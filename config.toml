@@ -1,5 +1,5 @@
 # Site settings
-baseurl = "blog.yech.xyz"
+baseurl = "/"
 languageCode = "en"
 title = "YeCh"
 theme = "hugo-theme-cactus-plus"

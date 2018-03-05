@@ -8,7 +8,5 @@ hidden = true
 Who am I?
 ***
 
-### Test About me page
-
-Hello world
+yech
 

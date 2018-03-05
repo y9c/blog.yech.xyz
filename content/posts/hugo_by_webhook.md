@@ -6,12 +6,29 @@ categories = [""]
 draft = false
 +++
 
+A pipeline for blogging automatically though Github
+
 ## Purpose
 
-...
+write and serve markdown blog without caring about the html, theme, archiving, server, website, domain ...
+
+<!--more-->
 
 ## What to Build?
 
+Local repo
+  ↓
+Github repo
+  ↓
+Webhook 
+  ↓
+Server repo 
+  ↓
+Caddy hook
+  ↓
+Hugo build
+  ↓
+Caddy serve
 ...
 
 ## Workflow
@@ -23,7 +40,6 @@ hugo new MyBlog
 # git submodule
 # theme
 ```
-
 
 write the first markdown file
 

@@ -5,8 +5,9 @@ tags = ["net", "tech"]
 
 +++
 
+google dnsmasq address
 
-> google dnsmasq address
+<!--more-->
 
 ```bash
 ##=====google=====##

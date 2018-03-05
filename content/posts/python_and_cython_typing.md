@@ -53,7 +53,13 @@ def fun(n: int) -> int:
 
 ## cython
 
-Cython 的语法
+Cython 通过静态编译来提升 Python 代码的性能，而加入 C 的类型声明后提升效果更为明显。
+
+只要稍微修改一些代码，就可以通过 Cython 获得大幅度的性能提升，在很多场景还是值得尝试的。
+
+但是既然 Python 新语法中有了类型声明（typing），那么是否可以就按着 Python 的方式加入 typing，这样代码更加 Pythonic。
+
+Github 上有过这样的[提问](https://github.com/cython/cython/issues/1672)，而最终也在 Cython 0.27 版加入了类似的尝试。
 
 ```python
 import cython

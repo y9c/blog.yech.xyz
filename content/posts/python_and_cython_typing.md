@@ -50,12 +50,30 @@ def fun(n: int) -> int:
 
 ```
 
+## 静态编译
 
-## cython
+**Cython**
 
 Cython 通过静态编译来提升 Python 代码的性能，而加入 C 的类型声明后提升效果更为明显。
 
 只要稍微修改一些代码，就可以通过 Cython 获得大幅度的性能提升，在很多场景还是值得尝试的。
+
+*Cython 不是唯一的方案*
+
+
+直接编译:
+
+```python
+
+```
+
+引入 C 类型声明:
+
+```python
+
+```
+
+## 新的尝试
 
 但是既然 Python 新语法中有了类型声明（typing），那么是否可以就按着 Python 的方式加入 typing，这样代码更加 Pythonic。
 

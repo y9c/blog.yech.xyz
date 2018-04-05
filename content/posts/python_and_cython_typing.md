@@ -22,7 +22,7 @@ Python是动态语言，不需要像静态语言（C、java）那样声明变量
 [PEP 526](https://www.python.org/dev/peps/pep-0526/) 用到的注释方式和 Golang 类似，变量名在前，变量类型在后。
 *似乎新生的语言 Rust，TypeScript 偏好这种模式，而传统的语言 C，Java 采用相反的模式。*
 
-之前的写法：
+**之前的写法：**
 
 ```python
 
@@ -36,7 +36,7 @@ def fun(n):
 
 ```
 
-新的写法：
+**新的写法：**
 
 ```python
 
@@ -52,57 +52,36 @@ def fun(n: int) -> int:
 
 ## 静态编译
 
-**Cython**
-
-Cython 通过静态编译来提升 Python 代码的性能，而加入 C 的类型声明后提升效果更为明显。
-
+- Cython 通过静态编译来提升 Python 代码的性能，而加入 C 的类型声明后提升效果更为明显。
 只要稍微修改一些代码，就可以通过 Cython 获得大幅度的性能提升，在很多场景还是值得尝试的。
 
-*Cython 不是唯一的方案*
+*Cython 不是唯一的方案, 还有 Swig 之类的，也可实现类似效果。*
 
+- 通过 `pip install -U Cython`，安装最新版本 Cython。
 
-### 直接编译
+*Cython 相关的知识就不赘述了，下面展示的都是关键函数的代码实现。*
 
-从配置环境到测试，需要一些步骤。在第一个案例做详细地说明，后面同理，就不赘述了。
-
-- 安装 Cython：
-
-```bash
-pip install -U Cython`
-```
-
-确认 Cython 版本号 ≥ 0.27
-
-```bash
-python -c 'import cython;print(cython.__version__)'
-```
-
-- 将上述新的写法保存成文件 `test_raw.py`，后面 benchmark 的时候用到。
-
-- 编写编译脚本：
-
-```python
-# replace filename with yours
-from distutils.core import setup
-from Cython.Build import cythonize
-
-setup(ext_modules=cythonize('test_c.pyx'))
-```
-
-- 通过运行 `python setup.py build_ext -i` 编译模块。
-
-- 在测试时 import 编译好的包，调用相关函数。
+**Cython 传统实现方式：**
 
 
 ```python
 
+cdef int fun(int n):
+    """Print the Fibonacci series up to n."""
+    cdef int a
+    cdef int b
+    a = 0
+    b = 1
+    while b < n:
+        a, b = b, a + b
+    return b
+
+
+def run(N: int) -> int:
+    return fun(N)
+
 ```
 
-### 引入 C 类型声明:
-
-```python
-
-```
 
 ## 新的尝试
 
@@ -132,3 +111,13 @@ def run(N: cython.int) -> cython.int:
     return fun(N)
 
 ```
+
+## 性能比较
+
+- 1 raw python
+- 2 raw python with typing
+- 3 build cythonize python
+- 4 build cythonize python with typing
+- 5 build cythonize python with cdef
+- 6 build cythonize python with cython typing
+

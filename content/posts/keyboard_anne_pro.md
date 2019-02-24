@@ -15,21 +15,23 @@ draft = false
 
 ## 解决方案
 
-1. 安装 `dfu-util`
+1. **安装 `dfu-util`**
   ```bash
   sudo pacman -S dfu-util
   ```
 
-2. 下载 [V1.40.02 固件](http://en.obins.net/firmware#1J)
+1. **下载 [V1.40.02 固件](http://en.obins.net/firmware#1J)**
 
-3. 按住 `Esc` 键不放，戳键盘背后的 Reset 按钮，释放 `Esc` 键。
-  注意，此处的 `Esc` 是原先的 `Esc` 键位，不是修改后的 `Esc` 键。
-  键盘和电脑用 USB 线保持连接，不是断开。
+1. 按住 `Esc` 键不放，戳键盘背后的 Reset 按钮，释放 `Esc` 键。
+  (注意，此处的 `Esc` 是原先的 `Esc` 键位，不是修改后的 `Esc` 键。
+  键盘和电脑用 USB 线保持连接，不是断开。)
 
-4. 写入固件
+1. **写入固件**
+  ```bash
   dfu-util --alt 0 --intf 0 --download xxx_NoWinLock.dfu
+  ```
 
-5. 戳键盘背后的 Reset 按钮，退出 dfu 模式。
+1. 戳键盘背后的 Reset 按钮，退出 dfu 模式。
 
-6. 通过蓝牙手机 APP 重设键位。
+1. 通过蓝牙手机 APP 重设键位。
   这时候 `WIN_L` 依然会对应 WIN_LOCK，只是因为 APP 的原因，键盘已经生效。

@@ -1,8 +1,8 @@
 +++
 title = "How to Publish a Hugo Project to Remote Server Automatically?"
 date = 2018-03-03T16:21:39+08:00
-tags = ["tech", "geek"]
-categories = [""]
+tags = ["tech", "net", "server"]
+categories = ["geek"]
 draft = false
 +++
 

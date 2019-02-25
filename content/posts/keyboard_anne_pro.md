@@ -1,5 +1,5 @@
 +++
-title = "Keyboard_anne_pro"
+title = "治好了键盘的一个毛病"
 date = 2019-02-25T02:05:02+08:00
 tags = ["coding", "hardware"]
 categories = ["geek"]

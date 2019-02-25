@@ -1,8 +1,9 @@
 +++
-title = "node.js学习笔记(一)"
-date = "2015-12-21T14:01:05+08:00"
-tags = []
-
+title = "node.js 学习笔记(二)"
+date = 2015-12-21T14:01:05+08:00
+tags = ["coding", "nodejs"]
+categories = ["geek"]
+draft = false
 +++
 
 

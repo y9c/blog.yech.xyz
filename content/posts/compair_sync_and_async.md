@@ -1,10 +1,10 @@
 +++
 title = "比较同步编程和异步编程的区别"
 date = "2015-12-23T15:21:01+08:00"
-tags = []
-
+tags = ["coding"]
+categories = ["geek"]
+draft = false
 +++
-
 
 > Sync in C
 
@@ -24,6 +24,7 @@ int main()
     exit(0);
 }
 ```
+
 The time is 1396492137
 The time is 1396492139
 The time is 1396492141

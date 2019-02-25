@@ -1,9 +1,14 @@
 +++
 title = "convolution 和 cross-correlation的区别"
-tags = []
-
+date = 2015-08-20T17:50:49+08:00
+tags = ["math"]
+categories = ["sci"]
+draft = false
 +++
 
+“卷积”和“互相关”
+
+<!--more-->
 
 
 # 计算函数:
@@ -37,6 +42,5 @@ plot(lags,corr_seq)
 xcorr(a)
 %convolution
 ...
-
 
 ```

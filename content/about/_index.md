@@ -4,9 +4,6 @@ title = "About"
 hidden = true
 +++
 
-***
+<center>
 Who am I?
-***
-
-yech
-
+</center>

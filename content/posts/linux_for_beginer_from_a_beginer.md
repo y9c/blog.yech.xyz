@@ -1,8 +1,9 @@
 +++
-title = "linux_for_beginer_from_a_beginer"
+title = "linux for beginer from a beginer"
 date = "2015-12-22T13:47:48+08:00"
-tags = []
-
+tags = ["coidng", "server", "linux"]
+categories = ["geek"]
+draft = false
 +++
 
 

@@ -1,10 +1,14 @@
 +++
-title = "surfingkeys_vimium_like_setting"
+title = "vimium like setting for surfingkeys"
 date = "2016-01-01T01:14:32+08:00"
-tags = []
-
+tags = ["coding"]
+categories = ["geek"]
+draft = false
 +++
 
+A conf file of surfingkeys for vimium user
+
+<!--more-->
 
 ```javascript
 

@@ -15,6 +15,8 @@ draft = false
 
 ## 解决方案
 
+<!--more-->
+
 1. **安装 `dfu-util`**
   ```bash
   sudo pacman -S dfu-util

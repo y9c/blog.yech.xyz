@@ -1,19 +1,17 @@
 +++
-title = "Proxy_gitea_as_caddy_subpath"
-date = 2019-02-26T02:53:35+08:00
-tags = ["web"]
+title = "Proxy gitea as caddy subpath"
+date = 2019-02-26T03:04:42+08:00
+tags = ["coding"]
 categories = ["geek"]
 draft = false
 +++
 
 Using Caddy with a Sub-path as a reverse proxy.
-Gitea and Caddy is not on the same machine.
+Gitea and Caddy are on different server.
 
 <!--more-->
 
-## conf
-
-Caddyfile (in website server)
+Caddyfile (on caddy server)
 
 ```
 example.com {
@@ -23,11 +21,11 @@ example.com {
 }
 ```
 
-custom/conf/app.ini (in gitea server)
+custom/conf/app.ini (on gitea server)
 
 ```
 [server]
-ROOT_URL = http://git.example.com/git/
+ROOT_URL = http://example.com/git/
 ```
 
 ## ref

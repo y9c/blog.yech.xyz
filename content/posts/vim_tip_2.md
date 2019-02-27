@@ -1,6 +1,6 @@
 +++
 title = "随手记录点vim技巧(二)"
-date = "2015-12-27T23:41:23+08:00"
+date = 2015-12-27T23:41:23+08:00
 tags = ["vim", "coding"]
 categories = ["geek"]
 draft = false

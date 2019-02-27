@@ -1,9 +1,9 @@
 +++
-title: 随手记录点vim技巧(四)
+title = "随手记录点vim技巧(四)"
 date = 2019-02-28T01:54:11+08:00
-tags: ["vim", "coding"]
-categories: ["geek"]
-draft: false
+tags = ["vim", "coding"]
+categories = ["geek"]
+draft = false
 +++
 
 

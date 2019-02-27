@@ -1,9 +1,9 @@
 +++
-title: 随手记录点vim技巧(三)
-date: 2018-02-01T15:21:53+08:00
-tags: ["vim", "coding"]
-categories: ["geek"]
-draft: false
+title = "随手记录点vim技巧(三)"
+date = 2018-02-01T15:21:53+08:00
+tags = ["vim", "coding"]
+categories = ["geek"]
+draft = false
 +++
 
 
@@ -17,6 +17,7 @@ draft: false
 nmap <F8> i<C-R>=system('date --iso-8601=second')<CR><Esc>
 imap <F8> <C-R>=system('date --iso-8601=second')<CR>
 ```
+
 输出格式：
 
 `2018-02-01T15:26:36+08:00`

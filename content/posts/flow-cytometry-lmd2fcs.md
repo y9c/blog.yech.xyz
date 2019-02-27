@@ -1,12 +1,16 @@
 +++
 title = "Beckman流式细胞仪数据lmd格式转fcs格式"
 date = "2015-12-28T19:26:56+08:00"
-tags = []
-
+tags = ["bio"]
+categories = ["sci"]
+draft = false
 +++
 
+借助R语言包`flowcore`，将Beckman流式细胞仪数据从 lmd 格式转 fcs 格式，进而能被下游的工具读取。
 
-# 方法一: R语言包flowcore
+<!--more-->
+
+单个文件转换
 
 ```R
 # install
@@ -20,8 +24,9 @@ write.FCS(x,out.fname) #in.fname=xxx.fcs
 
 ```
 
+批量lmd转化为fcs
+
 ```R
-#批量lmd转化为fcs
 library(flowCore)
 library(tools)
 

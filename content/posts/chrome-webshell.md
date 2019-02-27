@@ -1,20 +1,22 @@
 +++
 title = "在浏览器中登陆terminal"
 date = "2015-12-26T17:50:49+08:00"
-tags = []
-
+tags = ["net", "server"]
+categories = ["geek"]
+draft = false
 +++
 
+chrome 的应用 `secure shell` 能非常方便的实现 SSH 客户端的功能，并且能像修改网页属性那样修改应用的外观。
 
-# secure shell for chrome
+安装和配置都非常简单。
 
-- 安装
-    
+## 安装
+
 ```
 https://chrome.google.com/webstore/detail/secure-shell/pnhechapfaindjhompbnflcldabbghjo/related?utm_source=chrome-app-launcher-info-dialog
 ```
 
-- 配置
+## 配置
 
 ```
 {

@@ -1,6 +1,6 @@
 +++
 title = "convolution 和 cross-correlation的区别"
-date = 2015-8-20T17:50:49+08:00
+date = 2015-08-20T17:50:49+08:00
 tags = ["bio"]
 categories = ["sci"]
 draft = false

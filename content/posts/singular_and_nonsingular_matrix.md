@@ -1,8 +1,9 @@
 +++
 title = "奇异矩阵（singular matrix）和 非奇异矩阵（nonsingular matrix）"
 date = "2015-12-27T00:27:27+08:00"
-tags = []
-
+tags = ["math"]
+categories = ["sci"]
+draft = false
 +++
 
 

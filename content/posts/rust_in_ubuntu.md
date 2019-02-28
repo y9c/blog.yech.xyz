@@ -1,8 +1,9 @@
 +++
 title = "一行搞定rust的运行环境"
 date = "2015-12-30T21:13:25+08:00"
-tags = []
-
+tags = ["coding"]
+categories = ["geek"]
+draft = false
 +++
 
 

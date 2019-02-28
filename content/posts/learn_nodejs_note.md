@@ -1,28 +1,15 @@
 +++
-title = "node.js学习笔记(一)"
-date = "2015-12-21T14:01:05+08:00"
-tags = []
-
+title = "node.js 学习笔记"
+date = 2015-12-20T14:01:05+08:00
+tags = ["coding", "nodejs"]
+categories = ["geek"]
+draft = false
 +++
 
+记录一下 nodejs 的小知识
 
-# 运行环境
+--- 
 
-> 两种,类似python
+update in 2019-02-28:
 
-- 命令行交互
-
-```bash
-$ node
-```
-
-```javascript
-> console.log("Hello World");
-```
-
-- 文件运行(无需编译)
-
-```bash
-$ echo 'console.log("Hello World")' > helloworld.js
-$ node helloworld.js
-```
+这个系列应该是凉了

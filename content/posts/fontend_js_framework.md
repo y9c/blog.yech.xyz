@@ -1,7 +1,7 @@
 +++
 title = "常用的前端框架"
 date = "2015-12-25T10:54:10+08:00"
-tags = ["coding", "net"]
+tags = ["coding", "web"]
 categories = ["geek"]
 draft = false
 +++

@@ -10,6 +10,7 @@ draft = true
 > 用R将两列索引的表格转化为,二维的行列的矩阵
 
 ## example
+
 ### 表格长这样
 | gene    | trait     | value    |
 |

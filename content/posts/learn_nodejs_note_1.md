@@ -1,29 +1,21 @@
 +++
 title = "node.js 学习笔记(一)"
-date = 2015-12-21T14:01:05+08:00
+date = "2015-12-20T16:21:23+08:00"
 tags = ["coding", "nodejs"]
 categories = ["geek"]
 draft = false
 +++
 
+# ubuntu安装nodejs5
 
-# 运行环境
-
-> 两种,类似python
-
-- 命令行交互
+- 将nodejs添加到源
 
 ```bash
-$ node
+wget -qO- https://deb.nodesource.com/setup_5.x | sudo bash -
 ```
 
-```javascript
-> console.log("Hello World");
-```
-
-- 文件运行(无需编译)
+- 安装nodejs
 
 ```bash
-$ echo 'console.log("Hello World")' > helloworld.js
-$ node helloworld.js
+sudo apt-get install --yes nodejs
 ```

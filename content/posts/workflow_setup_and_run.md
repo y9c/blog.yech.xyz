@@ -13,4 +13,7 @@ Workflow
 - nextflow
 - CWL
 
-- make
+
+- Martian (Pipeline Manager developed by 10x Genomics for Cellranger)
+
+- make (GNU)

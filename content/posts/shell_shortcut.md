@@ -26,3 +26,4 @@ Some useful bash shortcut for me.
 | `Alt + d`              | Delete the word after the cursor                                           |
 | `Ctrl + l`             | Clear screen                                                               |
 | `Ctrl + j`             | Sent Enter                                                                 |
+| `Ctrl + j`             | Delete one charater before cursor                                          |

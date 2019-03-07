@@ -21,7 +21,7 @@ Chrome/Chromium 下部分 emoji 符号显示出来怎么是小方块？而同样
 > ArchLinux
 
 ```bash
-sudo pacman -Syu note-fonts-emoji
+sudo pacman -S note-fonts-emoji
 ```
 
 > Ubuntu
@@ -29,3 +29,5 @@ sudo pacman -Syu note-fonts-emoji
 ```bash
 sudo apt install fonts-noto-color-emoji
 ```
+
+Restart Chrome, or restart PC.

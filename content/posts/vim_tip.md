@@ -1,9 +1,11 @@
 +++
 title = "随手记录点vim技巧"
+description = ""
+featured_image = "/img/nvim_custom_config.png"
 date = "2015-12-27T13:41:16+08:00"
 tags = ["vim", "coding"]
 categories = ["geek"]
-draft = false
+comment = true
 +++
 
 **这个系列叫“随手记录点 vim 技巧”**

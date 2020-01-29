@@ -1,7 +1,9 @@
 +++
 title = "{{ replace .TranslationBaseName "_" " " | title }}"
+description = ""
+featured_image = ""
 date = {{ .Date }}
-tags = [""]
-categories = [""]
-draft = false
+tags = []
+categories = []
+comment = true
 +++

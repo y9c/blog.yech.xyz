@@ -1,13 +1,13 @@
 baseurl = "/"
 languageCode = "en-us"
-title = "YeCh's blog"
+title = "Chang's blog"
 copyright = "2020 by Ye Chang"
 disableKinds = ["section"]
 theme = "diary"
 googleAnalytics = "UA-71962122-1"
 
 [params]
-    subtitle = "Themed by Diary."
+    subtitle = "learn and share..."
     enableGitalk = true
 
 [params.gitalk]

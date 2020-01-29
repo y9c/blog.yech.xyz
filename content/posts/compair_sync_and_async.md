@@ -36,26 +36,25 @@ The time is 1396492151
 The time is 1396492153
 The time is 1396492155
 
-
 # Async in javascript
 
 ```javascript
 function test() {
-    for (var i = 0; i < 10; i++) {
-        console.log(new Date);
-        setTimeout(function(){}, 2000); //睡眠2秒，然后再进行一下次for循环打印
-    }
-};
+  for (var i = 0; i < 10; i++) {
+    console.log(new Date());
+    setTimeout(function() {}, 2000); //睡眠2秒，然后再进行一下次for循环打印
+  }
+}
 test();
 ```
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
 
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)

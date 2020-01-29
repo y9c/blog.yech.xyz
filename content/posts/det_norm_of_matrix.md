@@ -6,7 +6,6 @@ categories = ["sci"]
 draft = false
 +++
 
-
 # det(A)
 
 ![](https://upload.wikimedia.org/math/9/c/c/9ccd8b1b2c36abe1bd149a1cfd33ef79.png)
@@ -14,4 +13,3 @@ draft = false
 ![](https://upload.wikimedia.org/math/a/8/4/a84b6d9c86846b74d3a83cd04d0cc84f.png)
 
 # norm(A)
-

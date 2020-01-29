@@ -6,11 +6,9 @@ categories = ["geek"]
 draft = true
 +++
 
-
 # 位操作(Bitwise operations)
 
 > 将值转为二进制进行操作
 
-
-| 操作符   | 用法    | 描述                                                     | 例子                                            |
+| 操作符 | 用法 | 描述 | 例子 |
 |

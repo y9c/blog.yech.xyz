@@ -5,7 +5,6 @@ tags = ["life"]
 
 +++
 
-
 ```python
 for i in range(365):
     print "happy Year: 2016; Date: {}".format(i+1)

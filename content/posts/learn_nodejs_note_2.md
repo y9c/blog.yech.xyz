@@ -6,10 +6,9 @@ categories = ["geek"]
 draft = false
 +++
 
-
 # 运行环境
 
-> 两种,类似python
+> 两种,类似 python
 
 - 命令行交互
 

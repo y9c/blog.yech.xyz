@@ -6,15 +6,15 @@ categories = ["geek"]
 draft = false
 +++
 
-# ubuntu安装nodejs5
+# ubuntu 安装 nodejs5
 
-- 将nodejs添加到源
+- 将 nodejs 添加到源
 
 ```bash
 wget -qO- https://deb.nodesource.com/setup_5.x | sudo bash -
 ```
 
-- 安装nodejs
+- 安装 nodejs
 
 ```bash
 sudo apt-get install --yes nodejs

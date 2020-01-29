@@ -14,6 +14,10 @@ comment = true
 
 [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947)
 
+**中科院 2019 新型冠状病毒资源库**:
+
+[NGDC](https://bigd.big.ac.cn/ncov#progress)
+
 **Map**:
 
 ![Genome map](/img/Wuhan_seafood_market_pneumonia_virus_map.svg)

@@ -6,8 +6,7 @@ categories = ["geek"]
 draft = false
 +++
 
-
-# rust运行环境的安装
+# rust 运行环境的安装
 
 ## 安装
 
@@ -18,6 +17,7 @@ $ curl -sSf https://static.rust-lang.org/rustup.sh | sh
 ## helloworld
 
 - 方法一:rustc
+
 ```rust
 // save file as helloworld.rs
 fn main() {
@@ -31,6 +31,7 @@ $ ./helloworld
 ```
 
 - 方法二:cargo
+
 ```bash
 $ cargo new rust_first_project --bin
 $ cargo build

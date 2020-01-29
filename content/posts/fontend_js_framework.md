@@ -6,7 +6,6 @@ categories = ["geek"]
 draft = false
 +++
 
-
 # 前端框架
 
 > MVVM, MVC 什么的还不清楚...
@@ -19,10 +18,11 @@ draft = false
 - extjs
 - zepto
 
-> jQuery jQueryUI : javascript框架和前端框架不是一个东西?
+> jQuery jQueryUI : javascript 框架和前端框架不是一个东西?
 
 ##转
->infoQ
+
+> infoQ
 
 - Backbone.js: Provides models with key-value binding and custom events, collections, and connects it all to your existing API over a RESTful JSON interface.
 - AngularJS: A toolset based on extending the HTML vocabulary for your application.
@@ -35,7 +35,7 @@ draft = false
 - ExtJS: Amongst other things offers plugin-free charting, and modern UI widgets.
 - Sammy.js: A small JavaScript framework developed to provide a basic structure for developing JavaScript applications.
 - Stapes.js: A tiny framework that aims to be easy to fit in an existing codebase, and because of its size it's suitable for mobile development.
-- Epitome: Epitome is a MVC* (MVP) framework for MooTools.
+- Epitome: Epitome is a MVC\* (MVP) framework for MooTools.
 - soma.js: Tries help developers to write loosely-coupled applications to increase scalability and maintainability.
 - PlastronJS: MVC framework for Closure Library and Closure Compiler.
 - rAppid.js: Lets you encapsulate complexity into components which can be easy used like HTML elements in your application.

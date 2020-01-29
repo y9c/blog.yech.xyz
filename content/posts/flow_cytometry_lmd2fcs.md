@@ -6,7 +6,7 @@ categories = ["sci"]
 draft = false
 +++
 
-借助R语言包`flowcore`，将Beckman流式细胞仪数据从 lmd 格式转 fcs 格式，进而能被下游的工具读取。
+借助 R 语言包`flowcore`，将 Beckman 流式细胞仪数据从 lmd 格式转 fcs 格式，进而能被下游的工具读取。
 
 <!--more-->
 
@@ -24,7 +24,7 @@ write.FCS(x,out.fname) #in.fname=xxx.fcs
 
 ```
 
-批量lmd转化为fcs
+批量 lmd 转化为 fcs
 
 ```R
 library(flowCore)

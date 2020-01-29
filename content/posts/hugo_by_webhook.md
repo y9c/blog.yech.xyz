@@ -17,17 +17,17 @@ write and serve markdown blog without caring about the html, theme, archiving, s
 ## What to Build?
 
 Local repo
-  ↓
+↓
 Github repo
-  ↓
-Webhook 
-  ↓
-Server repo 
-  ↓
+↓
+Webhook
+↓
+Server repo
+↓
 Caddy hook
-  ↓
+↓
 Hugo build
-  ↓
+↓
 Caddy serve
 ...
 
@@ -47,9 +47,6 @@ write the first markdown file
 
 install `hugo, go, caddy`
 
-
 - github side
 
 webhook
-
-

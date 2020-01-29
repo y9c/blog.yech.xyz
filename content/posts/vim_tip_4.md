@@ -1,9 +1,11 @@
 +++
 title = "随手记录点vim技巧(四)"
+description = ""
+featured_image = "/img/nvim_custom_config.png"
 date = 2019-02-28T01:54:11+08:00
 tags = ["vim", "coding"]
 categories = ["geek"]
-draft = false
+comment = true
 +++
 
 > Q: 怎么快速删除每一行最后一个字符?

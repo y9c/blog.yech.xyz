@@ -1,7 +1,7 @@
 +++
 title = "High-throughput Sequencing Specification"
 date = 2019-02-28T16:36:21+08:00
-tags = ["bio", "tech"]
+tags = ["bio", "tech", "ngs"]
 categories = ["sci"]
 draft = false
 +++

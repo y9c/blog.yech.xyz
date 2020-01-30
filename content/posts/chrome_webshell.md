@@ -2,7 +2,7 @@
 title = "在浏览器中登陆terminal"
 date = 2015-12-26T17:50:49+08:00
 tags = ["net", "server"]
-categories = ["geek"]
+categories = ["coding"]
 draft = false
 +++
 

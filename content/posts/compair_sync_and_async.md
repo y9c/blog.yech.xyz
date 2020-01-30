@@ -1,9 +1,11 @@
 +++
 title = "比较同步编程和异步编程的区别"
+description = ""
+featured_image: ""
 date = "2015-12-23T15:21:01+08:00"
-tags = ["coding"]
-categories = ["geek"]
-draft = false
+categories = ["coding"]
+tags = ["c", "async"]
+comment = true
 +++
 
 > Sync in C

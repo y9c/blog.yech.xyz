@@ -55,3 +55,65 @@ systemctl enable caddy.service
 systemctl start caddy.service
 systemctl status caddy.service
 ```
+
+> caddy.service
+
+```bash
+[Unit]
+Description=Caddy HTTP/2 web server
+Documentation=https://caddyserver.com/docs
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+StartLimitIntervalSec=14400
+StartLimitBurst=10
+
+[Service]
+Restart=on-abnormal
+User=caddy
+Group=caddy
+Environment=CADDYPATH=/etc/ssl/caddy
+ExecStart=/usr/local/bin/caddy -log stdout -log-timestamps=false -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+ExecReload=/bin/kill -USR1 $MAINPID
+KillMode=mixed
+KillSignal=SIGQUIT
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+PrivateDevices=false
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/etc/ssl/caddy
+ReadWriteDirectories=/etc/ssl/caddy
+
+[Install]
+WantedBy=multi-user.target
+```
+
+> Caddyfile
+
+```
+yech.xyz {
+  gzip
+  root /var/www/home
+}
+
+
+blog.yech.xyz {
+  gzip
+  root /var/www/caddy/blog.yech.xyz
+  log /var/log/caddy/access.log
+  git {
+    repo https://github.com/xxx/xxx
+    path ../github_xxx_repo
+    hook /webhook xxxxx
+    then hugo --destination=/var/www/caddy/blog.yech.xyz
+    clone_args --recursive
+    pull_args --recurse-submodules
+    interval 3600
+  }
+  errors {
+    404 404.html # Not Found
+  }
+}
+```

@@ -1,7 +1,7 @@
 +++
 title = "在R语言中使用并行"
 description = ""
-featured_image = "/img/bioawk.png"
+featured_image = ""
 date = 2018-01-31T00:11:14+08:00
 categories = ["coding"]
 tags = ["data", "R"]

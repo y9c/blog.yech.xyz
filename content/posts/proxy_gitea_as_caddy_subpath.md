@@ -30,4 +30,4 @@ ROOT_URL = http://example.com/git/
 
 > Reference
 
-[1] https://docs.gitea.io/en-us/reverse-proxies/
+1. https://docs.gitea.io/en-us/reverse-proxies/

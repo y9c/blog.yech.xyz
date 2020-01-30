@@ -1,6 +1,6 @@
 +++
 title = "Open Resource for 2019-NCoV"
-description = ""
+description = "collections of open access data and open source code for 2019-NCoV"
 featured_image = "/img/Wuhan_seafood_market_pneumonia_virus_map.svg"
 date = 2020-01-30T19:07:54+08:00
 tags = ["biology", "virus"]

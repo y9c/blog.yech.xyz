@@ -1,9 +1,11 @@
 +++
 title = "node.js 学习笔记(一)"
+description = ""
+featured_image = "/img/nodejs_learning.png"
 date = "2015-12-20T16:21:23+08:00"
-tags = ["coding", "nodejs"]
-categories = ["geek"]
-draft = false
+tags = ["website", "nodejs"]
+categories = ["coding"]
+comment = true
 +++
 
 # ubuntu 安装 nodejs5

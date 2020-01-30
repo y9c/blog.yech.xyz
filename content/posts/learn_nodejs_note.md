@@ -1,9 +1,11 @@
 +++
 title = "node.js 学习笔记"
+description = ""
+featured_image = "/img/nodejs_learning.png"
 date = 2015-12-20T14:01:05+08:00
-tags = ["coding", "nodejs"]
-categories = ["geek"]
-draft = false
+tags = ["website", "nodejs"]
+categories = ["coding"]
+comment = true
 +++
 
 记录一下 nodejs 的小知识

@@ -1,9 +1,11 @@
 +++
 title = "node.js 学习笔记(四)"
+description = ""
+featured_image = "/img/nodejs_learning.png"
 date = 2015-12-23T14:42:59+08:00
-tags = ["coding", "nodejs"]
-categories = ["geek"]
-draft = false
+tags = ["website", "nodejs"]
+categories = ["coding"]
+comment = true
 +++
 
 # 用 node 的 express 插件创建应用

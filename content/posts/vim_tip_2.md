@@ -3,8 +3,8 @@ title = "随手记录点vim技巧(二)"
 description = ""
 featured_image = "/img/nvim_custom_config.png"
 date = 2015-12-27T23:41:23+08:00
-tags = ["vim", "editor"]
 categories = ["coding"]
+tags = ["vim", "editor"]
 comment = true
 +++
 

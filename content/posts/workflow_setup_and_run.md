@@ -1,8 +1,8 @@
 +++
 title = "Workflow Setup and Run"
 date = 2019-03-01T23:54:43+08:00
-tags = ["tech", "coding", "server"]
-categories = ["geek"]
+tags = ["pipeline", "server", "DSL"]
+categories = ["coding"]
 draft = true
 +++
 

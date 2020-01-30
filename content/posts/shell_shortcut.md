@@ -1,9 +1,11 @@
 +++
 title = "Shell Shortcut"
+description = ""
+featured_image = "/img/linux_terminal.png"
 date = 2019-03-05T19:21:46+08:00
-tags = ["coding", "server", "linux"]
-categories = ["geek"]
-draft = false
+categories = ["coding"]
+tags = ["terminal", "server", "linux"]
+comment = true
 +++
 
 Some useful bash shortcut for me.

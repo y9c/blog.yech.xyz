@@ -8,6 +8,8 @@ googleAnalytics = "UA-71962122-1"
 
 [params]
     subtitle = "learn and share..."
+    favicon = "favicon-96x96.png"
+    disableToC = false
     enableGitalk = true
 
 [params.gitalk]

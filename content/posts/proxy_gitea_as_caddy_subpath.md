@@ -28,6 +28,6 @@ custom/conf/app.ini (on gitea server)
 ROOT_URL = http://example.com/git/
 ```
 
-## ref
+> Reference
 
 [1] https://docs.gitea.io/en-us/reverse-proxies/

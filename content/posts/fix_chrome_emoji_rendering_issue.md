@@ -1,9 +1,10 @@
 +++
 title = "Fix Chrome Emoji Rendering Issue"
+description = ""
 date = 2019-03-07T02:44:14+08:00
-tags = ["web", "coding"]
-categories = ["geek"]
-draft = false
+categories = ["coding"]
+tags = ["web", "font"]
+comment = true
 +++
 
 Chrome/Chromium 下部分 emoji 符号显示出来怎么是小方块？而同样的字符在 Firefox 能正常显示。

@@ -1,16 +1,14 @@
 +++
-title = "simple mutaion calling process"
+title = "Mutaion Calling Pipeline"
+description = "An over simplified pipeline for beginners"
+featured_image = "/img/evolution-of-man-and-pig.png"
 date = 2016-01-20T17:50:49+08:00
-tags = ["bio"]
 categories = ["sci"]
-draft = false
+tags = ["bio", "mutation"]
+comment = true
 +++
 
-a over simplified pipeline for beginners
-
-<!--more-->
-
-# process
+## process
 
 - bwa
 - samtools view

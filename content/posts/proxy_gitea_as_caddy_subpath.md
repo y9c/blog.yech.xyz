@@ -1,8 +1,8 @@
 +++
 title = "Proxy gitea as caddy subpath"
 date = 2019-02-26T03:04:42+08:00
-tags = ["coding"]
-categories = ["geek"]
+categories = ["coding"]
+tags = ["web", "git", "caddy"]
 draft = false
 +++
 
@@ -28,6 +28,6 @@ custom/conf/app.ini (on gitea server)
 ROOT_URL = http://example.com/git/
 ```
 
-## ref
+> Reference
 
-[1] https://docs.gitea.io/en-us/reverse-proxies/
+1. https://docs.gitea.io/en-us/reverse-proxies/

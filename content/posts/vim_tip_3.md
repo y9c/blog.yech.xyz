@@ -1,10 +1,10 @@
 +++
 title = "随手记录点vim技巧(三)"
-description = ""
+description = "vim 怎么快速插入 iso-8601 格式的时间戳？"
 featured_image = "/img/nvim_custom_config.png"
 date = 2018-02-01T15:21:53+08:00
-tags = ["vim", "coding"]
-categories = ["geek"]
+categories = ["coding"]
+tags = ["vim", "editor"]
 comment = true
 +++
 

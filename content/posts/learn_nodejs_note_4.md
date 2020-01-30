@@ -1,9 +1,11 @@
 +++
 title = "node.js 学习笔记(四)"
+description = ""
+featured_image = "/img/nodejs_learning.png"
 date = 2015-12-23T14:42:59+08:00
-tags = ["coding", "nodejs"]
-categories = ["geek"]
-draft = false
+tags = ["website", "nodejs"]
+categories = ["coding"]
+comment = true
 +++
 
 # 用 node 的 express 插件创建应用
@@ -11,10 +13,10 @@ draft = false
 - 创建项目环境
 
 ```bash
-$ mkdir myapp
-$ cd myapp
-$ npm install express --save
-$ vim app.js
+mkdir myapp
+cd myapp
+npm install express --save
+vim app.js
 ```
 
 - 编写 javascript 脚本

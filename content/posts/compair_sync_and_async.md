@@ -1,9 +1,11 @@
 +++
 title = "比较同步编程和异步编程的区别"
+description = ""
+featured_image = ""
 date = "2015-12-23T15:21:01+08:00"
-tags = ["coding"]
-categories = ["geek"]
-draft = false
+categories = ["coding"]
+tags = ["c", "async"]
+comment = true
 +++
 
 > Sync in C
@@ -25,16 +27,16 @@ int main()
 }
 ```
 
-The time is 1396492137
-The time is 1396492139
-The time is 1396492141
-The time is 1396492143
-The time is 1396492145
-The time is 1396492147
-The time is 1396492149
-The time is 1396492151
-The time is 1396492153
-The time is 1396492155
+    The time is 1396492137
+    The time is 1396492139
+    The time is 1396492141
+    The time is 1396492143
+    The time is 1396492145
+    The time is 1396492147
+    The time is 1396492149
+    The time is 1396492151
+    The time is 1396492153
+    The time is 1396492155
 
 # Async in javascript
 
@@ -48,13 +50,13 @@ function test() {
 test();
 ```
 
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
-Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+    Wed Dec 23 2015 15:27:15 GMT+0800 (CST)

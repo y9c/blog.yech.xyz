@@ -1,8 +1,8 @@
 +++
 title = "Beckman流式细胞仪数据lmd格式转fcs格式"
 date = 2015-12-28T19:26:56+08:00
-tags = ["bio"]
 categories = ["sci"]
+tags = ["bio", "cell", "R"]
 draft = false
 +++
 

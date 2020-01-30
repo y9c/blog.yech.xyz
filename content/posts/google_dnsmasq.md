@@ -1,8 +1,8 @@
 +++
 title = "google的dnsmasq地址和IP"
 date = "2016-02-24T05:13:25+08:00"
-tags = ["net", "tech"]
-categories = ["geek"]
+tags = ["net", "gfw"]
+categories = ["coding"]
 draft = false
 +++
 

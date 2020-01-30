@@ -1,7 +1,7 @@
 +++
 title = "比较同步编程和异步编程的区别"
 description = ""
-featured_image: ""
+featured_image = ""
 date = "2015-12-23T15:21:01+08:00"
 categories = ["coding"]
 tags = ["c", "async"]

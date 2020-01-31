@@ -8,6 +8,17 @@ tags = ["website", "server", "blog"]
 comment = true
 +++
 
+## About
+
+The content is hosted in a remote github repo, and a webhook is triggered when
+there is a new commit. Hence, the local repo on the web server, which is set as
+root of the website, will be updated automatically.
+
+- The home page is prerendered and as servered directly.
+- The markdown files of blog content are built by hugo.
+
+## Setup
+
 Download hugo:
 
 ```bash
@@ -56,6 +67,8 @@ systemctl start caddy.service
 systemctl status caddy.service
 ```
 
+---
+
 > caddy.service
 
 ```bash
@@ -93,11 +106,22 @@ WantedBy=multi-user.target
 > Caddyfile
 
 ```
-yech.xyz {
+yech.xyz, www.yech.xyz {
   gzip
-  root /var/www/home
+  root /var/www/caddy/github_xxx_repo
+  log /var/log/caddy/access.log
+  git {
+    repo https://github.com/xxx/xxx
+    path ../github_xxx_repo
+    hook /webhook xxxxx
+    clone_args --recursive
+    pull_args --recurse-submodules
+    interval 3600
+  }
+  errors {
+    404 404.html
+  }
 }
-
 
 blog.yech.xyz {
   gzip
@@ -113,7 +137,7 @@ blog.yech.xyz {
     interval 3600
   }
   errors {
-    404 404.html # Not Found
+    404 404.html
   }
 }
 ```

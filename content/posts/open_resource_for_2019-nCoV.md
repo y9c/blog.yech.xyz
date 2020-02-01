@@ -8,11 +8,17 @@ categories = ["sci"]
 comment = true
 +++
 
-## Genomic sequence
+## 🧬 Genomic sequence
+
+### Reference genome
 
 **Genebank ID** (NCBI):
 
 [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947)
+
+![Genome map](/img/Wuhan_seafood_market_pneumonia_virus_map.svg)
+
+### Genome resource
 
 **中科院 2019 新型冠状病毒资源库**:
 
@@ -20,9 +26,7 @@ comment = true
 
 **Map**:
 
-![Genome map](/img/Wuhan_seafood_market_pneumonia_virus_map.svg)
-
-## Epidemic data
+## 🦠 Epide genome
 
 ### Data source
 

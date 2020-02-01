@@ -29,7 +29,12 @@ comment = true
 > Achieved data
 
 - https://github.com/globalcitizen/2019-wuhan-coronavirus-data
-- https://github.com/BlankerL/DXY-2019-nCoV-Crawler
+
+Time series date by area:
+
+[![API Status](https://img.shields.io/website?url=https%3A%2F%2Flab.isaaclin.cn)](https://lab.isaaclin.cn/nCoV/)
+
+https://raw.githubusercontent.com/BlankerL/DXY-2019-nCoV-Data/master/DXYArea.csv
 
 > Real time API
 

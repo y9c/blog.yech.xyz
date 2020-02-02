@@ -11,7 +11,7 @@ hide = true
 
 Data source:
 
-| Sampele_Name                     | Query_ID (with download click)                                                                                                                                                    | Completeness           |
+| Sampele_Name                     | Query_ID<sup>[1]</sup>                                                                                                                                                            | Completeness           |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | BetaCoV/Wuhan/IPBCAMS-WH-01/2019 | [GWHABKF00000000](ftp://download.big.ac.cn/gwh/Viruses/Betacoronavirus_IPBCAMS-WH-01_GWHABKF00000000/GWHABKF00000000.genome.fasta.gz)                                             | Complete               |
 | BetaCoV/Wuhan/IPBCAMS-WH-02/2019 | [GWHABKG00000000](ftp://download.big.ac.cn/gwh/Viruses/Betacoronavirus_IPBCAMS-WH-02_GWHABKG00000000/GWHABKG00000000.genome.fasta.gz)                                             | Complete               |
@@ -62,4 +62,5 @@ Data source:
 | 2019 nCoV/Italy-INMI2            | [MT008023 ](https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&save=file&log$=seqview&db=nuccore&report=fasta&id=MT008023&conwithfeat=on&withparts=on&hide-cdd=on)       | Partial/gene level     |
 | BetaCoV/Wuhan/WH-02/2019         | [NMDC60013002-02](http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-02.fasta)                                                                                           | Partial/scaffold level |
 
-_NOTE: GISAID data is not public available. _
+- [1]: _With download link, click for downlaod fasta file._
+- [2]: _GISAID data is not public available._

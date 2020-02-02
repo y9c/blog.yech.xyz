@@ -31,3 +31,6 @@ googleAnalytics = "UA-71962122-1"
     url = "/tags"
     name = "Tags"
     weight = 2
+
+[markup.goldmark.renderer]
+    unsafe = true

@@ -20,6 +20,10 @@ comment = true
 
 ### Genome resource
 
+**NCBI 官方整理数据**：
+
+[GeneBank](https://www.ncbi.nlm.nih.gov/genbank/2019-ncov-seqs/)
+
 **中科院 2019 新型冠状病毒资源库**（[NGDC](https://bigd.big.ac.cn/ncov#progress)）:
 
 example
@@ -36,6 +40,10 @@ example
 | 2019-nCoV_HKU-SZ-007c_2020  | MN975265       | GenBank  |                | Partial/gene level |
 
 [more info](/dat/Released_2019-nCoV_Genome_Sequences.csv) (update in 2020-02-02 03:14)
+
+### DNA sequence donwload
+
+Collected by YC, [read more](/posts/phylogenetic_analysis_for_2019-ncov/)
 
 ## 🦠 Epide genome
 

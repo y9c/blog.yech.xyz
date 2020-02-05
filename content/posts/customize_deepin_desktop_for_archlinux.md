@@ -18,19 +18,19 @@ comment = true
 
 - 创建配置文件：
 
-    `~/.local/share/deepin/themes/deepin/light/titlebar.ini`(_If you use light theme_)
+  `~/.local/share/deepin/themes/deepin/light/titlebar.ini`(_If you use light theme_)
 
-    或 `~/.local/share/deepin/themes/deepin/dark/titlebar.ini` (_If you use dark theme_)
+  或 `~/.local/share/deepin/themes/deepin/dark/titlebar.ini` (_If you use dark theme_)
 
 - 在其中添加
 
-    ```
-    [Active]
-    height=25
+      ```
+      [Active]
+      height=25
 
-    [Inactive]
-    height=25
-    ```
+      [Inactive]
+      height=25
+      ```
 
 注：仅对 deepin-kwin 生效，对 deepin-wm 无效。
 

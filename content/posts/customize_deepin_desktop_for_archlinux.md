@@ -10,7 +10,6 @@ comment = true
 
 > 在英文环境中打开日历的农历显示？<sup>[1]</sup>
 
-
 - 创建配置文件：`~/.config/deepin/dde-calendar.conf`
 
 - 在其中添加 `EnableLunar=true`
@@ -33,6 +32,7 @@ comment = true
     height=25
     ```
 
+注：仅对 deepin-kwin 生效，对 deepin-wm 无效。
 
 > Reference
 

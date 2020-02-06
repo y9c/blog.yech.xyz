@@ -2,7 +2,7 @@
 title = "Open Resource for 2019-NCoV"
 description = "collections of open access data and open source code for 2019-NCoV"
 featured_image = "/img/Wuhan_seafood_market_pneumonia_virus_map.svg"
-date = 2020-01-30T19:07:54+08:00
+date = 2020-02-06T18:09:54+08:00
 tags = ["biology", "virus"]
 categories = ["sci"]
 comment = true
@@ -45,7 +45,7 @@ example
 
 Collected by YC, [read more](/posts/phylogenetic_analysis_for_2019-ncov/)
 
-## 🦠 Epide genome
+## 🦠 Epidemic data
 
 ### Data source
 
@@ -86,5 +86,11 @@ Collected by YC, [read more](/posts/phylogenetic_analysis_for_2019-ncov/)
 
   实时获取“丁香园”的数据接口
 
+## Visualization
+
 **Map**:
 ![Geo map](/img/2019-NCoV-animation.gif)
+
+阳性病人的地理位置：
+
+https://yech.xyz/nCoV_GZ_map.html

@@ -2,7 +2,7 @@
 title = "Use Black as Formatter for Jupyter Notebook"
 description = ""
 featured_image = ""
-date = 2020-01-31T20:34:01+08:00
+date = 2019-01-31T20:34:01+08:00
 categories = ["coding"]
 tags = ["editor", "python"]
 comment = true

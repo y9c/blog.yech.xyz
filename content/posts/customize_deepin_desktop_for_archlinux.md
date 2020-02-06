@@ -2,7 +2,7 @@
 title = "Customize Deepin Desktop for Archlinux"
 description = ""
 featured_image = ""
-date = 2020-02-05T18:28:41+08:00
+date = 2019-02-05T18:28:41+08:00
 categories = ["coding"]
 tags = ["tools", "linux"]
 comment = true

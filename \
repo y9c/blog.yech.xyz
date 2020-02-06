@@ -1,0 +1,19 @@
++++
+title = "Fcitx5 as Chinese Input Method"
+description = ""
+featured_image = ""
+date = 2020-02-06T17:13:56+08:00
+categories = ["coding"]
+tags = ["chinese", "linux", "archlinux"]
+comment = true
++++
+
+> Fcitx is a lightweight input method framework aimed at providing environment independent language support for Linux.
+
+> 安装 Archlinux 最后一件事往往是安装搜狗输入法，这也是最困难的一件事。
+>
+> - 从 AUR 编译源码需要花费大量的时间（_低配置的 Laptop 上需要半天_）。
+> - 为了兼容 QT4, QT5, GTK4, GTK5, XIM 等框架的应用，需要各种调试。
+> - 搜狗输入法带有 bug，经常无法调出输入法，或是输入皮肤不显示。
+>
+> 直到 fcitx5 的发布，终于有了转机会。

@@ -1,6 +1,6 @@
 +++
 title = "随手记录点vim技巧(二)"
-description = ""
+description = "删除到/插入到/移动到 行首怎么搞?"
 featured_image = "/img/nvim_custom_config.png"
 date = 2015-12-27T23:41:23+08:00
 categories = ["coding"]

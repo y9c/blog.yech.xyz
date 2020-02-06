@@ -1,6 +1,6 @@
 +++
 title = "随手记录点vim技巧(五)"
-description = ""
+description = "怎么查看 vim 启动时加载的脚本？ (启动 vim 时怎么 debug？)"
 featured_image = "/img/nvim_custom_config.png"
 date = 2020-01-30T14:50:30+08:00
 categories = ["coding"]

@@ -109,7 +109,7 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
    Theme=simple-blue
    ```
 
-   - 配置拼音输入法：
+   - 配置拼音输入法（针对 fcitx5-chinese-addons）：
 
    在 `~/.config/fcitx5/conf/pinyin.conf` 中修改，使得 `<`, `>` 键可以用于翻页：
 
@@ -123,6 +123,20 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
    0=equal
    1=Down
    2=period
+   ```
+
+   - 配置拼音输入法中的云拼音输入法（同样针对 fcitx5-chinese-addons）：
+
+   在 `~/.config/fcitx5/conf/cloudpinyin.conf` 中修改云拼音的来源从 Google 修改为 Baidu。
+
+   **尝试了很多次才知道配置参数为 `Backend` 而不是
+   `CloudPinyinBackend`，被代码的命名误导了。配置文件是独立的文件，而不是放在 `pinyin.conf` 里面**
+
+   ```
+   # Minimum Pinyin Length
+   MinimumPinyinLength=4
+   # Backend
+   Backend=Baidu
    ```
 
 > Reference

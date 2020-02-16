@@ -21,13 +21,13 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
 
 1. **安装 fcitx5**：
 
-   从 AUR 安装<sup>[1]</sup>：
+   从 AUR 安装[^1]：
 
    ```bash
    yay -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git
    ```
 
-   若配置了 ArchlinuxCN<sup>[2]</sup>，从 ArchlinuxCN 安装：
+   若配置了 ArchlinuxCN[^2]，从 ArchlinuxCN 安装：
 
    ```bash
    pacman -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git
@@ -83,12 +83,10 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
    0=Default
    ```
 
-   - 下载主题：
+   - 下载主题[^3]：
 
    ```
    git clone https://github.com/weearc/fcitx5-skin-simple-blue.git ~/.local/share/fcitx5/themes/simple-blue
-   # 或是
-   git clone https://github.com/escape0707/fcitx5-adwaita-dark.git ~/.local/share/fcitx5/themes/adwaita-dark
    ```
 
    **开启 fcitx5 然后关闭，让其自动生成配置文件。**
@@ -105,9 +103,10 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
    # Font for Chinese and English, then font size
    Font="Noto Sans CJK SC Regular Noto Sans Regular 11"
    # Theme
-   # Theme=adwaita-dark
    Theme=simple-blue
    ```
+
+   其中，`Theme` 为下载的主题文件夹名称，`Font` 设置输入法的显示字体及字号。
 
    - 配置拼音输入法（针对 fcitx5-chinese-addons）：
 
@@ -140,8 +139,6 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
 
 > Reference
 
-1. https://zhuanlan.zhihu.com/p/42287487 (yaourt 已经停止维护了，用 yay 替代)
-2. https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/ (从 ArchlinuxCN
-   下载预编译的安装包)
-3. https://github.com/weearc/fcitx5-skin-simple-blue
-4. https://github.com/escape0707/fcitx5-adwaita-dark.git
+[^1]: yaourt 已经停止维护了，用 yay [替代](https://zhuanlan.zhihu.com/p/42287487)。
+[^2]: 从 [ArchlinuxCN](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/) 下载预编译的安装包，可以省去编译的时间。
+[^3]: 另外推荐两款皮肤：[adwaita-dark](https://github.com/escape0707/fcitx5-adwaita-dark.git) 和 [Material-Color](https://github.com/hosxy/Fcitx5-Material-Color.git)。

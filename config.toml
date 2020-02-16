@@ -34,3 +34,6 @@ googleAnalytics = "UA-71962122-1"
 
 [markup.goldmark.renderer]
     unsafe = true
+
+[markup.goldmark.extensions]
+    footnote = true

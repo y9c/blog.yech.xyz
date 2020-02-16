@@ -8,7 +8,7 @@ tags = ["geek", "net", "gfw"]
 comment = true
 +++
 
-通过在路由器下面挂载树莓派（“旁路由”），并将其他客户端的流量通过树莓派转发出去，可以无缝实现透明代理<sup>[1]</sup>。
+通过在路由器下面挂载树莓派（“旁路由”），并将其他客户端的流量通过树莓派转发出去，可以无缝实现透明代理[^1]。
 
 将其他客户端的流量转发至“旁路由”有三种方式：
 
@@ -20,7 +20,7 @@ comment = true
 
 其中第三种方法，即“为特定客户端指定 gateway 及 DNS”的设置方式如下：
 
-在 `/etc/config/dhcp` 文件中添加以下配置文件<sup>2</sup>:
+在 `/etc/config/dhcp` 文件中添加以下配置文件[^2]:
 
 ```
 config host
@@ -35,7 +35,7 @@ config tag 'vpn'
     option force '1'
 ```
 
-其中，`option mac` 为客户端的网卡地址，用于静态地址绑定；`option tag`为配置加上`classifier`标签，用于进一步的配置。
+其中，`option mac` 为客户端的网卡地址，用于静态地址绑定；**`option tag`为配置加上`classifier`标签**[^3]，用于进一步的配置。
 `list dhcp_option '3,192.168.1.2'` 是指定 gateway;
 `list dhcp_option '6,192.168.1.2'` 是指定 DNS。
 
@@ -47,6 +47,6 @@ config tag 'vpn'
 
 > Reference
 
-1. https://toutyrater.github.io/app/tproxy.html
-2. https://openwrt.org/start?id=docs/guide-user/base-system/dhcp
-3. https://sites.google.com/site/virtualdesktoplinkboxbox/home/computing/electronics/routers/openwrt?tmpl=%2Fsystem%2Fapp%2Ftemplates%2Fprint%2F&showPrintDialog=1
+[^1]: 若采用 V2ray，可参考这个[教程](https://toutyrater.github.io/app/tproxy.html)。
+[^2]: OpenWrt 中的 DHCP 可以由 dnsmasq 来实现，查阅[文档](https://openwrt.org/start?id=docs/guide-user/base-system/dhcp)。
+[^3]: 官方文档似乎没有详细描述这个用法，而且中文版的文档还是过时的，最后是通过[这个案例](https://sites.google.com/site/virtualdesktoplinkboxbox/home/computing/electronics/routers/openwrt?tmpl=%2Fsystem%2Fapp%2Ftemplates%2Fprint%2F&showPrintDialog=1)试出来的。

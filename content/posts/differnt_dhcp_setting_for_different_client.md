@@ -15,7 +15,9 @@ comment = true
 1. 在路由器中转发 LAN 口的流量至“旁路由”。
 2. **设置 LAN 口客户端以 DHCP 获取的 gateway 及 DNS。**
 
-第 2 种配置方式中，路由器为客户端指定默认的 gateway 及 DNS，而且客户端也有权限自主修改，自由度更高
+第 2 种配置方式中，路由器为客户端指定默认的 gateway 及 DNS，而且客户端也有权限自主修改，自由度更高。
+
+---
 
 OpenWrt 中的 DHCP 可以由 dnsmasq 来实现[^2]，以 OpenWrt 为例，第 2 种方法设置方式如下：
 

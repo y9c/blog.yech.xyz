@@ -1,16 +1,16 @@
 +++
 title = "Build a New PC in 2020"
 description = ""
-featured_image = ""
+featured_image = "/img/pc_assembly_2020.jpg"
 date = 2020-02-18T21:17:47+08:00
-categories = ["geek", "hardware", "PC"]
-tags = ["tech"]
+categories = ["tech"]
+tags = ["geek", "hardware", "PC"]
 comment = true
 +++
 
 ## 配置
 
-| Hardware | Spec              | Price(￥)   |
+| Hardware | Spec.             | Price(￥)   |
 | -------- | ----------------- | ----------- |
 | CPU      | AMD R5 3600       | 1369        |
 | 内存     | USCORSTAR DDR4    | 599x2       |

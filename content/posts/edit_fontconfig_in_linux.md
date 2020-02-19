@@ -1,5 +1,5 @@
 +++
-title = "ArchLinux 系统中的字体配置"
+title = "Linux 系统中的字体配置"
 description = ""
 featured_image = ""
 date = 2020-02-19T16:59:41+08:00
@@ -40,6 +40,6 @@ ArchLinux 中的 noto-fonts-cjk 字体包会安装`Noto Serif CJK TC`、`Noto Se
 
 - `fc-cache -fv` 重新生成字体配置的缓存。
 - `fc-list` 查看系统中的字体文件信息，但配置中的字体印射不在结果中显示。
-- `fc-match "mono"` 测试系统字体的调用。
+- `fc-match "Noto Serif SC"` 测试系统字体的调用。
 
 [^1]: Fontconfig 2.10.1 版本后的用户配置位于 `$XDG_CONFIG_HOME/fontconfig/fonts.conf` 和 `$XDG_CONFIG_HOME/fontconfig/conf.d/xxx.conf`，一般也就是`~/.config/fontconfig/fonts.conf`文件中，或是`~/.config/fontconfig/conf.d/` 文件夹中的配置文件中。

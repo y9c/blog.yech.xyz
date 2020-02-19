@@ -3,8 +3,8 @@ title = "Phylogenetic Analysis for 2019-NCoV"
 description = ""
 featured_image = ""
 date = 2020-02-02T16:48:18+08:00
-categories = ["bio"]
-tags = ["evolution", "DNA"]
+categories = ["sci"]
+tags = ["evolution", "DNA", "bio"]
 comment = true
 hide = true
 +++

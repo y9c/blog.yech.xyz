@@ -3,7 +3,7 @@ title = "为不同客户端设置不同 DHCP"
 description = "Customize DHCP settings for each client under the lan of OpenWrt router"
 featured_image = ""
 date = 2020-02-15T16:10:42+08:00
-categories = ["coding"]
+categories = ["geek"]
 tags = ["geek", "net", "gfw"]
 comment = true
 +++

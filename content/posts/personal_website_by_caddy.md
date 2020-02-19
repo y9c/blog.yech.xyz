@@ -3,7 +3,7 @@ title = "Personal Website by Caddy"
 description = ""
 featured_image = ""
 date = 2020-01-30T18:53:20+08:00
-categories = ["coding"]
+categories = ["geek"]
 tags = ["website", "server", "blog"]
 comment = true
 +++

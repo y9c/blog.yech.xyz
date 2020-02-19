@@ -13,10 +13,10 @@ comment = true
 - 创建项目环境
 
 ```bash
-$ mkdir myapp
-$ cd myapp
-$ npm install express --save
-$ vim app.js
+mkdir myapp
+cd myapp
+npm install express --save
+vim app.js
 ```
 
 - 编写 javascript 脚本

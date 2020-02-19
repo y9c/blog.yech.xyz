@@ -15,19 +15,19 @@ comment = true
 > - 搜狗输入法带有 bug，经常无法调出输入法，或是输入皮肤不显示。
 >
 > 这直到 fcitx5 发布，一切终于有了转机会。
-> 若非进行大量的中文写作，fcitx5 完全可以胜任日常的中文输入。
+> 若非进行大量的中文写作，fcitx5 中的拼音插件[^1]完全可以胜任日常的中文输入。
 
 fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大致步骤如下：
 
 1. **安装 fcitx5**：
 
-   从 AUR 安装[^1]：
+   从 AUR 安装[^2]：
 
    ```bash
    yay -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git
    ```
 
-   若配置了 ArchlinuxCN[^2]，从 ArchlinuxCN 安装：
+   若配置了 ArchlinuxCN[^3]，从 ArchlinuxCN 安装：
 
    ```bash
    pacman -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git
@@ -83,7 +83,7 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
    0=Default
    ```
 
-   - 下载主题[^3]：
+   - 下载主题[^4]：
 
    ```
    git clone https://github.com/weearc/fcitx5-skin-simple-blue.git ~/.local/share/fcitx5/themes/simple-blue
@@ -137,8 +137,7 @@ fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大�
    Backend=Baidu
    ```
 
-> Reference
-
-[^1]: yaourt 已经停止维护了，用 yay [替代](https://zhuanlan.zhihu.com/p/42287487)。
-[^2]: 从 [ArchlinuxCN](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/) 下载预编译的安装包，可以省去编译的时间。
-[^3]: 另外推荐两款皮肤：[adwaita-dark](https://github.com/escape0707/fcitx5-adwaita-dark.git) 和 [Material-Color](https://github.com/hosxy/Fcitx5-Material-Color.git)。
+[^1]: fcitx5 也获得了 [Rime 输入法的插件](https://github.com/fcitx/fcitx5-rime)支持，功能更为强大，但配置也相对复杂，有悖于这个文章的初衷。
+[^2]: yaourt 已经停止维护了，用 yay [替代](https://zhuanlan.zhihu.com/p/42287487)。
+[^3]: 从 [ArchlinuxCN](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/) 下载预编译的安装包，可以省去编译的时间。
+[^4]: 另外推荐两款皮肤：[adwaita-dark](https://github.com/escape0707/fcitx5-adwaita-dark.git) 和 [Material-Color](https://github.com/hosxy/Fcitx5-Material-Color.git)。

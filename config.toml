@@ -5,6 +5,7 @@ copyright = "2020 by Ye Chang"
 disableKinds = ["section"]
 theme = "diary"
 googleAnalytics = "UA-71962122-1"
+enableGitInfo = true
 
 [params]
     subtitle = "learn and share..."

@@ -1,9 +1,11 @@
 +++
 title = "How to Publish a Hugo Project to Remote Server Automatically?"
+description = ""
+featured_image = ""
 date = 2018-03-03T16:21:39+08:00
-tags = ["caddy", "net", "server"]
 categories = ["coding"]
-draft = false
+tags = ["caddy", "net", "server"]
+comment = true
 +++
 
 A pipeline for blogging automatically though Github
@@ -14,39 +16,39 @@ write and serve markdown blog without caring about the html, theme, archiving, s
 
 <!--more-->
 
-## What to Build?
+## What to Build? (Workflow)
 
-Local repo
-↓
-Github repo
-↓
-Webhook
-↓
-Server repo
-↓
-Caddy hook
-↓
-Hugo build
-↓
-Caddy serve
-...
+    Local repo
+        ↓
+    Github repo
+        ↓
+    Webhook
+        ↓
+    Server repo
+        ↓
+    Caddy hook
+        ↓
+    Hugo build
+        ↓
+    Caddy serve
 
-## Workflow
+## Step by Step Examples
 
-- generate a new hugo project
+1. generate a new hugo project
 
-```bash
-hugo new MyBlog
-# git submodule
-# theme
-```
+   ```bash
+   # build a hugo site
+   hugo new MyBlog
+   # theme
+   # git submodule
+   # write the markdown file
+   # vim content/posts/xxx.md
+   ```
 
-write the first markdown file
+1. server side
 
-- server side
+   install `hugo, go, caddy`
 
-install `hugo, go, caddy`
+1. github side
 
-- github side
-
-webhook
+   webhook

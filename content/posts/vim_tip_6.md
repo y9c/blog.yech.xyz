@@ -19,11 +19,11 @@ comment = true
   `synIDattr` 获取 ID 对应的 syntax 名称（"name"）。
 
   ```vim
-  map <F10> :echo
-              \ "hi<" . synIDattr(synID(line("."),col("."),1),"name") . ">
+  map <F10> :echo "
+              \ hi<" . synIDattr(synID(line("."),col("."),1),"name") . ">
               \ trans<" . synIDattr(synID(line("."),col("."),0),"name") . ">
-              \ lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
-              \ <CR>
+              \ lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">
+              \ "<CR>
   ```
 
 - 光标定位至感兴趣的单词，按 F10 相似 syntax 和 highlight 的名称，例如：

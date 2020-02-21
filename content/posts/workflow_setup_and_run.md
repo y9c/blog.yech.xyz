@@ -1,9 +1,11 @@
 +++
 title = "Workflow Setup and Run"
+description = ""
+featured_image = ""
 date = 2019-03-01T23:54:43+08:00
-tags = ["pipeline", "server", "DSL"]
 categories = ["coding"]
-draft = true
+tags = ["pipeline", "server", "DSL"]
+comment = true
 +++
 
 Workflow

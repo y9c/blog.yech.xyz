@@ -3,8 +3,8 @@ title = "node.js 学习笔记(二)"
 description = ""
 featured_image = "/img/nodejs_learning.png"
 date = 2015-12-21T14:01:05+08:00
-tags = ["website", "nodejs"]
 categories = ["coding"]
+tags = ["website", "nodejs"]
 comment = true
 +++
 

@@ -4,7 +4,7 @@ description = ""
 featured_image = ""
 date = 2018-03-29T21:41:30+08:00
 categories = ["coding"]
-tags = ["website", "nodejs"]
+tags = ["linux", "desktop"]
 comment = true
 +++
 

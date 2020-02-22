@@ -1,9 +1,11 @@
 +++
 title = "在浏览器中登陆terminal"
+description = ""
+featured_image = ""
 date = 2015-12-26T17:50:49+08:00
-tags = ["net", "server"]
 categories = ["coding"]
-draft = false
+tags = ["net", "server"]
+comment = true
 +++
 
 chrome 的应用 `secure shell` 能非常方便的实现 SSH 客户端的功能，并且能像修改网页属性那样修改应用的外观。

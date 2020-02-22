@@ -1,9 +1,11 @@
 +++
 title = "vimium like setting for surfingkeys"
+description = ""
+featured_image = ""
 date = "2016-01-01T01:14:32+08:00"
 tags = ["coding"]
-categories = ["geek"]
-draft = false
+categories = ["vim", "web"]
+comment = true
 +++
 
 A conf file of surfingkeys for vimium user

@@ -2,7 +2,7 @@
 title = "Linux 系统中的字体配置"
 description = ""
 featured_image = ""
-date = 2020-02-19T16:59:41+08:00
+date = 2019-02-19T16:59:41+08:00
 categories = ["coding"]
 tags = ["fonts", "linux", "desktop"]
 comment = true

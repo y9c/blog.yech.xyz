@@ -1,14 +1,16 @@
 +++
-title = "linux for beginer from a beginer"
+title = "Linux for Beginer from a Beginer"
+description = ""
+featured_image = ""
 date = "2015-12-22T13:47:48+08:00"
-tags = ["coidng", "server", "linux"]
 categories = ["geek"]
-draft = false
+tags = ["coidng", "server", "linux"]
+comment = true
 +++
 
 > 这不是一份系统的教程, 也不是科学的入门方案, 只是希望能让刚接触 linux 的人少点困惑.
 
-linux 是一个操作系统, 和 windows 一样. 所以 windows 下能实现的, linux 基本也能实现. 反过来也是一样的.
+linux 是一个操作系统, 和 windows 一样。所以 windows 下能实现的, linux 基本也能实现。反过来也是一样的。[^1]
 
 _不过,别问我 linux 怎么上 QQ, 基本没有很好的方案._
 
@@ -54,3 +56,5 @@ for i in *.txt; do mv $i "beginer-"$i;done
 ```
 
 ![批量操作](/images/linux_b4.png)
+
+[^1]: 这种等价只是效用上的等价，不是操作方式的等价。

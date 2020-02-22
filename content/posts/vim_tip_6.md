@@ -9,15 +9,10 @@ comment = true
 +++
 
 > Q: 怎么查看 vim 中某个单词/高亮的 syntax 的类型？
-
+>
 > (想修改某一单词的高亮颜色（highlight）或是语法类型（syntax），但如何快速地判断当前被匹配上的类型？)
 
 - 设置快捷键：
-
-  其中，
-  `synID` 获取 syntax 的 ID，参数分别为（行号，列号，TRUE/FALSE[^1]）;
-  `synIDtrans` 获取 highlight 的 ID，参数分别为（行号，列号，TRUE/FALSE[^1]）;
-  `synIDattr` 获取 ID 对应的 syntax 名称（"name"）。
 
   ```vim
   map <F10> :echo "
@@ -27,7 +22,12 @@ comment = true
               \ "<CR>
   ```
 
-- 光标定位至感兴趣的单词，按 F10 相似 syntax 和 highlight 的名称，例如：
+  其中，
+  `synID` 获取 syntax 的 ID，参数分别为（行号，列号，TRUE/FALSE[^1]）;
+  `synIDtrans` 获取 highlight 的 ID，参数分别为（行号，列号，TRUE/FALSE[^1]）;
+  `synIDattr` 获取 ID 对应的 syntax 名称（"name"）。
+
+- 光标定位至感兴趣的单词，按 F10 显示 syntax 和 highlight 的名称，例如：
 
   `hi<vimMap> trans<vimMap> lo<vimCommand>`
 

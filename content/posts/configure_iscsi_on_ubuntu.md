@@ -5,7 +5,7 @@ featured_image = ""
 date = 2019-02-26T19:05:50+08:00
 categories = ["geek"]
 tags = ["net", "linux"]
-comment
+comment = true
 +++
 
 iSCSI (Internet Small Computer System Interface) is a protocol that allows SCSI commands to be transmitted over a network.

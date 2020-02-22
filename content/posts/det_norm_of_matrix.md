@@ -1,9 +1,11 @@
 +++
 title = "行列式(determinant)和范数(norm)"
+description = ""
+featured_image = ""
 date = 2015-12-27T00:14:21+08:00
-tags = ["math"]
 categories = ["sci"]
-draft = false
+tags = ["math"]
+draft = true
 +++
 
 # det(A)

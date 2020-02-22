@@ -1,9 +1,11 @@
 +++
 title = "google的dnsmasq地址和IP"
+description = ""
+featured_image = ""
 date = "2016-02-24T05:13:25+08:00"
-tags = ["net", "gfw"]
 categories = ["coding"]
-draft = false
+tags = ["net", "gfw"]
+comment = true
 +++
 
 google dnsmasq address

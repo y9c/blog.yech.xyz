@@ -3,8 +3,8 @@ title = "vimium like setting for surfingkeys"
 description = ""
 featured_image = ""
 date = "2016-01-01T01:14:32+08:00"
-tags = ["coding"]
-categories = ["vim", "web"]
+categories = ["coding"]
+tags = ["vim", "web"]
 comment = true
 +++
 

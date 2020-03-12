@@ -1,5 +1,5 @@
 +++
-title = "Change Default pdf Reader in Linux"
+title = "Set Default PDF Reader in Linux"
 description = ""
 featured_image = ""
 date = 2018-03-29T21:41:30+08:00

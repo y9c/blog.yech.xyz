@@ -3,7 +3,7 @@ title = "Make Your Own Feeds for Science"
 description = ""
 featured_image = "https://user-images.githubusercontent.com/5415510/75457345-58af6b80-59b7-11ea-83f3-1642f00a656e.png"
 date = 2020-02-27T02:20:22+08:00
-categories = ["coding"]
+categories = ["sci"]
 tags = ["science", "RSS", "javascript", "community"]
 comment = true
 +++

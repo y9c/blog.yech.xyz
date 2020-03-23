@@ -1,6 +1,6 @@
 +++
 title = "Fix a Bug in Quickrun, a Vim Plugin"
-description = "vim 的 quickrun 插件也可以方便地运行大多数编程语言，但是在运行 R 语言编写的脚步文件时，一直报‘file name is missing’的错误..."
+description = "vim 的 quickrun 插件也可以方便地运行大多数编程语言，但是在运行 R 语言编写的脚步文件时，一直报 ‘file name is missing’ 的错误..."
 featured_image = "/img/nvim_custom_config.png"
 date = 2020-03-23T22:38:14+08:00
 categories = ["coding"]
@@ -8,8 +8,7 @@ tags = ["vim", "R", "linux"]
 comment = true
 +++
 
-[Quickrun](https://github.com/thinca/vim-quickrun)
-是一个整合了常用编程语言运行命令的 Vim Plugin，可以通过 `:Quickrun`
+Quickrun[^1]是一个整合了常用编程语言运行命令的 Vim Plugin，可以通过 `:Quickrun`
 命令，或是自定义的映射，一键运行当前文件。
 
 今天在比编辑一个 R 文件时，发现结果一直输出“file name is
@@ -22,15 +21,13 @@ missing”。查看错误日志，发现一切正常; 搜索这个输出，均�
 ```r
 #!/usr/bin/env Rscript
 # -*- coding: utf-8 -*-
-#
 
 print('hello')
 ```
 
 运行了一下，依然是相同的报错，无奈之下只好把文件头的注释也删了。
-这时，惊奇地发现居然成功地跑起来了。
-也就是说是文件头间接地触发了报错。
-_(Linux 下这种首行 #! 开头的注释叫 shebang，目的是让终端能使用正确的解析器来运行文件。)_
+这时，惊奇地发现居然成功地看到了正常的输出。
+也就是说是文件头（shebang）[^2]间接地触发了报错。
 但是 Quickrun 是根据根据文件类型来触发运行命令的，理论上不应该受到文件注释的影响。
 唯一的解释是 Quickrun 中加入了对 shebang 的识别机制。
 
@@ -52,3 +49,5 @@ let g:quickrun_config.r = {
 
 成功解决。
 
+[^1]: https://github.com/thinca/vim-quickrun
+[^2]: Linux 下这种首行 #! 开头的注释叫 shebang，目的是让终端能使用正确的解析器来运行文件。

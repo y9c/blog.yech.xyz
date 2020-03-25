@@ -11,13 +11,7 @@ enableGitInfo = true
     subtitle = "learn and share..."
     favicon = "favicon-96x96.png"
     disableToC = false
-    enableGitalk = true
-
-[params.gitalk]
-    owner = "yech1990"
-    repo = "blog.yech.xyz"
-    client_id = "34a558922e45dfca085b"
-    client_secret = "af844fa274bad7885b0d3b2a20cb9bdb0fd62ca1"
+    enableGitalk = false
 
 [taxonomies]
     tag = "tags"

@@ -2,7 +2,7 @@
 title = "The future of R parallelism"
 description = ""
 featured_image = ""
-date - 2018-02-01T15:01:17+08:00
+date = 2018-02-01T15:01:17+08:00
 categories = ["coding"]
 tags = ["data", "R"]
 comment = true

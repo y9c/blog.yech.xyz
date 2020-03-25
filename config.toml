@@ -16,8 +16,8 @@ enableGitInfo = true
 [params.gitalk]
     owner = "yech1990"
     repo = "blog.yech.xyz"
-    client_id = "e989b7f655860f92447b"
-    client_secret = "945a1eb804d10b65854557ac3be5a57366753f75"
+    client_id = "34a558922e45dfca085b"
+    client_secret = "af844fa274bad7885b0d3b2a20cb9bdb0fd62ca1"
 
 [taxonomies]
     tag = "tags"

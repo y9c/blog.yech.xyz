@@ -19,18 +19,18 @@ mapkey("?", "Show usage", "Normal.showUsage()");
 Events.hotKey = "i"; // hotkey must be one keystroke with/without modifier, it can not be a sequence of keystrokes like `gg`.
 
 // tab
-mapkey("ZQ", "Quit", function() {
+mapkey("ZQ", "Quit", function () {
   RUNTIME("quit");
 });
-mapkey("ZZ", "Save session and quit", function() {
+mapkey("ZZ", "Save session and quit", function () {
   RUNTIME("createSession", {
-    name: "LAST"
+    name: "LAST",
   });
   RUNTIME("quit");
 });
-mapkey("ZR", "Restore last session", function() {
+mapkey("ZR", "Restore last session", function () {
   RUNTIME("openSession", {
-    name: "LAST"
+    name: "LAST",
   });
 });
 mapkey("T", "Choose a tab", "Normal.chooseTab()");
@@ -106,7 +106,7 @@ mapkey(
   'Hints.create("img, button", Hints.dispatchMouseClick)'
 );
 // next and pre page
-mapkey("[[", "Click on the previous link on current page", function() {
+mapkey("[[", "Click on the previous link on current page", function () {
   var prevLinks = $("a").regex(/((上页|上一页|<<|prev(ious)?)+)/i);
   if (prevLinks.length) {
     clickOn(prevLinks);
@@ -114,7 +114,7 @@ mapkey("[[", "Click on the previous link on current page", function() {
     walkPageUrl(-1);
   }
 });
-mapkey("]]", "Click on the next link on current page", function() {
+mapkey("]]", "Click on the next link on current page", function () {
   var nextLinks = $("a").regex(/((下页|下一页|>>|next)+)/i);
   if (nextLinks.length) {
     clickOn(nextLinks);
@@ -125,35 +125,35 @@ mapkey("]]", "Click on the next link on current page", function() {
 
 // command
 mapkey(":", "Open commands", 'Normal.openOmnibar({type: "Commands"})');
-command("quit", "quit chrome", function() {
+command("quit", "quit chrome", function () {
   RUNTIME("quit");
 });
-command("listSession", "list session", function() {
+command("listSession", "list session", function () {
   runtime.command(
     {
-      action: "getSessions"
+      action: "getSessions",
     },
-    function(response) {
-      Omnibar.listResults(Object.keys(response.sessions), function(s) {
+    function (response) {
+      Omnibar.listResults(Object.keys(response.sessions), function (s) {
         return $("<li></li>").html(s);
       });
     }
   );
 });
-command("createSession", "createSession [name]", function(name) {
+command("createSession", "createSession [name]", function (name) {
   RUNTIME("createSession", {
-    name: name
+    name: name,
   });
 });
-command("deleteSession", "deleteSession [name]", function(name) {
+command("deleteSession", "deleteSession [name]", function (name) {
   RUNTIME("deleteSession", {
-    name: name
+    name: name,
   });
   return true; // to close omnibar after the command executed.
 });
-command("openSession", "openSession [name]", function(name) {
+command("openSession", "openSession [name]", function (name) {
   RUNTIME("openSession", {
-    name: name
+    name: name,
   });
 });
 
@@ -162,7 +162,7 @@ mapkey("v", "Toggle visual mode", "Visual.toggle()");
 
 // find
 mapkey("/", "Find in current page", "Normal.openFinder()");
-mapkey("*", "Find selected text in current page", function() {
+mapkey("*", "Find selected text in current page", function () {
   Visual.star();
   Visual.toggle();
 });
@@ -172,13 +172,13 @@ mapkey("N", "Previous found text", "Visual.next(true)");
 mapkey("m", "Add current URL to vim-like marks", Normal.addVIMark, 1);
 mapkey("'", "Jump to vim-like mark", Normal.jumpVIMark, 1);
 mapkey("w", "Switch frames", "Normal.rotateFrame()");
-mapkey("p", "Paste html on current page.", function() {
-  Normal.getContentFromClipboard(function(response) {
+mapkey("p", "Paste html on current page.", function () {
+  Normal.getContentFromClipboard(function (response) {
     document.body.innerHTML = response.data;
   });
 });
-mapkey("cc", "Open selected link or link from clipboard", function() {
-  Normal.getContentFromClipboard(function(response) {
+mapkey("cc", "Open selected link or link from clipboard", function () {
+  Normal.getContentFromClipboard(function (response) {
     tabOpenLink(window.getSelection().toString() || response.data);
   });
 });
@@ -193,7 +193,7 @@ mapkey(
   'Normal.openOmnibar({type: "VIMarks"})'
 );
 
-mapkey("ys", "Copy current page's source", function() {
+mapkey("ys", "Copy current page's source", function () {
   var aa = document.documentElement.cloneNode(true);
   Normal.writeClipboard(aa.outerHTML);
 });
@@ -243,7 +243,7 @@ mapkey(
   "View page source",
   'RUNTIME("viewSource", { tab: { tabbed: true }})'
 );
-mapkey("gu", "Go up one path in the URL", function() {
+mapkey("gu", "Go up one path in the URL", function () {
   var url = location.href;
   if (location.pathname.length > 1) {
     url = url.endsWith("/") ? url.substr(0, url.length - 1) : url;
@@ -277,7 +277,7 @@ addSearchAliasX(
   "https://www.google.com/search?q=",
   "s",
   "https://www.google.com/complete/search?client=chrome-omni&gs_ri=chrome-ext&oit=1&cp=1&pgcl=7&q=",
-  function(response) {
+  function (response) {
     var res = eval(response.text);
     Omnibar.listWords(res[1]);
   }
@@ -288,7 +288,7 @@ addSearchAliasX(
   "https://www.baidu.com/s?wd=",
   "s",
   "http://suggestion.baidu.com/su?cb=eval&wd=",
-  function(response) {
+  function (response) {
     var res = eval(response.text);
     Omnibar.listWords(res.s);
   }
@@ -299,7 +299,7 @@ addSearchAliasX(
   "http://global.bing.com/search?setmkt=en-us&setlang=en-us&q=",
   "s",
   "http://api.bing.com/osjson.aspx?query=",
-  function(response) {
+  function (response) {
     var res = eval(response.text);
     Omnibar.listWords(res[1]);
   }
@@ -312,24 +312,21 @@ addSearchAliasX(
 );
 
 $(document)
-  .dblclick(function(event) {
+  .dblclick(function (event) {
     var sel = window.getSelection().toString();
     if (sel && sel.length) {
       httpRequest(
         {
-          url: "https://api.shanbay.com/bdc/search/?word=" + sel
+          url: "https://api.shanbay.com/bdc/search/?word=" + sel,
         },
-        function(res) {
+        function (res) {
           var res = eval("a=" + res.text);
-          var b = window
-            .getSelection()
-            .getRangeAt(0)
-            .getBoundingClientRect();
+          var b = window.getSelection().getRangeAt(0).getBoundingClientRect();
           var pos = [b.top - 18, b.left + b.width / 2 - 12];
           Normal.showBubble(
             {
               top: pos[0],
-              left: pos[1]
+              left: pos[1],
             },
             res.data.definition || res.msg
           );
@@ -337,7 +334,7 @@ $(document)
       );
     }
   })
-  .click(function() {
+  .click(function () {
     Normal.hideBubble();
   });
 ```

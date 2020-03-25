@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>archlinux on Chang's blog</title><link>//blog.yech.xyz/tags/archlinux/</link><description>Recent content in archlinux on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Thu, 06 Feb 2020 17:13:56 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/tags/archlinux/index.xml" rel="self" type="application/rss+xml"/><item><title>Fcitx5 as Chinese Input Method</title><link>//blog.yech.xyz/posts/fcitx5_as_chinese_input_method/</link><pubDate>Thu, 06 Feb 2020 17:13:56 +0800</pubDate><guid>//blog.yech.xyz/posts/fcitx5_as_chinese_input_method/</guid><description>安装 Archlinux 最后一件事往往是安装搜狗输入法，这也是最困难的一件事。
+从 AUR 编译源码需要花费大量的时间（低配置的 Laptop 上需要半天）。 为了兼容 QT4, QT5, GTK4, GTK5, XIM 等框架的应用，需要各种调试。 搜狗输入法带有 bug，经常无法调出输入法，或是输入皮肤不显示。 这直到 fcitx5 发布，一切终于有了转机会。 若非进行大量的中文写作，fcitx5 中的拼音插件1完全可以胜任日常的中文输入。
+fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大致步骤如下：
+安装 fcitx5：
+从 AUR 安装2：
+yay -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git 若配置了 ArchlinuxCN3，从 ArchlinuxCN 安装：
+pacman -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git 设置 fcitx5 的开启：
+基于 Xorg 的桌面环境，添加配置到 ~/.xprofile：
+export GTK_IM_MODULE=fcitx5 export XMODIFIERS=&amp;quot;@im=fcitx&amp;quot; export QT_IM_MODULE=fcitx5 fcitx5 &amp;gt; /dev/null &amp;amp; 基于 Wayland 的桌面环境，添加配置到 ~/.</description></item></channel></rss>

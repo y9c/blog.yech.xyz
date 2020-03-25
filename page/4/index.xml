@@ -1,0 +1,479 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chang's blog</title><link>//blog.yech.xyz/</link><description>Recent content on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Mon, 23 Mar 2020 22:38:14 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/index.xml" rel="self" type="application/rss+xml"/><item><title>狗年好运</title><link>//blog.yech.xyz/posts/happy_new_year_of_dog/</link><pubDate>Tue, 30 Jan 2018 16:02:26 +0800</pubDate><guid>//blog.yech.xyz/posts/happy_new_year_of_dog/</guid><description>Chang's blog //blog.yech.xyz/posts/happy_new_year_of_dog/ -&lt;p>&lt;img src="//blog.yech.xyz/img/evolution-of-man-and-dog.jpg" alt="狗年好运">&lt;/p>
+&lt;blockquote>
+&lt;p>2018&lt;/p>
+&lt;/blockquote>
+- //blog.yech.xyz/posts/happy_new_year_of_dog/ - 2020 by Ye Chang</description></item><item><title>How to use bioawk</title><link>//blog.yech.xyz/posts/how_to_use_bioawk/</link><pubDate>Mon, 29 Jan 2018 10:58:08 +0800</pubDate><guid>//blog.yech.xyz/posts/how_to_use_bioawk/</guid><description>Chang's blog //blog.yech.xyz/posts/how_to_use_bioawk/ -&lt;p>在 Linux 命令行处理文件过程中,合并文件是一个最基本的操作。&lt;/p>
+&lt;p>例如有 file1，file2，file3 几个文件，想合并成一个大文件 fileall，这个几乎有个标准答案：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">cat file1 file2 file3 &amp;gt; fileall
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>简单再说两点,&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>cat&lt;/code>是 concatenate 的缩写，本身就是串联的意思。用&lt;code>cat&lt;/code>来 print out 文件反而不是这个单词本身的含义。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果是 bash 下，且文件名称是连续的，&lt;code>cat file{1..3} &amp;gt; fileall&lt;/code>应该是逼格更高的写法。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>而实际需求很少是上面这么直接，更常见的需求是要文件名也放到最终文件中，以区别不同的样品类型，数据来源之类的。这时候就需要拿出&lt;code>awk&lt;/code>，代码实现也非常直接：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e"># 将文件名作为输出数据的第一列&lt;/span>
+awk &lt;span style="color:#e6db74">&amp;#39;{FILENAME,$0}&amp;#39;&lt;/span> file&lt;span style="color:#f92672">{&lt;/span>1..3&lt;span style="color:#f92672">}&lt;/span> &amp;gt; fileall
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>awk 基本可以实现大部分的文件操作。
+网上会把 sed 和 awk 放在一起封神，而 sed 之于 awk，有如 emacs 至于 vim。
+一个是神的工具，一个是工具之神。
+linux 下有不是这样有趣的组合，前者功能强大，但学习成本略高，后者功能少了一点，但思路清晰，上手快。&lt;/p>
+&lt;p>在引出文章的主角&lt;code>bioawk&lt;/code>之前，还要把需求再弄复杂一点。&lt;/p>
+&lt;p>如果文件是都 gzip 压缩的话，是否也能解决呢？&lt;/p>
+&lt;blockquote>
+&lt;p>这个其实不少见，比如多个.bed.gz 文件合并，多个.fq.gz 文件合并&amp;hellip;&lt;/p>
+&lt;/blockquote>
+&lt;p>把文件都解压后再操作是一个方法，不过这时候除了浪费空间外，还多了&lt;strong>两次&lt;/strong>IO。&lt;/p>
+&lt;p>linux 下&lt;code>zcat&lt;/code>命令可以进行 gzip 格式文件的读取，因而有类似的操作：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">zcat file&lt;span style="color:#f92672">{&lt;/span>1..3&lt;span style="color:#f92672">}&lt;/span>.gz &amp;gt; fileall
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>但是&lt;code>awk&lt;/code>不能读取 gzip 文件。能否用&lt;code>zcat&lt;/code>加上&lt;code>awk&lt;/code>来实现带上文件名的合并呢？
+先试一下这个：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e"># test1&lt;/span>
+zcat file&lt;span style="color:#f92672">{&lt;/span>1..3&lt;span style="color:#f92672">}&lt;/span>.gz | awk &lt;span style="color:#e6db74">&amp;#39;{FILENAME,$0}&amp;#39;&lt;/span> &amp;gt; fileall
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>咦，文件名都去哪了？怎么都是&amp;rsquo;-'？&lt;/p>
+&lt;p>原因是 pipe 操作传输的是 stdout 给下一步，而 stdout 就是&amp;rsquo;-'。如果要把文件名也传过来怎么办呢？直接扔代码:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e"># test2&lt;/span>
+&lt;span style="color:#66d9ef">for&lt;/span> i in file&lt;span style="color:#f92672">{&lt;/span>1..3&lt;span style="color:#f92672">}&lt;/span>.gz; &lt;span style="color:#66d9ef">do&lt;/span> awk &lt;span style="color:#e6db74">&amp;#39;{&amp;#34;&amp;#39;&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>$i&lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&amp;#34;,$0}&amp;#39;&lt;/span> $i&amp;gt; fileall; &lt;span style="color:#66d9ef">done&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>两个 defect: 不优雅的 for 循环；4 层嵌套的引号狂魔。&lt;/p>
+&lt;p>这时候可以召唤主角了，liheng 大神的&lt;a href="https://github.com/lh3/bioawk">bioawk&lt;/a>，基于 C 语言，速度快，功能全，不是那些妖艳的脚本语言实现。&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e"># test1&lt;/span>
+bioawk &lt;span style="color:#e6db74">&amp;#39;{FILENAME,$0}&amp;#39;&lt;/span> file&lt;span style="color:#f92672">{&lt;/span>1..3&lt;span style="color:#f92672">}&lt;/span>.gz &amp;gt; fileall
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这不是可以支持 gzip 格式的 awk 么？有什么了不起的？&lt;/p>
+&lt;p>下面开始讲&lt;code>bioawk&lt;/code>的了不起之处。&lt;/p>
+&lt;p>bioawk 是针对生物数据分析开发的软件，除了具有 awk 的功能外，还有针对特定格式的应用。
+加&lt;code>-c&lt;/code>参数加文件类型，可以让 bioawk 针对文件类型进行操作。
+支持的文件格式有 bed，sam，vcf，gff，fastx(fastq/fasta)。&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">bioawk -c help
+---
+bed:
+1:chrom 2:start 3:end 4:name 5:score 6:strand 7:thickstart 8:thickend 9:rgb 10:blockcount 11:blocksizes 12:blockstarts
+sam:
+1:qname 2:flag 3:rname 4:pos 5:mapq 6:cigar 7:rnext 8:pnext 9:tlen 10:seq 11:qual
+vcf:
+1:chrom 2:pos 3:id 4:ref 5:alt 6:qual 7:filter 8:info
+gff:
+1:seqname 2:source 3:feature 4:start 5:end 6:score 7:strand 8:frame 9:attribute
+fastx:
+1:name 2:seq 3:qual 4:comment
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果要统计一个 fastq 文件的长度大于 200bp 的序列条数，用 awk 的实现如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">awk &lt;span style="color:#e6db74">&amp;#39;NR%4==2{if(length($1)&amp;gt;200){a+=1}}END{print a}&amp;#39;&lt;/span> file.fq
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>bioawk 实现如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">bioawk -c fastx &lt;span style="color:#e6db74">&amp;#39;{if(length($seq)&amp;gt;200){a+=1}}END{print a}&amp;#39;&lt;/span> file.fq
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以看到，差别在于不用判定行数，bioawk 能自动提取序列。&lt;/p>
+&lt;p>如果文件是 fasta 格式，这种优势变得更加明显，因为 fasta 文件支持序列跨行，如果同时用 awk 还需要对“&amp;gt;”符号进行判断，合并序列成单行，才能进行后续的统计。
+而 bioawk 没有这个问题，liheng 的&lt;code>kseq.h&lt;/code>自带跨行读取支持。&lt;/p>
+&lt;p>再举一个例子，awk 可以将 sam 文件转成 fastq 文件，实现如下：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">awk &lt;span style="color:#e6db74">&amp;#39;{print &amp;#34;@&amp;#34;$1&amp;#34;\n&amp;#34;$10&amp;#34;\n+\n&amp;#34;$11}&amp;#39;&lt;/span> file.sam &amp;gt; file.fq
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>用 awk 处理过 sam、vcf、gff 文件的，应该都要这样的体验。
+每次要把文件头几行打出来，让后用手指着屏幕，一边数数，一边祈祷能一次过。
+然而，实际情况都是要数几次才能数对，因为有些列支持置空，这样的空行会导致后面的列数数少了。
+更严重的情况是，有些行是没有太大辨识度的数字，这样还不得不打开文档查文件的说明。&lt;/p>
+&lt;p>而&lt;code>bioawk&lt;/code>的支持用文件名取列，这样上面的例子可以写成：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">awk &lt;span style="color:#e6db74">&amp;#39;{print &amp;#34;@&amp;#34;$qname&amp;#34;\n&amp;#34;$seq&amp;#34;\n+\n&amp;#34;$qual}&amp;#39;&lt;/span> file.sam &amp;gt; file.fq
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;em>当然也可以通过&lt;code>bioawk -c help&lt;/code>查看说明文件，后用数值编号制定输出列。&lt;/em>&lt;/p>
+&lt;p>还有另一个小技巧，处理文件的时候经常要指定输入文件是 tab 分割，输出文件也用 tab 分割。&lt;code>awk&lt;/code> 中用 &lt;code>-F'\t' -v OFS=&amp;quot;\t&amp;quot;&lt;/code> 参数来指定，而 bioawk 可以直接有 &lt;code>-t&lt;/code> 满足一样的需求。&lt;/p>
+&lt;blockquote>
+&lt;p>你在编程上遇到的问题，99%都已经解决了。剩下 1%中的 99%是你搞错问题了。&lt;/p>
+&lt;/blockquote>
+- //blog.yech.xyz/posts/how_to_use_bioawk/ - 2020 by Ye Chang</description></item><item><title>top100 Journal for pubmed advance search</title><link>//blog.yech.xyz/posts/top100_journal_for_pubmed/</link><pubDate>Fri, 26 Feb 2016 17:50:49 +0800</pubDate><guid>//blog.yech.xyz/posts/top100_journal_for_pubmed/</guid><description>Chang's blog //blog.yech.xyz/posts/top100_journal_for_pubmed/ -&lt;p>A search filter for restricting PubMed search in top 100 journals only&lt;/p>
+&lt;pre>&lt;code>(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((&amp;quot;CA-A CANCER JOURNAL FOR CLINICIANS&amp;quot;[Journal] OR &amp;quot;CHEMICAL REVIEWS&amp;quot;[Journal]) OR &amp;quot;REVIEWS OF MODERN PHYSICS&amp;quot;[Journal]) OR &amp;quot;NATURE&amp;quot;[Journal]) OR &amp;quot;Annual Review of Immunology&amp;quot;[Journal]) OR &amp;quot;NATURE REVIEWS GENETICS&amp;quot;[Journal]) OR &amp;quot;LANCET&amp;quot;[Journal]) OR &amp;quot;NATURE BIOTECHNOLOGY&amp;quot;[Journal]) OR &amp;quot;NATURE REVIEWS CANCER&amp;quot;[Journal]) OR &amp;quot;NATURE REVIEWS DRUG DISCOVERY&amp;quot;[Journal]) OR &amp;quot;NATURE REVIEWS MOLECULAR CELL BIOLOGY&amp;quot;[Journal]) OR &amp;quot;NATURE MATERIALS&amp;quot;[Journal]) OR &amp;quot;NATURE REVIEWS IMMUNOLOGY&amp;quot;[Journal]) OR &amp;quot;Nature Nanotechnology&amp;quot;[Journal]) OR &amp;quot;CELL&amp;quot;[Journal]) OR &amp;quot;SCIENCE&amp;quot;[Journal]) OR &amp;quot;NATURE REVIEWS NEUROSCIENCE&amp;quot;[Journal]) OR &amp;quot;CHEMICAL SOCIETY REVIEWS&amp;quot;[Journal]) OR &amp;quot;Nature Photonics&amp;quot;[Journal]) OR &amp;quot;NATURE GENETICS&amp;quot;[Journal]) OR &amp;quot;PHYSIOLOGICAL REVIEWS&amp;quot;[Journal]) OR &amp;quot;NATURE MEDICINE&amp;quot;[Journal]) OR &amp;quot;PROGRESS IN POLYMER SCIENCE&amp;quot;[Journal]) OR &amp;quot;Annual Review of Biochemistry&amp;quot;[Journal]) OR &amp;quot;NATURE METHODS&amp;quot;[Journal]) OR &amp;quot;PROGRESS IN MATERIALS SCIENCE&amp;quot;[Journal]) OR &amp;quot;NATURE IMMUNOLOGY&amp;quot;[Journal]) OR &amp;quot;SURFACE SCIENCE REPORTS&amp;quot;[Journal]) OR &amp;quot;ACCOUNTS OF CHEMICAL RESEARCH&amp;quot;[Journal]) OR &amp;quot;Annual Review of Astronomy and Astrophysics&amp;quot;[Journal]) OR &amp;quot;CANCER CELL&amp;quot;[Journal]) OR &amp;quot;NATURE REVIEWS MICROBIOLOGY&amp;quot;[Journal]) OR &amp;quot;Nature Chemistry&amp;quot;[Journal]) OR &amp;quot;Annual Review of Neuroscience&amp;quot;[Journal]) OR &amp;quot;Cell Stem Cell&amp;quot;[Journal]) OR &amp;quot;TRENDS IN COGNITIVE SCIENCES&amp;quot;[Journal]) OR &amp;quot;TRENDS IN COGNITIVE SCIENCES&amp;quot;[Journal]) OR &amp;quot;Nature Physics&amp;quot;[Journal]) OR &amp;quot;Annual Review of Psychology&amp;quot;[Journal]) OR &amp;quot;Annual Review of Psychology&amp;quot;[Journal]) OR &amp;quot;Annual Review of Cell and Developmental Biology&amp;quot;[Journal]) OR &amp;quot;NATURE CELL BIOLOGY&amp;quot;[Journal]) OR &amp;quot;IMMUNITY&amp;quot;[Journal]) OR &amp;quot;ENDOCRINE REVIEWS&amp;quot;[Journal]) OR &amp;quot;Annual Review of Plant Biology&amp;quot;[Journal]) OR &amp;quot;PHARMACOLOGICAL REVIEWS&amp;quot;[Journal]) OR &amp;quot;Annual Review of Pharmacology and Toxicology&amp;quot;[Journal]) OR &amp;quot;Nano Today&amp;quot;[Journal]) OR &amp;quot;Annual Review of Genetics&amp;quot;[Journal]) OR &amp;quot;ADVANCES IN PHYSICS&amp;quot;[Journal]) OR &amp;quot;PROGRESS IN ENERGY AND COMBUSTION SCIENCE&amp;quot;[Journal]) OR &amp;quot;Cell Metabolism&amp;quot;[Journal]) OR &amp;quot;Annual Review of Marine Science&amp;quot;[Journal]) OR &amp;quot;ALDRICHIMICA ACTA&amp;quot;[Journal]) OR &amp;quot;ANNALS OF INTERNAL MEDICINE&amp;quot;[Journal]) OR &amp;quot;CLINICAL MICROBIOLOGY REVIEWS&amp;quot;[Journal]) OR &amp;quot;NEURON&amp;quot;[Journal]) OR &amp;quot;Cancer Discovery&amp;quot;[Journal]) OR &amp;quot;Nature Reviews Clinical Oncology&amp;quot;[Journal]) OR &amp;quot;Annual Review of Physical Chemistry&amp;quot;[Journal]) OR &amp;quot;Annual Review of Materials Research&amp;quot;[Journal]) OR &amp;quot;Energy &amp;amp; Environmental Science&amp;quot;[Journal]) OR &amp;quot;Annual Review of Medicine&amp;quot;[Journal]) OR &amp;quot;TRENDS IN ECOLOGY &amp;amp; EVOLUTION&amp;quot;[Journal]) OR &amp;quot;JOURNAL OF THE AMERICAN COLLEGE OF CARDIOLOGY&amp;quot;[Journal]) OR &amp;quot;Nature Climate Change&amp;quot;[Journal]) OR &amp;quot;Nature Climate Change&amp;quot;[Journal]) OR &amp;quot;MOLECULAR PSYCHIATRY&amp;quot;[Journal]) OR &amp;quot;NATURE NEUROSCIENCE&amp;quot;[Journal]) OR &amp;quot;CIRCULATION&amp;quot;[Journal]) OR &amp;quot;EUROPEAN HEART JOURNAL&amp;quot;[Journal]) OR &amp;quot;Annual Review of Physiology&amp;quot;[Journal]) OR &amp;quot;MOLECULAR CELL&amp;quot;[Journal]) OR &amp;quot;Science Translational Medicine&amp;quot;[Journal]) OR &amp;quot;PSYCHOLOGICAL BULLETIN&amp;quot;[Journal]) OR &amp;quot;PSYCHOLOGICAL BULLETIN&amp;quot;[Journal]) OR &amp;quot;Advanced Energy Materials&amp;quot;[Journal]) OR &amp;quot;MOLECULAR BIOLOGY AND EVOLUTION&amp;quot;[Journal]) OR &amp;quot;Nature Reviews Neurology&amp;quot;[Journal]) OR &amp;quot;Molecular Systems Biology&amp;quot;[Journal]) OR &amp;quot;PLOS MEDICINE&amp;quot;[Journal]) OR &amp;quot;GASTROENTEROLOGY&amp;quot;[Journal]) AND gene network[Title/Abstract]
+&lt;/code>&lt;/pre>- //blog.yech.xyz/posts/top100_journal_for_pubmed/ - 2020 by Ye Chang</description></item><item><title>google的dnsmasq地址和IP</title><link>//blog.yech.xyz/posts/google_dnsmasq/</link><pubDate>Wed, 24 Feb 2016 05:13:25 +0800</pubDate><guid>//blog.yech.xyz/posts/google_dnsmasq/</guid><description>Chang's blog //blog.yech.xyz/posts/google_dnsmasq/ -&lt;p>google dnsmasq address&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e">##=====google=====##&lt;/span>
+&lt;span style="color:#75715e">#google_ip_address:202.255.2.153&lt;/span>
+&lt;span style="color:#75715e">#google com&lt;/span>
+address&lt;span style="color:#f92672">=&lt;/span>/.google.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/www.google.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/google.com/220.255.2.153
+&lt;span style="color:#75715e">#google cn&lt;/span>
+address&lt;span style="color:#f92672">=&lt;/span>/.google.cn/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/google.cn/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/g.cn/220.255.2.153
+&lt;span style="color:#75715e">#google hk&lt;/span>
+address&lt;span style="color:#f92672">=&lt;/span>/.google.com.hk/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/google.com.hk/220.255.2.153
+&lt;span style="color:#75715e">#google tw&lt;/span>
+address&lt;span style="color:#f92672">=&lt;/span>/.google.com.tw/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/google.com.tw/220.255.2.153
+&lt;span style="color:#75715e">#google other&lt;/span>
+address&lt;span style="color:#f92672">=&lt;/span>/.ggpht.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.gstatic.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.gmail.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.goo.gl/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.g.co/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.google-analytics/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googleapis.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.gogleadservices.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googleapps.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googleartproject.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlechinawebmaster.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlecode.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googledrive.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlegroups.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlehosted.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googleinsidesearch.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlemail.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlemashups.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlesource.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlestore.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlesyndication.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googleusercontent.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlevideo.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.googlewave.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.thinkwithgoogle.com/220.255.2.153
+address&lt;span style="color:#f92672">=&lt;/span>/.withgoogle.com/220.255.2.153
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/google_dnsmasq/ - 2020 by Ye Chang</description></item><item><title>Mutaion Calling Pipeline</title><link>//blog.yech.xyz/posts/how_to_call_mutaion/</link><pubDate>Wed, 20 Jan 2016 17:50:49 +0800</pubDate><guid>//blog.yech.xyz/posts/how_to_call_mutaion/</guid><description>Chang's blog //blog.yech.xyz/posts/how_to_call_mutaion/ -&lt;h2 id="process">process&lt;/h2>
+&lt;ul>
+&lt;li>bwa&lt;/li>
+&lt;li>samtools view&lt;/li>
+&lt;li>samtools sort&lt;/li>
+&lt;li>samtools mpileup&lt;/li>
+&lt;li>perl pileup2base&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/how_to_call_mutaion/ - 2020 by Ye Chang</description></item><item><title>猴年大吉</title><link>//blog.yech.xyz/posts/happy_new_year_of_monkey/</link><pubDate>Mon, 18 Jan 2016 09:54:19 +0800</pubDate><guid>//blog.yech.xyz/posts/happy_new_year_of_monkey/</guid><description>Chang's blog //blog.yech.xyz/posts/happy_new_year_of_monkey/ -&lt;p>&lt;img src="//blog.yech.xyz/img/evolution-of-man-and-monkey.jpg" alt="猴年大吉">&lt;/p>
+&lt;blockquote>
+&lt;p>2017&lt;/p>
+&lt;/blockquote>
+- //blog.yech.xyz/posts/happy_new_year_of_monkey/ - 2020 by Ye Chang</description></item><item><title>Markup Language</title><link>//blog.yech.xyz/posts/markup_language/</link><pubDate>Sat, 02 Jan 2016 14:33:50 +0800</pubDate><guid>//blog.yech.xyz/posts/markup_language/</guid><description>Chang's blog //blog.yech.xyz/posts/markup_language/ -&lt;ul>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Markdown">markdown&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/AsciiDoc">AsciiDoc&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Org-mode">Org-mode&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Textile_(markup_language)">Textile&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Txt2tags">txt2tags&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Wiki_markup">Wiki markup&lt;/a>&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/markup_language/ - 2020 by Ye Chang</description></item><item><title>vimium like setting for surfingkeys</title><link>//blog.yech.xyz/posts/surfingkeys_vimium_like_setting/</link><pubDate>Fri, 01 Jan 2016 01:14:32 +0800</pubDate><guid>//blog.yech.xyz/posts/surfingkeys_vimium_like_setting/</guid><description>Chang's blog //blog.yech.xyz/posts/surfingkeys_vimium_like_setting/ -&lt;p>A conf file of surfingkeys for vimium user&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#75715e">//help
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;?&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Show usage&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Normal.showUsage()&amp;#34;&lt;/span>);
+&lt;span style="color:#75715e">//toggle
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">Events&lt;/span>.&lt;span style="color:#a6e22e">hotKey&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;i&amp;#34;&lt;/span>; &lt;span style="color:#75715e">// hotkey must be one keystroke with/without modifier, it can not be a sequence of keystrokes like `gg`.
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>
+&lt;span style="color:#75715e">// tab
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ZQ&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Quit&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;quit&amp;#34;&lt;/span>);
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ZZ&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Save session and quit&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;createSession&amp;#34;&lt;/span>, {
+&lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;LAST&amp;#34;&lt;/span>,
+});
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;quit&amp;#34;&lt;/span>);
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ZR&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Restore last session&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;openSession&amp;#34;&lt;/span>, {
+&lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;LAST&amp;#34;&lt;/span>,
+});
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;T&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Choose a tab&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Normal.chooseTab()&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;x&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Close current tab&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;closeTab&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;X&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Restore closed tab&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;openLast&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;yt&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Duplicate current tab&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;duplicateTab&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;J&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Go one tab left&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;previousTab&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;K&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Go one tab right&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;nextTab&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;P&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;pin/unpin current tab&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;togglePinTab&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Go one tab history back&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;historyTab&amp;#34;, {backward: true})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;gF&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Go one tab history forward&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;historyTab&amp;#34;, {backward: false})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#75715e">// page scroll
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;cs&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Change scroll target&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Normal.changeScrollTarget()&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;gg&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll to the top of the page&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;top&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;G&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll to the bottom of the page&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;bottom&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;u&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll a page up&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;pageUp&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;d&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll a page down&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;pageDown&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;j&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll down&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;down&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;k&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll up&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;up&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;h&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll left&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;left&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;l&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Scroll right&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.scroll(&amp;#34;right&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#75715e">// history
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;gh&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome History&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://history/&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;H&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Go back in history&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;history.go(-1)&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;L&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Go forward in history&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;history.go(1)&amp;#34;&lt;/span>);
+&lt;span style="color:#75715e">// new
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;r&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Reload the page&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;reloadTab&amp;#34;, { nocache: false })&amp;#39;&lt;/span>);
+&lt;span style="color:#75715e">// input
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;i&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Go to edit box&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;Hints.create(&amp;#34;input:visible, textarea:visible&amp;#34;, Hints.dispatchMouseClick)&amp;#39;&lt;/span>
+);
+&lt;span style="color:#75715e">// click
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">Hints&lt;/span>.&lt;span style="color:#a6e22e">pointers&lt;/span> &lt;span style="color:#f92672">=&lt;/span>
+&lt;span style="color:#e6db74">&amp;#34;a, button, *:visible:css(cursor=pointer), select:visible, input:visible, textarea:visible&amp;#34;&lt;/span>; &lt;span style="color:#75715e">// define all the css selectors that can be followed
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;f&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open a link&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick)&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;F&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open a link in new tab&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick, {tabbed: true})&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;gf&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open a link in non-active new tab&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick, {tabbed: true, active: false})&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;a-f&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open multiple links in a new tab&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick, {tabbed: true, active: false, multipleHits: true})&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;q&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Click on an Image or a button&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;Hints.create(&amp;#34;img, button&amp;#34;, Hints.dispatchMouseClick)&amp;#39;&lt;/span>
+);
+&lt;span style="color:#75715e">// next and pre page
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;[[&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Click on the previous link on current page&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">prevLinks&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">$&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">regex&lt;/span>(&lt;span style="color:#e6db74">/((上页|上一页|&amp;lt;&amp;lt;|prev(ious)?)+)/i&lt;/span>);
+&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">prevLinks&lt;/span>.&lt;span style="color:#a6e22e">length&lt;/span>) {
+&lt;span style="color:#a6e22e">clickOn&lt;/span>(&lt;span style="color:#a6e22e">prevLinks&lt;/span>);
+} &lt;span style="color:#66d9ef">else&lt;/span> {
+&lt;span style="color:#a6e22e">walkPageUrl&lt;/span>(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>);
+}
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;]]&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Click on the next link on current page&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">nextLinks&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">$&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">regex&lt;/span>(&lt;span style="color:#e6db74">/((下页|下一页|&amp;gt;&amp;gt;|next)+)/i&lt;/span>);
+&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">nextLinks&lt;/span>.&lt;span style="color:#a6e22e">length&lt;/span>) {
+&lt;span style="color:#a6e22e">clickOn&lt;/span>(&lt;span style="color:#a6e22e">nextLinks&lt;/span>);
+} &lt;span style="color:#66d9ef">else&lt;/span> {
+&lt;span style="color:#a6e22e">walkPageUrl&lt;/span>(&lt;span style="color:#ae81ff">1&lt;/span>);
+}
+});
+&lt;span style="color:#75715e">// command
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;:&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open commands&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar({type: &amp;#34;Commands&amp;#34;})&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">command&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;quit&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;quit chrome&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;quit&amp;#34;&lt;/span>);
+});
+&lt;span style="color:#a6e22e">command&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;listSession&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;list session&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">runtime&lt;/span>.&lt;span style="color:#a6e22e">command&lt;/span>(
+{
+&lt;span style="color:#a6e22e">action&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;getSessions&amp;#34;&lt;/span>,
+},
+&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">response&lt;/span>) {
+&lt;span style="color:#a6e22e">Omnibar&lt;/span>.&lt;span style="color:#a6e22e">listResults&lt;/span>(Object.&lt;span style="color:#a6e22e">keys&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">sessions&lt;/span>), &lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span>) {
+&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">$&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;&amp;lt;li&amp;gt;&amp;lt;/li&amp;gt;&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">html&lt;/span>(&lt;span style="color:#a6e22e">s&lt;/span>);
+});
+}
+);
+});
+&lt;span style="color:#a6e22e">command&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;createSession&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;createSession [name]&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">name&lt;/span>) {
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;createSession&amp;#34;&lt;/span>, {
+&lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">name&lt;/span>,
+});
+});
+&lt;span style="color:#a6e22e">command&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;deleteSession&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;deleteSession [name]&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">name&lt;/span>) {
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;deleteSession&amp;#34;&lt;/span>, {
+&lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">name&lt;/span>,
+});
+&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>; &lt;span style="color:#75715e">// to close omnibar after the command executed.
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>});
+&lt;span style="color:#a6e22e">command&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;openSession&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;openSession [name]&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">name&lt;/span>) {
+&lt;span style="color:#a6e22e">RUNTIME&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;openSession&amp;#34;&lt;/span>, {
+&lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">name&lt;/span>,
+});
+});
+&lt;span style="color:#75715e">// visual mode
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;v&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Toggle visual mode&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Visual.toggle()&amp;#34;&lt;/span>);
+&lt;span style="color:#75715e">// find
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Find in current page&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Normal.openFinder()&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;*&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Find selected text in current page&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">Visual&lt;/span>.&lt;span style="color:#a6e22e">star&lt;/span>();
+&lt;span style="color:#a6e22e">Visual&lt;/span>.&lt;span style="color:#a6e22e">toggle&lt;/span>();
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;n&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Next found text&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Visual.next(false)&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;N&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Previous found text&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Visual.next(true)&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;m&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Add current URL to vim-like marks&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">Normal&lt;/span>.&lt;span style="color:#a6e22e">addVIMark&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;&amp;#39;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Jump to vim-like mark&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">Normal&lt;/span>.&lt;span style="color:#a6e22e">jumpVIMark&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;w&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Switch frames&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Normal.rotateFrame()&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;p&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Paste html on current page.&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">Normal&lt;/span>.&lt;span style="color:#a6e22e">getContentFromClipboard&lt;/span>(&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">response&lt;/span>) {
+document.&lt;span style="color:#a6e22e">body&lt;/span>.&lt;span style="color:#a6e22e">innerHTML&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">data&lt;/span>;
+});
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;cc&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open selected link or link from clipboard&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">Normal&lt;/span>.&lt;span style="color:#a6e22e">getContentFromClipboard&lt;/span>(&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">response&lt;/span>) {
+&lt;span style="color:#a6e22e">tabOpenLink&lt;/span>(window.&lt;span style="color:#a6e22e">getSelection&lt;/span>().&lt;span style="color:#a6e22e">toString&lt;/span>() &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">data&lt;/span>);
+});
+});
+&lt;span style="color:#75715e">// url
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ou&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open an URLs&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar({type: &amp;#34;URLs&amp;#34;})&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;b&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open a bookmark&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar(({type: &amp;#34;Bookmarks&amp;#34;}))&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;oh&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open URL from history&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar({type: &amp;#34;History&amp;#34;})&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;om&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open URL from vim-like marks&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar({type: &amp;#34;VIMarks&amp;#34;})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ys&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Copy current page&amp;#39;s source&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">aa&lt;/span> &lt;span style="color:#f92672">=&lt;/span> document.&lt;span style="color:#a6e22e">documentElement&lt;/span>.&lt;span style="color:#a6e22e">cloneNode&lt;/span>(&lt;span style="color:#66d9ef">true&lt;/span>);
+&lt;span style="color:#a6e22e">Normal&lt;/span>.&lt;span style="color:#a6e22e">writeClipboard&lt;/span>(&lt;span style="color:#a6e22e">aa&lt;/span>.&lt;span style="color:#a6e22e">outerHTML&lt;/span>);
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;yf&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Copy current page&amp;#39;s URL&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Normal.writeClipboard(window.location.href)&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;yl&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Copy current page&amp;#39;s title&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Normal.writeClipboard(document.title)&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;ob&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open Search with alias b&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar({type: &amp;#34;SearchEngine&amp;#34;, extra: &amp;#34;b&amp;#34;})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;og&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open Search with alias g&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar({type: &amp;#34;SearchEngine&amp;#34;, extra: &amp;#34;g&amp;#34;})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;ow&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open Search with alias w&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;Normal.openOmnibar({type: &amp;#34;SearchEngine&amp;#34;, extra: &amp;#34;w&amp;#34;})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;t&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome newtab&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://newtab/&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;gb&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome Bookmarks&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://bookmarks/&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;gj&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open Chrome Bookmarks&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://chrome/settings/contentExceptions#javascript&amp;#34;)&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;gc&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome Cache&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://cache/&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;gd&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome Downloads&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://downloads/&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;gk&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome Cookies&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://settings/cookies&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ge&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome Extensions&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://extensions/&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;gn&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Open Chrome net-internals&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://net-internals/#proxy&amp;#34;)&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;gs&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;View page source&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;viewSource&amp;#34;, { tab: { tabbed: true }})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;gu&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Go up one path in the URL&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">location&lt;/span>.&lt;span style="color:#a6e22e">href&lt;/span>;
+&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">location&lt;/span>.&lt;span style="color:#a6e22e">pathname&lt;/span>.&lt;span style="color:#a6e22e">length&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) {
+&lt;span style="color:#a6e22e">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span>.&lt;span style="color:#a6e22e">endsWith&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/&amp;#34;&lt;/span>) &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span>.&lt;span style="color:#a6e22e">substr&lt;/span>(&lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#a6e22e">url&lt;/span>.&lt;span style="color:#a6e22e">length&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span>;
+&lt;span style="color:#a6e22e">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span>.&lt;span style="color:#a6e22e">substr&lt;/span>(&lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#a6e22e">url&lt;/span>.&lt;span style="color:#a6e22e">lastIndexOf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/&amp;#34;&lt;/span>));
+}
+window.&lt;span style="color:#a6e22e">location&lt;/span>.&lt;span style="color:#a6e22e">href&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span>;
+});
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;gU&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Go to root of current URL hierarchy&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;window.location.href = window.location.origin&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;se&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Edit Settings&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;RUNTIME(&amp;#34;editSettings&amp;#34;, { tab: { tabbed: true }})&amp;#39;&lt;/span>
+);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;sr&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Reset Settings&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Normal.resetSettings()&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;si&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Open Chrome Inpect&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;tabOpenLink(&amp;#34;chrome://inspect/#devices&amp;#34;)&amp;#39;&lt;/span>);
+&lt;span style="color:#a6e22e">mapkey&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;;q&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;Insert jquery library on current page&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#39;Normal.insertJS(&amp;#34;//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js&amp;#34;)&amp;#39;&lt;/span>
+);
+&lt;span style="color:#75715e">// search
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">addSearchAliasX&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;g&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;google&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;https://www.google.com/search?q=&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;s&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;https://www.google.com/complete/search?client=chrome-omni&amp;amp;gs_ri=chrome-ext&amp;amp;oit=1&amp;amp;cp=1&amp;amp;pgcl=7&amp;amp;q=&amp;#34;&lt;/span>,
+&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">response&lt;/span>) {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> eval(&lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">text&lt;/span>);
+&lt;span style="color:#a6e22e">Omnibar&lt;/span>.&lt;span style="color:#a6e22e">listWords&lt;/span>(&lt;span style="color:#a6e22e">res&lt;/span>[&lt;span style="color:#ae81ff">1&lt;/span>]);
+}
+);
+&lt;span style="color:#a6e22e">addSearchAliasX&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;b&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;baidu&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;https://www.baidu.com/s?wd=&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;s&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;http://suggestion.baidu.com/su?cb=eval&amp;amp;wd=&amp;#34;&lt;/span>,
+&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">response&lt;/span>) {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> eval(&lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">text&lt;/span>);
+&lt;span style="color:#a6e22e">Omnibar&lt;/span>.&lt;span style="color:#a6e22e">listWords&lt;/span>(&lt;span style="color:#a6e22e">res&lt;/span>.&lt;span style="color:#a6e22e">s&lt;/span>);
+}
+);
+&lt;span style="color:#a6e22e">addSearchAliasX&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;w&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;bing&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;http://global.bing.com/search?setmkt=en-us&amp;amp;setlang=en-us&amp;amp;q=&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;s&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;http://api.bing.com/osjson.aspx?query=&amp;#34;&lt;/span>,
+&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">response&lt;/span>) {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> eval(&lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">text&lt;/span>);
+&lt;span style="color:#a6e22e">Omnibar&lt;/span>.&lt;span style="color:#a6e22e">listWords&lt;/span>(&lt;span style="color:#a6e22e">res&lt;/span>[&lt;span style="color:#ae81ff">1&lt;/span>]);
+}
+);
+&lt;span style="color:#a6e22e">addSearchAliasX&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;s&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;stackoverflow&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;http://stackoverflow.com/search?q=&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">addSearchAliasX&lt;/span>(
+&lt;span style="color:#e6db74">&amp;#34;h&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;github&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;https://github.com/search?type=Code&amp;amp;utf8=%E2%9C%93&amp;amp;q=&amp;#34;&lt;/span>
+);
+&lt;span style="color:#a6e22e">$&lt;/span>(document)
+.&lt;span style="color:#a6e22e">dblclick&lt;/span>(&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">event&lt;/span>) {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">sel&lt;/span> &lt;span style="color:#f92672">=&lt;/span> window.&lt;span style="color:#a6e22e">getSelection&lt;/span>().&lt;span style="color:#a6e22e">toString&lt;/span>();
+&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">sel&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#a6e22e">sel&lt;/span>.&lt;span style="color:#a6e22e">length&lt;/span>) {
+&lt;span style="color:#a6e22e">httpRequest&lt;/span>(
+{
+&lt;span style="color:#a6e22e">url&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;https://api.shanbay.com/bdc/search/?word=&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">sel&lt;/span>,
+},
+&lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">res&lt;/span>) {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> eval(&lt;span style="color:#e6db74">&amp;#34;a=&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">res&lt;/span>.&lt;span style="color:#a6e22e">text&lt;/span>);
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">=&lt;/span> window.&lt;span style="color:#a6e22e">getSelection&lt;/span>().&lt;span style="color:#a6e22e">getRangeAt&lt;/span>(&lt;span style="color:#ae81ff">0&lt;/span>).&lt;span style="color:#a6e22e">getBoundingClientRect&lt;/span>();
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">pos&lt;/span> &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">top&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">18&lt;/span>, &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">left&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">width&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">12&lt;/span>];
+&lt;span style="color:#a6e22e">Normal&lt;/span>.&lt;span style="color:#a6e22e">showBubble&lt;/span>(
+{
+&lt;span style="color:#a6e22e">top&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">pos&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>],
+&lt;span style="color:#a6e22e">left&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">pos&lt;/span>[&lt;span style="color:#ae81ff">1&lt;/span>],
+},
+&lt;span style="color:#a6e22e">res&lt;/span>.&lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">definition&lt;/span> &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#a6e22e">res&lt;/span>.&lt;span style="color:#a6e22e">msg&lt;/span>
+);
+}
+);
+}
+})
+.&lt;span style="color:#a6e22e">click&lt;/span>(&lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#a6e22e">Normal&lt;/span>.&lt;span style="color:#a6e22e">hideBubble&lt;/span>();
+});
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/surfingkeys_vimium_like_setting/ - 2020 by Ye Chang</description></item><item><title>happy new year 2016</title><link>//blog.yech.xyz/posts/happy_new_year_2016/</link><pubDate>Thu, 31 Dec 2015 23:48:35 +0800</pubDate><guid>//blog.yech.xyz/posts/happy_new_year_2016/</guid><description>Chang's blog //blog.yech.xyz/posts/happy_new_year_2016/ -&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#f92672">in&lt;/span> range(&lt;span style="color:#ae81ff">365&lt;/span>):
+&lt;span style="color:#66d9ef">print&lt;/span> &lt;span style="color:#e6db74">&amp;#34;happy Year: 2016; Date: {}&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>format(i&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/happy_new_year_2016/ - 2020 by Ye Chang</description></item><item><title>一行搞定rust的运行环境</title><link>//blog.yech.xyz/posts/rust_in_ubuntu/</link><pubDate>Wed, 30 Dec 2015 21:13:25 +0800</pubDate><guid>//blog.yech.xyz/posts/rust_in_ubuntu/</guid><description>Chang's blog //blog.yech.xyz/posts/rust_in_ubuntu/ -&lt;h1 id="rust-运行环境的安装">rust 运行环境的安装&lt;/h1>
+&lt;h2 id="安装">安装&lt;/h2>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ curl -sSf https://static.rust-lang.org/rustup.sh | sh
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="helloworld">helloworld&lt;/h2>
+&lt;ul>
+&lt;li>方法一:rustc&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-rust" data-lang="rust">&lt;span style="color:#75715e">// save file as helloworld.rs
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">fn&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+println&lt;span style="color:#f92672">!&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello helab&amp;#34;&lt;/span>)
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ rustc helloworld.rs
+$ ./helloworld
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>方法二:cargo&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ cargo new rust_first_project --bin
+$ cargo build
+$ cargo run
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/rust_in_ubuntu/ - 2020 by Ye Chang</description></item></channel></rss>

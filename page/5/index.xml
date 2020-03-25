@@ -1,0 +1,291 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chang's blog</title><link>//blog.yech.xyz/</link><description>Recent content on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Mon, 23 Mar 2020 22:38:14 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/index.xml" rel="self" type="application/rss+xml"/><item><title>Beckman流式细胞仪数据lmd格式转fcs格式</title><link>//blog.yech.xyz/posts/flow_cytometry_lmd2fcs/</link><pubDate>Mon, 28 Dec 2015 19:26:56 +0800</pubDate><guid>//blog.yech.xyz/posts/flow_cytometry_lmd2fcs/</guid><description>Chang's blog //blog.yech.xyz/posts/flow_cytometry_lmd2fcs/ -&lt;p>借助 R 语言包&lt;code>flowcore&lt;/code>，将 Beckman 流式细胞仪数据从 lmd 格式转 fcs 格式，进而能被下游的工具读取。&lt;/p>
+&lt;p>单个文件转换&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-R" data-lang="R">&lt;span style="color:#75715e"># install&lt;/span>
+&lt;span style="color:#a6e22e">source&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;http://bioconductor.org/biocLite.R&amp;#34;&lt;/span>)
+&lt;span style="color:#a6e22e">biocLite&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;flowCore&amp;#34;&lt;/span>)
+&lt;span style="color:#75715e"># convert&lt;/span>
+&lt;span style="color:#a6e22e">library&lt;/span>(flowCore)
+x &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#a6e22e">read.FCS&lt;/span>(in.fname) &lt;span style="color:#75715e">#in.fname=xxx.lmd&lt;/span>
+&lt;span style="color:#a6e22e">write.FCS&lt;/span>(x,out.fname) &lt;span style="color:#75715e">#in.fname=xxx.fcs&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>批量 lmd 转化为 fcs&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-R" data-lang="R">&lt;span style="color:#a6e22e">library&lt;/span>(flowCore)
+&lt;span style="color:#a6e22e">library&lt;/span>(tools)
+files &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#a6e22e">list.files&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;./&amp;#34;&lt;/span>)
+lmd2fcs &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#a6e22e">function&lt;/span>(fi){
+x &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#a6e22e">read.FCS&lt;/span>(fi)
+&lt;span style="color:#a6e22e">write.FCS&lt;/span>(x,&lt;span style="color:#a6e22e">paste0&lt;/span>(&lt;span style="color:#a6e22e">file_path_sans_ext&lt;/span>(fi),&lt;span style="color:#e6db74">&amp;#34;.fcs&amp;#34;&lt;/span>))
+}
+&lt;span style="color:#a6e22e">lapply&lt;/span>(files, lmd2fcs)
+lmd2csv &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#a6e22e">function&lt;/span>(fi){
+x &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#a6e22e">read.FCS&lt;/span>(fi)
+&lt;span style="color:#a6e22e">write.csv&lt;/span>(&lt;span style="color:#a6e22e">summary&lt;/span>(x),file&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#a6e22e">paste0&lt;/span>(&lt;span style="color:#a6e22e">file_path_sans_ext&lt;/span>(fi),&lt;span style="color:#e6db74">&amp;#34;.summary.csv&amp;#34;&lt;/span>))
+}
+&lt;span style="color:#a6e22e">lapply&lt;/span>(files, lmd2csv)
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/flow_cytometry_lmd2fcs/ - 2020 by Ye Chang</description></item><item><title>随手记录点vim技巧(二)</title><link>//blog.yech.xyz/posts/vim_tip_2/</link><pubDate>Sun, 27 Dec 2015 23:41:23 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_2/</guid><description>Chang's blog //blog.yech.xyz/posts/vim_tip_2/ -&lt;blockquote>
+&lt;p>Q: 删除到/插入到/移动到 行首怎么搞?&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>有 N 种方法&lt;/li>
+&lt;/ul>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>命令&lt;/th>
+&lt;th align="center">按键&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>移动到行首&lt;/td>
+&lt;td align="center">&lt;code>(&lt;/code> &lt;code>^&lt;/code> &lt;code>0&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>移动到行尾&lt;/td>
+&lt;td align="center">&lt;code>)&lt;/code> &lt;code>$&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>插入到行首&lt;/td>
+&lt;td align="center">&lt;code>I&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>插入到行尾&lt;/td>
+&lt;td align="center">&lt;code>A&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>删除到行首&lt;/td>
+&lt;td align="center">&lt;code>d(&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>删除到行尾&lt;/td>
+&lt;td align="center">&lt;code>d)&lt;/code> &lt;code>D&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>最规范的还是行用() 段用{}&lt;/li>
+&lt;/ul>- //blog.yech.xyz/posts/vim_tip_2/ - 2020 by Ye Chang</description></item><item><title>随手记录点vim技巧(一)</title><link>//blog.yech.xyz/posts/vim_tip_1/</link><pubDate>Sun, 27 Dec 2015 13:41:23 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_1/</guid><description>Chang's blog //blog.yech.xyz/posts/vim_tip_1/ -&lt;blockquote>
+&lt;p>Q: 粘贴段落的时候, 自动缩进和加注释符, 格式都乱了, 怎么办?&lt;/p>
+&lt;/blockquote>
+&lt;pre>&lt;code class="language-vi" data-lang="vi">#开启粘贴模式
+:set paste
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>粘贴(paste)&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code class="language-vi" data-lang="vi">#关闭粘贴模式
+:set nopaste
+&lt;/code>&lt;/pre>- //blog.yech.xyz/posts/vim_tip_1/ - 2020 by Ye Chang</description></item><item><title>随手记录点vim技巧</title><link>//blog.yech.xyz/posts/vim_tip/</link><pubDate>Sun, 27 Dec 2015 13:41:16 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip/</guid><description>Chang's blog //blog.yech.xyz/posts/vim_tip/ -&lt;p>&lt;strong>这个系列叫“随手记录点 vim 技巧”&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>大概就是把自己重复遇到过几次以上的 vim 问题记录起来，现在记性不好了&lt;/p>
+&lt;/blockquote>
+- //blog.yech.xyz/posts/vim_tip/ - 2020 by Ye Chang</description></item><item><title>奇异矩阵（singular matrix）和 非奇异矩阵（nonsingular matrix）</title><link>//blog.yech.xyz/posts/singular_and_nonsingular_matrix/</link><pubDate>Sun, 27 Dec 2015 00:27:27 +0800</pubDate><guid>//blog.yech.xyz/posts/singular_and_nonsingular_matrix/</guid><description>Chang's blog //blog.yech.xyz/posts/singular_and_nonsingular_matrix/ -&lt;h1 id="奇异矩阵singular-matrix">奇异矩阵（singular matrix）&lt;/h1>
+&lt;h1 id="非奇异矩阵nonsingular-matrix">非奇异矩阵（nonsingular matrix）&lt;/h1>
+&lt;blockquote>
+&lt;p>对于矩阵 A，如果存在一个矩阵 B，使得 AB=BA=I，其中 I 为与 A,B 同维数的单位阵，就称 A 为可逆矩阵（或者称 A 可逆），并称 B 是 A 的逆矩阵，简称逆阵。（此时的逆称为凯利逆） 　　矩阵 A 可逆的充分必要条件是|A|≠0。 　　奇异矩阵阵或非方阵的矩阵不存在逆矩阵，但可以用函数 pinv(A)求其伪逆矩阵。基本语法为 X=pinv(A),X=pinv(A,tol),其中 tol 为误差：max(size(A))*norm(A)*eps。函数返回一个与 A 的转置矩阵 A&amp;rsquo; 同型的矩阵 X，并且满足：AXA=A,XAX=X.此时，称矩阵 X 为矩阵 A 的伪逆，也称为广义逆矩阵。pinv(A)具有 inv(A)的部分特性，但不与 inv(A)完全等同。
+如果 A 为非奇异方阵，pinv(A)=inv(A)，但却会耗费大量的计算时间，相比较而言，inv(A)花费更少的时间。
+奇异矩阵是线性代数的概念，就是对应的行列式等于 0 的矩阵。
+奇异矩阵的判断方法：首先，看这个矩阵是不是方阵（即行数和列数相等的矩阵。若行数和列数不相等，那就谈不上奇异矩阵和非奇异矩阵）。 然后，再看此方阵的行列式|A|是否等于 0，若等于 0，称矩阵 A 为奇异矩阵；若不等于 0，称矩阵 A 为非奇异矩阵。 同时，由|A|≠0 可知矩阵 A 可逆，这样可以得出另外一个重要结论:可逆矩阵就是非奇异矩阵，非奇异矩阵也是可逆矩阵。&lt;/p>
+&lt;/blockquote>
+- //blog.yech.xyz/posts/singular_and_nonsingular_matrix/ - 2020 by Ye Chang</description></item><item><title>在浏览器中登陆terminal</title><link>//blog.yech.xyz/posts/chrome_webshell/</link><pubDate>Sat, 26 Dec 2015 17:50:49 +0800</pubDate><guid>//blog.yech.xyz/posts/chrome_webshell/</guid><description>Chang's blog //blog.yech.xyz/posts/chrome_webshell/ -&lt;p>chrome 的应用 &lt;code>secure shell&lt;/code> 能非常方便的实现 SSH 客户端的功能，并且能像修改网页属性那样修改应用的外观。&lt;/p>
+&lt;p>安装和配置都非常简单。&lt;/p>
+&lt;h2 id="安装">安装&lt;/h2>
+&lt;pre>&lt;code>https://chrome.google.com/webstore/detail/secure-shell/pnhechapfaindjhompbnflcldabbghjo/related?utm_source=chrome-app-launcher-info-dialog
+&lt;/code>&lt;/pre>&lt;h2 id="配置">配置&lt;/h2>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">{
+&lt;span style="color:#f92672">&amp;#34;magic&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;nassh-prefs&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">2&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;nassh&amp;#34;&lt;/span>: {
+&lt;span style="color:#f92672">&amp;#34;profile-ids&amp;#34;&lt;/span>: [
+{
+&lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;c509&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;json&amp;#34;&lt;/span>: {
+&lt;span style="color:#f92672">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;yc@172.22.49.95:22&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;username&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;yc&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;hostname&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;172.22.49.95&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;port&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">22&lt;/span>
+}
+}
+]
+},
+&lt;span style="color:#f92672">&amp;#34;hterm&amp;#34;&lt;/span>: {
+&lt;span style="color:#f92672">&amp;#34;default&amp;#34;&lt;/span>: {
+&lt;span style="color:#f92672">&amp;#34;background-color&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;rgba(0, 43, 54, 1)&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;cursor-color&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;rgba(238, 232, 213, 0.5)&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;color-palette-overrides&amp;#34;&lt;/span>: {
+&lt;span style="color:#f92672">&amp;#34;0&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#073642&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;1&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#dc322f&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;2&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#859900&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;3&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#b58900&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;4&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#268bd2&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;5&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#d33682&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;6&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#3aa198&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;7&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#eee8d5&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;8&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#002b36&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;9&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#cb4b16&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;10&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#586e75&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;11&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#657b83&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;12&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#839496&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;13&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#6c71c4&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;14&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#93a1a1&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;15&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;#fdf6e3&amp;#34;&lt;/span>
+},
+&lt;span style="color:#f92672">&amp;#34;font-family&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;\&amp;#34;DejaVu Sans Mono\&amp;#34;, &amp;#39;Droid Sans Mono for Powerline&amp;#39;, PowerlineSymbols&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;foreground-color&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;rgba(238, 232, 213, 1)&amp;#34;&lt;/span>,
+&lt;span style="color:#f92672">&amp;#34;user-css&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://cdn.rawgit.com/JayXon/powerline-web-fonts/master/DroidSansMono.css&amp;#34;&lt;/span>
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/chrome_webshell/ - 2020 by Ye Chang</description></item><item><title>常用的前端框架</title><link>//blog.yech.xyz/posts/fontend_js_framework/</link><pubDate>Fri, 25 Dec 2015 10:54:10 +0800</pubDate><guid>//blog.yech.xyz/posts/fontend_js_framework/</guid><description>Chang's blog //blog.yech.xyz/posts/fontend_js_framework/ -&lt;h1 id="前端框架">前端框架&lt;/h1>
+&lt;blockquote>
+&lt;p>MVVM, MVC 什么的还不清楚&amp;hellip;&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>angular&lt;/li>
+&lt;li>vue&lt;/li>
+&lt;li>react&lt;/li>
+&lt;li>ant-design&lt;/li>
+&lt;li>jQuery&lt;/li>
+&lt;li>extjs&lt;/li>
+&lt;li>zepto&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>jQuery jQueryUI : javascript 框架和前端框架不是一个东西?&lt;/p>
+&lt;/blockquote>
+&lt;p>##转&lt;/p>
+&lt;blockquote>
+&lt;p>infoQ&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>Backbone.js: Provides models with key-value binding and custom events, collections, and connects it all to your existing API over a RESTful JSON interface.&lt;/li>
+&lt;li>AngularJS: A toolset based on extending the HTML vocabulary for your application.&lt;/li>
+&lt;li>Ember.js: Provides template written in the Handlebars templating language, views, controllers, models and a router.&lt;/li>
+&lt;li>Knockout: Aims to simplify JavaScript UIs by applying the Model-View-View Model (MVVM) pattern.&lt;/li>
+&lt;li>Agility.js: Aims to let developers write maintainable and reusable browser code without the verbose or infrastructural overhead found in other MVC libraries.&lt;/li>
+&lt;li>CanJS: Focuses on striking a balance between size, ease of use, safety, speed and flexibility.&lt;/li>
+&lt;li>Spine: A lightweight framework that strives to have the most friendly documentation for any JavaScript framework available.&lt;/li>
+&lt;li>Maria: Based on the original MVC flavor as it was used in Smalltalk - aka &amp;ldquo;the Gang of Four MVC&amp;rdquo;.&lt;/li>
+&lt;li>ExtJS: Amongst other things offers plugin-free charting, and modern UI widgets.&lt;/li>
+&lt;li>Sammy.js: A small JavaScript framework developed to provide a basic structure for developing JavaScript applications.&lt;/li>
+&lt;li>Stapes.js: A tiny framework that aims to be easy to fit in an existing codebase, and because of its size it&amp;rsquo;s suitable for mobile development.&lt;/li>
+&lt;li>Epitome: Epitome is a MVC* (MVP) framework for MooTools.&lt;/li>
+&lt;li>soma.js: Tries help developers to write loosely-coupled applications to increase scalability and maintainability.&lt;/li>
+&lt;li>PlastronJS: MVC framework for Closure Library and Closure Compiler.&lt;/li>
+&lt;li>rAppid.js: Lets you encapsulate complexity into components which can be easy used like HTML elements in your application.&lt;/li>
+&lt;li>Serenade.js: Tries to follow the ideas of classical MVC than competing frameworks.&lt;/li>
+&lt;li>Kendo UI: Combines jQuery-based widgets, an MVVM framework, themes, templates, and more.&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/fontend_js_framework/ - 2020 by Ye Chang</description></item><item><title>比较同步编程和异步编程的区别</title><link>//blog.yech.xyz/posts/compair_sync_and_async/</link><pubDate>Wed, 23 Dec 2015 15:21:01 +0800</pubDate><guid>//blog.yech.xyz/posts/compair_sync_and_async/</guid><description>Chang's blog //blog.yech.xyz/posts/compair_sync_and_async/ -&lt;blockquote>
+&lt;p>Sync in C&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-C" data-lang="C">&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;time.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>()
+{
+&lt;span style="color:#66d9ef">int&lt;/span> i;
+time_t the_time;
+&lt;span style="color:#66d9ef">for&lt;/span>(i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>; i&lt;span style="color:#f92672">++&lt;/span>) {
+the_time &lt;span style="color:#f92672">=&lt;/span> time((time_t &lt;span style="color:#f92672">*&lt;/span>)&lt;span style="color:#ae81ff">0&lt;/span>);
+printf(&lt;span style="color:#e6db74">&amp;#34;The time is %ld&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, the_time);
+sleep(&lt;span style="color:#ae81ff">2&lt;/span>);
+}
+exit(&lt;span style="color:#ae81ff">0&lt;/span>);
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>The time is 1396492137
+The time is 1396492139
+The time is 1396492141
+The time is 1396492143
+The time is 1396492145
+The time is 1396492147
+The time is 1396492149
+The time is 1396492151
+The time is 1396492153
+The time is 1396492155
+&lt;/code>&lt;/pre>
+&lt;h1 id="async-in-javascript">Async in javascript&lt;/h1>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">test&lt;/span>() {
+&lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span>) {
+&lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#66d9ef">new&lt;/span> Date());
+&lt;span style="color:#a6e22e">setTimeout&lt;/span>(&lt;span style="color:#66d9ef">function&lt;/span> () {}, &lt;span style="color:#ae81ff">2000&lt;/span>); &lt;span style="color:#75715e">//睡眠2秒，然后再进行一下次for循环打印
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> }
+}
+&lt;span style="color:#a6e22e">test&lt;/span>();
+&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+Wed Dec 23 2015 15:27:15 GMT+0800 (CST)
+&lt;/code>&lt;/pre>
+- //blog.yech.xyz/posts/compair_sync_and_async/ - 2020 by Ye Chang</description></item><item><title>node.js 学习笔记(四)</title><link>//blog.yech.xyz/posts/learn_nodejs_note_4/</link><pubDate>Wed, 23 Dec 2015 14:42:59 +0800</pubDate><guid>//blog.yech.xyz/posts/learn_nodejs_note_4/</guid><description>Chang's blog //blog.yech.xyz/posts/learn_nodejs_note_4/ -&lt;h1 id="用-node-的-express-插件创建应用">用 node 的 express 插件创建应用&lt;/h1>
+&lt;ul>
+&lt;li>创建项目环境&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">mkdir myapp
+cd myapp
+npm install express --save
+vim app.js
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>编写 javascript 脚本&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#75715e">//app.js 内容
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">express&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;express&amp;#34;&lt;/span>);
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">express&lt;/span>();
+&lt;span style="color:#a6e22e">app&lt;/span>.&lt;span style="color:#a6e22e">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> (&lt;span style="color:#a6e22e">req&lt;/span>, &lt;span style="color:#a6e22e">res&lt;/span>) {
+&lt;span style="color:#a6e22e">res&lt;/span>.&lt;span style="color:#a6e22e">send&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>);
+});
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">server&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">app&lt;/span>.&lt;span style="color:#a6e22e">listen&lt;/span>(&lt;span style="color:#ae81ff">3000&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span> () {
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">host&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">server&lt;/span>.&lt;span style="color:#a6e22e">address&lt;/span>().&lt;span style="color:#a6e22e">address&lt;/span>;
+&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">port&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">server&lt;/span>.&lt;span style="color:#a6e22e">address&lt;/span>().&lt;span style="color:#a6e22e">port&lt;/span>;
+&lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Example app listening at http://%s:%s&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">host&lt;/span>, &lt;span style="color:#a6e22e">port&lt;/span>);
+});
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>启动服务,监听 3000 端口&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">node app.js
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/learn_nodejs_note_4/ - 2020 by Ye Chang</description></item><item><title>Linux for Beginer from a Beginer</title><link>//blog.yech.xyz/posts/linux_for_beginer_from_a_beginer/</link><pubDate>Tue, 22 Dec 2015 13:47:48 +0800</pubDate><guid>//blog.yech.xyz/posts/linux_for_beginer_from_a_beginer/</guid><description>Chang's blog //blog.yech.xyz/posts/linux_for_beginer_from_a_beginer/ -&lt;blockquote>
+&lt;p>这不是一份系统的教程, 也不是科学的入门方案, 只是希望能让刚接触 linux 的人少点困惑.&lt;/p>
+&lt;/blockquote>
+&lt;p>linux 是一个操作系统, 和 windows 一样。所以 windows 下能实现的, linux 基本也能实现。反过来也是一样的。&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>&lt;/p>
+&lt;p>&lt;em>不过,别问我 linux 怎么上 QQ, 基本没有很好的方案.&lt;/em>&lt;/p>
+&lt;h1 id="文件操作">文件操作&lt;/h1>
+&lt;p>windows 下做得最多的文件操作无非是&amp;quot;打开&amp;rdquo;,&amp;ldquo;复制&amp;rdquo;,&amp;ldquo;粘贴&amp;rdquo;,&amp;ldquo;重命名&amp;rdquo;.
+linux 下的对应关系&lt;/p>
+&lt;pre>&lt;code>&amp;quot;打开文件夹&amp;quot; == &amp;quot;ls&amp;quot;
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>例子一: 打开当前文件夹&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="//blog.yech.xyz/images/linux_b1.png" alt="打开">&lt;/p>
+&lt;pre>&lt;code>&amp;quot;复制+粘贴&amp;quot; == &amp;quot;cp&amp;quot;
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>例子二: 复制 hehe.txt 文件,并粘贴为 haha.txt&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="//blog.yech.xyz/images/linux_b2.png" alt="复制">&lt;/p>
+&lt;pre>&lt;code>&amp;quot;重命名/移动&amp;quot; == &amp;quot;mv&amp;quot;
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>例子三: 将 haha.txt 重命名为 hello.txt&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="//blog.yech.xyz/images/linux_b3.png" alt="重命名">&lt;/p>
+&lt;p>虽然这些命令都是两个字符能搞定的, 但是后面得输入很长的一串文件名, 熟练使用 windows 的人一定会觉得效率太低.
+不过这里面涉及到 linux 的哲学: &lt;strong>&amp;ldquo;一切都是对象&amp;rdquo;&lt;/strong>, 可以勉强的理解为所有的东西都是可以操作的, 这是 linux 和 windows 比较大的区别. 因为这里说的 &lt;strong>&amp;ldquo;一切&amp;rdquo;&lt;/strong> 包括了复制粘贴命名本身. 看下面这里例子基本可以说明问题.&lt;/p>
+&lt;ul>
+&lt;li>例子四: 批量添加前缀&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e">#很多人在windows下有过这样的体验, 给一个文件夹中几十个文件一个个手动添加前缀或者是后缀, 十几分钟一直在重复右键,重命名,修改,确定...&lt;/span>
+&lt;span style="color:#75715e">#在linux系统, 因为重命名本身是可以被操作的, 所以你就可以用一个循环来实现重命名, 甚至对重命名命令本身进行修改&lt;/span>
+&lt;span style="color:#75715e">#为了方便理解可以用如下命令, *事实上linux有更方便的命令来实现这个事情*, 十几分钟的事情可以在十几秒内完成.&lt;/span>
+&lt;span style="color:#66d9ef">for&lt;/span> i in *.txt; &lt;span style="color:#66d9ef">do&lt;/span> mv $i &lt;span style="color:#e6db74">&amp;#34;beginer-&amp;#34;&lt;/span>$i;&lt;span style="color:#66d9ef">done&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="//blog.yech.xyz/images/linux_b4.png" alt="批量操作">&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>这种等价只是效用上的等价，不是操作方式的等价。 &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- //blog.yech.xyz/posts/linux_for_beginer_from_a_beginer/ - 2020 by Ye Chang</description></item></channel></rss>

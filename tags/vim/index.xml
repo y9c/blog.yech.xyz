@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>vim on Chang's blog</title><link>//blog.yech.xyz/tags/vim/</link><description>Recent content in vim on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Mon, 23 Mar 2020 22:38:14 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/tags/vim/index.xml" rel="self" type="application/rss+xml"/><item><title>Fix a Bug in Quickrun, a Vim Plugin</title><link>//blog.yech.xyz/posts/fix_a_bug_in_quickrun_vim_plugin/</link><pubDate>Mon, 23 Mar 2020 22:38:14 +0800</pubDate><guid>//blog.yech.xyz/posts/fix_a_bug_in_quickrun_vim_plugin/</guid><description>Quickrun1是一个整合了常用编程语言运行命令的 Vim Plugin，可以通过 :Quickrun 命令，或是自定义的映射，一键运行当前文件。
+今天在 Vim 中运行一个 R 文件时，发现结果一直输出“file name is missing”。查看错误日志，却发现一切正常; 用各种关键词搜索这个输出信息，均未能找到有用的信息; 查看插件的源码，也没看到这个报错的出处。
+这时只能从文件入手，把文件（test.R）删到只剩下一句命令：
+#!/usr/bin/env Rscript # -*- coding: utf-8 -*- print(&amp;#39;hello&amp;#39;) 运行了一下，依然是相同的报错。 再次陷入了 “越是容易上手的东西，越不容易使用” 的魔咒。
+无奈之下只好把文件头的注释也删了。 这时，惊奇地发现居然成功地看到了正常的输出。 也就是说是文件头（shebang）2间接地触发了报错。 但是 Quickrun 是根据根据文件类型来触发运行命令的，理论上不应该受到文件注释的影响。 唯一的解释是 Quickrun 中加入了对 shebang 的识别机制。
+再次翻看源码和文档，终于发现其中 R 语言的运行命令为：%c %o --no-save --slave %a &amp;lt; %s。 默认情况下 %c 会被替换为 comand 参数中的设定值，即 R。 但是在识别到 shebang 的时候，会将 %c（小写字母）替换为 %C（大些字母），而 %C 对应的是 shebang 中设定值，即 Rscript。 正常情况下，当前文件 %s 会被逐行输出（&amp;lt;）为 R 命令的标准输入，R 命令支持命令行模式。 但是 Rscript 命令只支持文件名作为输入参数，因此触发了报错。诡异的报错信息就是简单粗暴的 &amp;lsquo;file name is missing&amp;rsquo;（R 相关的设计一直都很随意，大多数的文档和报错信息都云里雾里的。）。 可以测试这个例子：</description></item><item><title>Write Rcpp Package in Vim</title><link>//blog.yech.xyz/posts/write_rcpp_package_in_vim/</link><pubDate>Sun, 22 Mar 2020 00:11:50 +0800</pubDate><guid>//blog.yech.xyz/posts/write_rcpp_package_in_vim/</guid><description>Plenty of tutorials have been posted online for writing Rcpp packages in Rstudio, but few tutorials mention developing R packages in vim.
+After some attempt, I have figure out the solution by myself.
+install requirement Rcpp in R neovim (with coc.nvim) ccls clang set up a new project R -e &amp;#39;Rcpp::Rcpp.package.skeleton(&amp;#34;mypackage&amp;#34;)&amp;#39; cd ./mypackage setup project create ccls config file (.ccls) in the project, and fill it with the following settings.</description></item><item><title>随手记录点vim技巧(六)</title><link>//blog.yech.xyz/posts/vim_tip_6/</link><pubDate>Sat, 22 Feb 2020 01:16:22 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_6/</guid><description>Q: 怎么查看 vim 中某个单词/高亮的 syntax 的类型？
+(想修改某一单词的高亮颜色（highlight）或是语法类型（syntax），但如何快速地判断当前被匹配上的类型？)
+设置快捷键：
+map &amp;lt;F10&amp;gt; :echo &amp;#34; \ hi&amp;lt;&amp;#34; . synIDattr(synID(line(&amp;#34;.&amp;#34;),col(&amp;#34;.&amp;#34;),1),&amp;#34;name&amp;#34;) . &amp;#34;&amp;gt; \ trans&amp;lt;&amp;#34; . synIDattr(synID(line(&amp;#34;.&amp;#34;),col(&amp;#34;.&amp;#34;),0),&amp;#34;name&amp;#34;) . &amp;#34;&amp;gt; \ lo&amp;lt;&amp;#34; . synIDattr(synIDtrans(synID(line(&amp;#34;.&amp;#34;),col(&amp;#34;.&amp;#34;),1)),&amp;#34;name&amp;#34;) . &amp;#34;&amp;gt; \ &amp;#34;&amp;lt;CR&amp;gt;其中， synID 获取 syntax 的 ID，参数分别为（行号，列号，TRUE/FALSE1）; synIDtrans 获取 highlight 的 ID，参数分别为（行号，列号，TRUE/FALSE1）; synIDattr 获取 ID 对应的 syntax 名称（&amp;ldquo;name&amp;rdquo;）。
+光标定位至感兴趣的单词，按 F10 显示 syntax 和 highlight 的名称，例如：
+hi&amp;lt;vimMap&amp;gt; trans&amp;lt;vimMap&amp;gt; lo&amp;lt;vimCommand&amp;gt;
+查看 syntax 的正则表达式：
+:syntax list在结果定位 syntax 名称的关键词。</description></item><item><title>随手记录点vim技巧(五)</title><link>//blog.yech.xyz/posts/vim_tip_5/</link><pubDate>Thu, 30 Jan 2020 14:50:30 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_5/</guid><description> Q: 怎么查看 vim 启动时加载的脚本？
+(启动 vim 时怎么 debug？)
+查看 vim 加载时执行了哪些脚本（加载了那些插件）:
+:scriptnames&amp;#39; or `:scr` for short查看每一个脚本/插件的耗时：
+vim --startuptime start_time.log filename 不加载插件启动：
+# vim vim --clean # neovim nvim --noplugin 指定从另外的配置文件启动：
+vim -u min.vim filename Reference
+http://www.wepeng.net/article/detail/100518128.html</description></item><item><title>随手记录点vim技巧(四)</title><link>//blog.yech.xyz/posts/vim_tip_4/</link><pubDate>Thu, 28 Feb 2019 01:54:11 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_4/</guid><description>&lt;blockquote>
+&lt;p>Q: 怎么快速删除每一行最后一个字符?
+（怎么录制宏？）&lt;/p>
+&lt;/blockquote>
+&lt;p>例如一个文件每一行最后一个字符是句号，需要把它们都去掉。&lt;/p></description></item><item><title>随手记录点vim技巧(三)</title><link>//blog.yech.xyz/posts/vim_tip_3/</link><pubDate>Thu, 01 Feb 2018 15:21:53 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_3/</guid><description>&lt;blockquote>
+&lt;p>Q: vim 怎么快速插入 iso-8601 格式的时间戳？&lt;/p>
+&lt;/blockquote></description></item><item><title>vimium like setting for surfingkeys</title><link>//blog.yech.xyz/posts/surfingkeys_vimium_like_setting/</link><pubDate>Fri, 01 Jan 2016 01:14:32 +0800</pubDate><guid>//blog.yech.xyz/posts/surfingkeys_vimium_like_setting/</guid><description>&lt;p>A conf file of surfingkeys for vimium user&lt;/p></description></item><item><title>随手记录点vim技巧(二)</title><link>//blog.yech.xyz/posts/vim_tip_2/</link><pubDate>Sun, 27 Dec 2015 23:41:23 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_2/</guid><description>&lt;blockquote>
+&lt;p>Q: 删除到/插入到/移动到 行首怎么搞?&lt;/p>
+&lt;/blockquote></description></item><item><title>随手记录点vim技巧(一)</title><link>//blog.yech.xyz/posts/vim_tip_1/</link><pubDate>Sun, 27 Dec 2015 13:41:23 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_1/</guid><description>&lt;blockquote>
+&lt;p>Q: 粘贴段落的时候, 自动缩进和加注释符, 格式都乱了, 怎么办?&lt;/p>
+&lt;/blockquote></description></item><item><title>随手记录点vim技巧</title><link>//blog.yech.xyz/posts/vim_tip/</link><pubDate>Sun, 27 Dec 2015 13:41:16 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip/</guid><description>这个系列叫“随手记录点 vim 技巧”
+大概就是把自己重复遇到过几次以上的 vim 问题记录起来，现在记性不好了</description></item></channel></rss>

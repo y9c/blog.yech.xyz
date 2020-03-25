@@ -1,0 +1,872 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chang's blog</title><link>//blog.yech.xyz/</link><description>Recent content on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Mon, 23 Mar 2020 22:38:14 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/index.xml" rel="self" type="application/rss+xml"/><item><title>Fix a Bug in Quickrun, a Vim Plugin</title><link>//blog.yech.xyz/posts/fix_a_bug_in_quickrun_vim_plugin/</link><pubDate>Mon, 23 Mar 2020 22:38:14 +0800</pubDate><guid>//blog.yech.xyz/posts/fix_a_bug_in_quickrun_vim_plugin/</guid><description>Chang's blog //blog.yech.xyz/posts/fix_a_bug_in_quickrun_vim_plugin/ -&lt;p>Quickrun&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>是一个整合了常用编程语言运行命令的 Vim Plugin，可以通过 &lt;code>:Quickrun&lt;/code>
+命令，或是自定义的映射，一键运行当前文件。&lt;/p>
+&lt;p>今天在 Vim 中运行一个 R 文件时，发现结果一直输出“file name is
+missing”。查看错误日志，却发现一切正常; 用各种关键词搜索这个输出信息，均未能找到有用的信息;
+查看插件的源码，也没看到这个报错的出处。&lt;/p>
+&lt;p>这时只能从文件入手，把文件（test.R）删到只剩下一句命令：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-r" data-lang="r">&lt;span style="color:#75715e">#!/usr/bin/env Rscript&lt;/span>
+&lt;span style="color:#75715e"># -*- coding: utf-8 -*-&lt;/span>
+&lt;span style="color:#a6e22e">print&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;hello&amp;#39;&lt;/span>)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行了一下，依然是相同的报错。
+再次陷入了 &lt;strong>“越是容易上手的东西，越不容易使用”&lt;/strong> 的魔咒。&lt;/p>
+&lt;hr>
+&lt;p>无奈之下只好把文件头的注释也删了。
+这时，惊奇地发现居然成功地看到了正常的输出。
+也就是说是文件头（shebang）&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>间接地触发了报错。
+但是 Quickrun 是根据根据文件类型来触发运行命令的，理论上不应该受到文件注释的影响。
+&lt;strong>唯一的解释是 Quickrun 中加入了对 shebang 的识别机制。&lt;/strong>&lt;/p>
+&lt;p>再次翻看源码和文档，终于发现其中 R 语言的运行命令为：&lt;code>%c %o --no-save --slave %a &amp;lt; %s&lt;/code>。
+默认情况下 &lt;code>%c&lt;/code> 会被替换为 &lt;code>comand&lt;/code> 参数中的设定值，即 &lt;code>R&lt;/code>。
+但是在识别到 shebang 的时候，会将 &lt;code>%c&lt;/code>（小写字母）替换为 &lt;code>%C&lt;/code>（大些字母），而 &lt;code>%C&lt;/code> 对应的是 shebang 中设定值，即 &lt;code>Rscript&lt;/code>。
+正常情况下，当前文件 &lt;code>%s&lt;/code> 会被逐行输出（&lt;code>&amp;lt;&lt;/code>）为 &lt;code>R&lt;/code> 命令的标准输入，&lt;code>R&lt;/code> 命令支持命令行模式。
+但是 &lt;strong>&lt;code>Rscript&lt;/code> 命令只支持文件名作为输入参数，因此触发了报错&lt;/strong>。诡异的报错信息就是简单粗暴的 &amp;lsquo;file name is missing&amp;rsquo;（&lt;em>R 相关的设计一直都很随意，大多数的文档和报错信息都云里雾里的。&lt;/em>）。
+可以测试这个例子：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">Rscript --no-save --slave &amp;lt; test.R
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>因此有两种修改思路，一是把 Quickrun 中 R 语言的运行命令修改为：&lt;code>Rscript %s&lt;/code>
+这样的形式；二是禁用 Quickrun 对 shebang
+文件头的识别。最终采用了第二种方式，在 vim 的配置中加入&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-vim" data-lang="vim">&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">g&lt;/span>:&lt;span style="color:#a6e22e">quickrun_config&lt;/span>.&lt;span style="color:#a6e22e">r&lt;/span> = {&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span> \ &lt;span style="color:#e6db74">&amp;#39;command&amp;#39;&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;R&amp;#39;&lt;/span>,&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span> \ &lt;span style="color:#e6db74">&amp;#39;exec&amp;#39;&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;%c %o --no-save --slave %a &amp;lt; %s&amp;#39;&lt;/span>,&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span> \ &lt;span style="color:#e6db74">&amp;#39;hook/shebang/enable&amp;#39;&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span> \}&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>成功解决。&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="https://github.com/thinca/vim-quickrun">https://github.com/thinca/vim-quickrun&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>Linux 下这种首行 #! 开头的注释叫 shebang，目的是让终端能使用正确的解析器来运行文件。 &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- //blog.yech.xyz/posts/fix_a_bug_in_quickrun_vim_plugin/ - 2020 by Ye Chang</description></item><item><title>Write Rcpp Package in Vim</title><link>//blog.yech.xyz/posts/write_rcpp_package_in_vim/</link><pubDate>Sun, 22 Mar 2020 00:11:50 +0800</pubDate><guid>//blog.yech.xyz/posts/write_rcpp_package_in_vim/</guid><description>Chang's blog //blog.yech.xyz/posts/write_rcpp_package_in_vim/ -&lt;p>Plenty of tutorials have been posted online for writing Rcpp packages in Rstudio,
+but few tutorials mention developing R packages in vim.&lt;/p>
+&lt;p>After some attempt, I have figure out the solution by myself.&lt;/p>
+&lt;h3 id="install-requirement">install requirement&lt;/h3>
+&lt;ul>
+&lt;li>Rcpp in R&lt;/li>
+&lt;li>neovim (with coc.nvim)&lt;/li>
+&lt;li>ccls&lt;/li>
+&lt;li>clang&lt;/li>
+&lt;/ul>
+&lt;h3 id="set-up-a-new-project">set up a new project&lt;/h3>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">R -e &lt;span style="color:#e6db74">&amp;#39;Rcpp::Rcpp.package.skeleton(&amp;#34;mypackage&amp;#34;)&amp;#39;&lt;/span>
+cd ./mypackage
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="setup-project">setup project&lt;/h3>
+&lt;p>create ccls config file (&lt;code>.ccls&lt;/code>) in the project, and fill it with the following settings.&lt;/p>
+&lt;pre>&lt;code>clang
+%c -std=c11
+%cpp -std=c++2a
+-I/home/yech/.local/lib/R-3.6/library/Rcpp/include/
+-I/usr/include/R
+&lt;/code>&lt;/pre>- //blog.yech.xyz/posts/write_rcpp_package_in_vim/ - 2020 by Ye Chang</description></item><item><title>Cascade Notation in Dart is Magic</title><link>//blog.yech.xyz/posts/dart_tip_1/</link><pubDate>Thu, 12 Mar 2020 18:43:07 +0800</pubDate><guid>//blog.yech.xyz/posts/dart_tip_1/</guid><description>Chang's blog //blog.yech.xyz/posts/dart_tip_1/ -&lt;p>在编写 Python 代码的时候，&lt;code>sort()&lt;/code> 和 &lt;code>sorted()&lt;/code> 是两个不同的函数，对于列表 &lt;code>l = [2, 6, 1]&lt;/code>，
+可以用 &lt;code>l.sort()&lt;/code> 来进行排序，也可以用 &lt;code>sorted(l)&lt;/code>
+来进行排序。但是如果打印出来会发现，&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#66d9ef">print&lt;/span>(l&lt;span style="color:#f92672">.&lt;/span>sort())
+None
+&lt;span style="color:#f92672">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#66d9ef">print&lt;/span>(sorted(l))
+[&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">6&lt;/span>]
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>原因是 &lt;code>sorted()&lt;/code> 返回（return）的是变换后的列表，&lt;code>.sort()&lt;/code>
+是对列表进行&lt;strong>原位&lt;/strong>地排序，虽然列表改变了，但是返回的是 None。
+所以要输出 &lt;code>.sort()&lt;/code> 的结果，需要两步。&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">&amp;gt;&amp;gt;&amp;gt;&lt;/span> l&lt;span style="color:#f92672">.&lt;/span>sort()
+&lt;span style="color:#f92672">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#66d9ef">print&lt;/span>(l)
+[&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">6&lt;/span>]
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这可能是 Python 维护了两个排序函数的原因，同时 &lt;code>sorted&lt;/code> 的使用频率也高一点。&lt;/p>
+&lt;p>Dart 语言里面 List 也有 &lt;code>.sort()&lt;/code> 函数，和 Python 类似，运行以下代码，输出的结果是 &lt;code>{null}&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-dart" data-lang="dart">&lt;span style="color:#66d9ef">void&lt;/span> main() {
+&lt;span style="color:#66d9ef">var&lt;/span> l &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">6&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>];
+print(l.sort());
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>但是 Dart 里面无需额外的 &lt;code>sorted()&lt;/code> 函数来实现这个功能，只要把 &lt;code>l.sort()&lt;/code> 换成 &lt;code>l..sort()&lt;/code> 即可获取排序后的列表。
+这里用到了 Dart 的 &lt;strong>Cascade Notation&lt;/strong>&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>，&lt;code>..&lt;/code> 表示调用函数后依旧返回对象本身。&lt;/p>
+&lt;p>因此，可以高效地实现很多有趣的功能，例如：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-dart" data-lang="dart">&lt;span style="color:#66d9ef">void&lt;/span> main() {
+&lt;span style="color:#66d9ef">var&lt;/span> l &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">6&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>];
+l
+..add(&lt;span style="color:#ae81ff">10&lt;/span>)
+..add(&lt;span style="color:#ae81ff">8&lt;/span>)
+..add(&lt;span style="color:#ae81ff">20&lt;/span>)
+..sort();
+print(l);
+}
+&lt;span style="color:#75715e">// output: [1, 2, 6, 8, 10, 20]
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>&lt;a href="https://dart.dev/guides/language/language-tour#cascade-notation-">https://dart.dev/guides/language/language-tour#cascade-notation-&lt;/a> &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- //blog.yech.xyz/posts/dart_tip_1/ - 2020 by Ye Chang</description></item><item><title>Make Your Own Feeds for Science</title><link>//blog.yech.xyz/posts/make_your_own_feeds_for_science/</link><pubDate>Thu, 27 Feb 2020 02:20:22 +0800</pubDate><guid>//blog.yech.xyz/posts/make_your_own_feeds_for_science/</guid><description>Chang's blog //blog.yech.xyz/posts/make_your_own_feeds_for_science/ -&lt;p>The Internet is becoming more and more isolated and fragmented, but this has never been caused by technical issues.&lt;/p>
+&lt;p>Ironically, this phenomenon is particularly prominent in scientific journals, which is the exact opposite of the concept of openness and cooperation that science claims.
+A scientist usually spend lots of time in visiting multiple websites for different scientific journals to follow the latest articles in a specific field.
+An experienced scientist is often familiar with the layout of journal websites and keeps in mind the content style of different articles.
+But all of this has nothing to do with science.&lt;/p>
+&lt;p>RSS is an old technology that allows users to access updates of a websites in a standardized format.
+Contrary to various AI-based recommendation algorithms, this is a way for users to obtain information actively.
+But due to considerations of income, RSS feed of major websites are not very useful, or even do not exist.&lt;/p>
+&lt;p>Since I became a freshman in college, I was a heavy user of &lt;a href="http://reader.google.com/">&lt;strong>Google Reader&lt;/strong>&lt;/a>.
+Even within a few years after it closed, I opened its website occasionally to confirm whether it would reopen someday.
+During that time, I started using &lt;strong>online services&lt;/strong> like &lt;a href="https://feed43.com/">Feed43&lt;/a> and &lt;a href="www.feedburner.com">FeedBurner&lt;/a>
+to write RSS rules for scientific journals.
+At the same time, some Python crawlers are written and deployed locally to fetch the fulltext of some journals, and to generate &lt;strong>PDF-format magazines issue by issue&lt;/strong>.&lt;/p>
+&lt;p>However, RSS rules need to be maintained in time with the revision of those websites.
+As the task of wet experiments increases, some of the rules written by myself are outdated.
+For many years I have conceived a community-driven RSS rule sharing platform.
+Until one day I found that many people shared homemade RSS crawling rules on a platform called &lt;a href="https://rsshub.app">RSShub&lt;/a>,
+but there were no rules related to science.
+Then I begun to rewrite my RSS rule into javascript code, and commit to RSShub repo.
+It is still a on going process, but some of the rules are available now.
+Such as:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>cover story and new issue notification&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://rsshub.app/cell/cover">https://rsshub.app/cell/cover&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/cover">https://rsshub.app/nature/cover&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/sciencemag/cover">https://rsshub.app/sciencemag/cover&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>news&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/nature">https://rsshub.app/nature/news-and-comment/nature&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/nbt">https://rsshub.app/nature/news-and-comment/nbt&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/neuro">https://rsshub.app/nature/news-and-comment/neuro&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/ng">https://rsshub.app/nature/news-and-comment/ng&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/ni">https://rsshub.app/nature/news-and-comment/ni&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/nmeth">https://rsshub.app/nature/news-and-comment/nmeth&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/nchem">https://rsshub.app/nature/news-and-comment/nchem&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/nmat">https://rsshub.app/nature/news-and-comment/nmat&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/news-and-comment/natmachintell">https://rsshub.app/nature/news-and-comment/natmachintell&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>papers&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/nbt">https://rsshub.app/nature/research/nbt&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/neuro">https://rsshub.app/nature/research/neuro&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/ng">https://rsshub.app/nature/research/ng&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/ni">https://rsshub.app/nature/research/ni&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/nmeth">https://rsshub.app/nature/research/nmeth&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/nchem">https://rsshub.app/nature/research/nchem&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/nmat">https://rsshub.app/nature/research/nmat&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/nature/research/natmachintell">https://rsshub.app/nature/research/natmachintell&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/sciencemag/current/science">https://rsshub.app/sciencemag/current/science&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/sciencemag/current/advances">https://rsshub.app/sciencemag/current/advances&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/sciencemag/current/immunology">https://rsshub.app/sciencemag/current/immunology&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/sciencemag/current/robotics">https://rsshub.app/sciencemag/current/robotics&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/sciencemag/current/stke">https://rsshub.app/sciencemag/current/stke&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/sciencemag/current/stm">https://rsshub.app/sciencemag/current/stm&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://rsshub.app/cell/cell/current">https://rsshub.app/cell/cell/current&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/make_your_own_feeds_for_science/ - 2020 by Ye Chang</description></item><item><title>随手记录点vim技巧(六)</title><link>//blog.yech.xyz/posts/vim_tip_6/</link><pubDate>Sat, 22 Feb 2020 01:16:22 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_6/</guid><description>Chang's blog //blog.yech.xyz/posts/vim_tip_6/ -&lt;blockquote>
+&lt;p>Q: 怎么查看 vim 中某个单词/高亮的 syntax 的类型？&lt;/p>
+&lt;p>(想修改某一单词的高亮颜色（highlight）或是语法类型（syntax），但如何快速地判断当前被匹配上的类型？)&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>设置快捷键：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-vim" data-lang="vim">&lt;span style="color:#a6e22e">map&lt;/span> &amp;lt;&lt;span style="color:#a6e22e">F10&lt;/span>&amp;gt; :&lt;span style="color:#a6e22e">echo&lt;/span> &lt;span style="color:#75715e">&amp;#34;
+&lt;/span>&lt;span style="color:#75715e"> \ hi&amp;lt;&amp;#34; . synIDattr(synID(line(&amp;#34;.&amp;#34;),col(&amp;#34;.&amp;#34;),1),&amp;#34;name&amp;#34;) . &amp;#34;&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span> \ &lt;span style="color:#a6e22e">trans&lt;/span>&amp;lt;&lt;span style="color:#e6db74">&amp;#34; . synIDattr(synID(line(&amp;#34;&lt;/span>.&lt;span style="color:#e6db74">&amp;#34;),col(&amp;#34;&lt;/span>.&lt;span style="color:#e6db74">&amp;#34;),0),&amp;#34;&lt;/span>&lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#e6db74">&amp;#34;) . &amp;#34;&lt;/span>&amp;gt;&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span> \ &lt;span style="color:#a6e22e">lo&lt;/span>&amp;lt;&lt;span style="color:#e6db74">&amp;#34; . synIDattr(synIDtrans(synID(line(&amp;#34;&lt;/span>.&lt;span style="color:#e6db74">&amp;#34;),col(&amp;#34;&lt;/span>.&lt;span style="color:#e6db74">&amp;#34;),1)),&amp;#34;&lt;/span>&lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#e6db74">&amp;#34;) . &amp;#34;&lt;/span>&amp;gt;&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span> \ &lt;span style="color:#75715e">&amp;#34;&amp;lt;CR&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中，
+&lt;code>synID&lt;/code> 获取 syntax 的 ID，参数分别为（行号，列号，TRUE/FALSE&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>）;
+&lt;code>synIDtrans&lt;/code> 获取 highlight 的 ID，参数分别为（行号，列号，TRUE/FALSE&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>）;
+&lt;code>synIDattr&lt;/code> 获取 ID 对应的 syntax 名称（&amp;ldquo;name&amp;rdquo;）。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>光标定位至感兴趣的单词，按 F10 显示 syntax 和 highlight 的名称，例如：&lt;/p>
+&lt;p>&lt;code>hi&amp;lt;vimMap&amp;gt; trans&amp;lt;vimMap&amp;gt; lo&amp;lt;vimCommand&amp;gt;&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>查看 syntax 的正则表达式：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-vim" data-lang="vim">:&lt;span style="color:#a6e22e">syntax&lt;/span> &lt;span style="color:#a6e22e">list&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在结果定位 syntax 名称的关键词。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>查看文件并进行修改：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-vim" data-lang="vim">:&lt;span style="color:#a6e22e">scriptnames&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看加载的配置文件，并在这些文件中定位目标正则表达式，进行修改。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>Reference&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>&lt;a href="https://vim.fandom.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor">https://vim.fandom.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://superuser.com/questions/686241/how-do-i-tell-what-syntax-file-is-being-used">https://superuser.com/questions/686241/how-do-i-tell-what-syntax-file-is-being-used&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>When {trans} is |TRUE|, transparent items are reduced to the item that they reveal. When {trans} is |FALSE|, the transparent item is returned. &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- //blog.yech.xyz/posts/vim_tip_6/ - 2020 by Ye Chang</description></item><item><title>Build a New PC in 2020</title><link>//blog.yech.xyz/posts/build_a_new_pc_in_2020/</link><pubDate>Tue, 18 Feb 2020 21:17:47 +0800</pubDate><guid>//blog.yech.xyz/posts/build_a_new_pc_in_2020/</guid><description>Chang's blog //blog.yech.xyz/posts/build_a_new_pc_in_2020/ -&lt;h2 id="需求">需求&lt;/h2>
+&lt;p>最近笔记本开始卡顿，加上不知不觉用台式机工作已经几年了，一下子手头没有台式机竟有点没习惯过来。
+心想要不就自己组一台吧，也可以把自己的显卡和显示器利用起来。
+盘算了一下，理想中的机子大概要符合这几个要求：&lt;/p>
+&lt;ul>
+&lt;li>线程数越多越好，至少得 &amp;gt;8。&lt;/li>
+&lt;li>内存在 32 G 往上。&lt;/li>
+&lt;li>&lt;del>体型足够迷你，可以放桌面。&lt;/del> &lt;em>(屈服于现实，最终这一点没能实现)&lt;/em>&lt;/li>
+&lt;/ul>
+&lt;h2 id="配置">配置&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Hardware&lt;/th>
+&lt;th>Spec.&lt;/th>
+&lt;th>Price(￥)&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>CPU&lt;/td>
+&lt;td>AMD R5 3600&lt;/td>
+&lt;td>1369&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>内存&lt;/td>
+&lt;td>USCORSTAR DDR4&lt;/td>
+&lt;td>599x2&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>机箱&lt;/td>
+&lt;td>PHANTEKS P418X&lt;/td>
+&lt;td>269&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>散热器&lt;/td>
+&lt;td>JONSBO SHADOW 240&lt;/td>
+&lt;td>360&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>电源&lt;/td>
+&lt;td>Huntkey 600S&lt;/td>
+&lt;td>309&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>显卡&lt;/td>
+&lt;td>NVIDIA GTX1060&lt;/td>
+&lt;td>~2000(存货)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>显示器&lt;/td>
+&lt;td>DELL P2415Q&lt;/td>
+&lt;td>~3000(存货)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>硬盘&lt;/td>
+&lt;td>INTEL SSDSC2BW48&lt;/td>
+&lt;td>~1000(存货)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>硬盘&lt;/td>
+&lt;td>KINGSTON SV300S3&lt;/td>
+&lt;td>~250(存货)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>硬盘&lt;/td>
+&lt;td>SEAGATE 2T&lt;/td>
+&lt;td>~750(存货)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="坎坷历程">坎坷历程&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>最先购置的是 MSI B450I 主版，买之前就担心 B450 不能兼容三代的锐龙。网页写明了可以支持 R5 3000 系列，后来与客服的沟通也确认了 9
+月份后的型号出厂即可支持，于是买了 12 月批号的板子。然而经过一天的折腾，依然进不去 BIOS，再次询问客服又改口了，说不一定能支持，得自行升级 BIOS，或是返厂升级。这样看来这个主版应该是旧的批次换了个新的盒子，考虑到二手东的作风，直接退货了。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>然而 ITX 的主版选择又太少了，加上 X570 的板子多在促销，虽然有些性能过剩，但性价比绝对是高的，也就放弃了 ITX 主机的幻想了 😢，转为购买 Gigabit 的 X570 WiFi Pro。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>装上 X570 的板子后，发现问题更加严重了，这次直接卡在了 DRAM
+的检测，也就是说内存出问题了。担心是双通道兼容性的问题，不同插槽进行组合，依然无法点亮。接着又用酒精进行擦拭，依然不能点亮，最后一条条排查，发现其中一条无论在哪个插槽都无法点亮，另一条只在某个插槽能识别。这意味着主板和内存都有点毛病。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>勉强跳过 DRAM 的检测后，发现 VGA 和 BOOT 的检测灯来回闪，插上屏幕后也没图像。查说明书也没查出什么，问客服又让我送回去检测。最后在一个帖子上看到说主板首次进入系统前不支持 DP 线输出，后来换了 HDMI 线，果真还真进入了 BIOS 了，这是这么多天首次看到 BIOS 点亮了。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>插上固态硬盘后，一波操作，终于把 Linux 系统给安上了。进入系统后各种升级，接着重启，发现卡 BIOS 了，硬盘也不见了。猜测是 SATA 口出了问题，又是各种排列组合。最后发现是个概率问题，只有一定概率能识别硬盘。再次换货 😢。&lt;em>这里还有个小插曲，在拆机取内存的时候，手一滑，机箱玻璃碎了一地。&lt;/em>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等了快一周，新主板也拿到了，安上去的时候，发现彻底不亮。无奈之下，按了下 CPU 风扇，终于点亮了，不过看来&lt;del>新&lt;/del>（&lt;em>第三次换货的二手&lt;/em>）主板 CPU 的接口也有点毛病。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="结论">结论&lt;/h2>
+&lt;p>没事的话少在 JD 买东西，尤其是在假期。&lt;/p>
+- //blog.yech.xyz/posts/build_a_new_pc_in_2020/ - 2020 by Ye Chang</description></item><item><title>为不同客户端设置不同 DHCP</title><link>//blog.yech.xyz/posts/differnt_dhcp_setting_for_different_client/</link><pubDate>Sat, 15 Feb 2020 16:10:42 +0800</pubDate><guid>//blog.yech.xyz/posts/differnt_dhcp_setting_for_different_client/</guid><description>Chang's blog //blog.yech.xyz/posts/differnt_dhcp_setting_for_different_client/ -&lt;p>通过在路由器下面挂载树莓派（“旁路由”），并将其他客户端的流量通过树莓派转发出去，可以无缝实现透明代理&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>，并实现 DNS 服务器的功能。&lt;/p>
+&lt;p>将其他客户端的流量转发至“旁路由”有两种方式：&lt;/p>
+&lt;ol>
+&lt;li>在路由器中转发 LAN 口的流量至“旁路由”。&lt;/li>
+&lt;li>&lt;strong>设置 LAN 口客户端以 DHCP 获取的 gateway 及 DNS。&lt;/strong>&lt;/li>
+&lt;/ol>
+&lt;p>第 2 种配置方式中，路由器为客户端指定默认的 gateway 及 DNS，而且客户端也有权限自主修改，自由度更高。&lt;/p>
+&lt;hr>
+&lt;p>OpenWrt 中的 DHCP 可以由 dnsmasq 来实现&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>，以 OpenWrt 为例，第 2 种方法设置方式如下：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>在 &lt;code>/etc/config/dhcp&lt;/code> 文件中添加以下配置文件&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>:&lt;/p>
+&lt;p>&lt;em>设置所有客户端&lt;/em>&lt;/p>
+&lt;pre>&lt;code>config dhcp 'lan'
+option interface 'lan'
+option leasetime '48h'
+option ndp 'relay'
+option ra 'server'
+option dhcpv6 'relay'
+list dhcp_option '3,192.168.2.1'
+list dhcp_option '6,192.168.2.1'
+&lt;/code>&lt;/pre>&lt;p>&lt;em>设置某一个客户端&lt;/em>&lt;/p>
+&lt;pre>&lt;code>config host
+option name 'my-PC'
+option mac 'XX:XX:XX:XX:XX:XX'
+option ip '192.168.1.100'
+option tag 'vpn'
+config tag 'vpn'
+list dhcp_option '3,192.168.1.2'
+list dhcp_option '6,192.168.1.2'
+option force '1'
+&lt;/code>&lt;/pre>&lt;p>其中，&lt;code>option mac&lt;/code> 为客户端的网卡地址，用于静态地址绑定；&lt;strong>&lt;code>option tag&lt;/code>为配置加上&lt;code>classifier&lt;/code>标签&lt;/strong>&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>，用于进一步的配置。
+&lt;code>list dhcp_option '3,192.168.1.2'&lt;/code> 是指定 gateway;
+&lt;code>list dhcp_option '6,192.168.1.2'&lt;/code> 是指定 DNS。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>最后重启 dnsmasq 服务：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">/etc/init.d/dnsmasq restart
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>Reference&lt;/p>
+&lt;/blockquote>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>若采用 V2ray，可参考这个&lt;a href="https://toutyrater.github.io/app/tproxy.html">教程&lt;/a>。 &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>查阅&lt;a href="https://openwrt.org/start?id=docs/guide-user/base-system/dhcp">文档&lt;/a>。 &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:3" role="doc-endnote">
+&lt;p>官方文档似乎没有详细描述这个用法，而且中文版的文档还是过时的，最后是通过&lt;a href="https://sites.google.com/site/virtualdesktoplinkboxbox/home/computing/electronics/routers/openwrt?tmpl=%2Fsystem%2Fapp%2Ftemplates%2Fprint%2F&amp;amp;showPrintDialog=1">这个案例&lt;/a>试出来的。 &lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- //blog.yech.xyz/posts/differnt_dhcp_setting_for_different_client/ - 2020 by Ye Chang</description></item><item><title>Open Resource for 2019-NCoV</title><link>//blog.yech.xyz/posts/open_resource_for_2019-ncov/</link><pubDate>Thu, 06 Feb 2020 18:09:54 +0800</pubDate><guid>//blog.yech.xyz/posts/open_resource_for_2019-ncov/</guid><description>Chang's blog //blog.yech.xyz/posts/open_resource_for_2019-ncov/ -&lt;h2 id="-genomic-sequence">🧬 Genomic sequence&lt;/h2>
+&lt;h3 id="reference-genome">Reference genome&lt;/h3>
+&lt;p>&lt;strong>Genebank ID&lt;/strong> (NCBI):&lt;/p>
+&lt;p>&lt;a href="https://www.ncbi.nlm.nih.gov/nuccore/MN908947">MN908947&lt;/a>&lt;/p>
+&lt;p>&lt;img src="//blog.yech.xyz/img/Wuhan_seafood_market_pneumonia_virus_map.svg" alt="Genome map">&lt;/p>
+&lt;h3 id="genome-resource">Genome resource&lt;/h3>
+&lt;p>&lt;strong>NCBI 官方整理数据&lt;/strong>：&lt;/p>
+&lt;p>&lt;a href="https://www.ncbi.nlm.nih.gov/genbank/2019-ncov-seqs/">GeneBank&lt;/a>&lt;/p>
+&lt;p>&lt;strong>中科院 2019 新型冠状病毒资源库&lt;/strong>（&lt;a href="https://bigd.big.ac.cn/ncov#progress">NGDC&lt;/a>）:&lt;/p>
+&lt;p>example&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>病毒株名&lt;/th>
+&lt;th>序列号&lt;/th>
+&lt;th>数据来源&lt;/th>
+&lt;th>相关 ID&lt;/th>
+&lt;th>序列完整度&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2019-nCoV WHU01&lt;/td>
+&lt;td>MN988668&lt;/td>
+&lt;td>GenBank&lt;/td>
+&lt;td>EPI_ISL_406716&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV/USA-CA1/2020&lt;/td>
+&lt;td>MN994467&lt;/td>
+&lt;td>GenBank&lt;/td>
+&lt;td>EPI_ISL_406034&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV/USA-CA2/2020&lt;/td>
+&lt;td>MN994468&lt;/td>
+&lt;td>GenBank&lt;/td>
+&lt;td>EPI_ISL_406036&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Foshan/20SF207/2020&lt;/td>
+&lt;td>EPI_ISL_406534&lt;/td>
+&lt;td>GISAID&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Foshan/20SF210/2020&lt;/td>
+&lt;td>EPI_ISL_406535&lt;/td>
+&lt;td>GISAID&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;hellip;&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007c_2020&lt;/td>
+&lt;td>MN975268&lt;/td>
+&lt;td>GenBank&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007c_2020&lt;/td>
+&lt;td>MN975265&lt;/td>
+&lt;td>GenBank&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;a href="//blog.yech.xyz/dat/Released_2019-nCoV_Genome_Sequences.csv">more info&lt;/a> (update in 2020-02-02 03:14)&lt;/p>
+&lt;h3 id="dna-sequence-donwload">DNA sequence donwload&lt;/h3>
+&lt;p>Collected by YC, &lt;a href="//blog.yech.xyz/posts/phylogenetic_analysis_for_2019-ncov/">read more&lt;/a>&lt;/p>
+&lt;h2 id="-epidemic-data">🦠 Epidemic data&lt;/h2>
+&lt;h3 id="data-source">Data source&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://3g.dxy.cn/newh5/view/pneumonia">https://3g.dxy.cn/newh5/view/pneumonia&lt;/a>&lt;/p>
+&lt;p>来自“丁香园”的实时数据。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://news.qq.com/zt2020/page/feiyan.htm">https://news.qq.com/zt2020/page/feiyan.htm&lt;/a>&lt;/p>
+&lt;p>来自“腾讯新闻”的实时数据。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://activity.peopleapp.com/broadcast/">https://activity.peopleapp.com/broadcast/&lt;/a>&lt;/p>
+&lt;p>来自“人民日报”的实时数据。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://sa.sogou.com/new-weball/page/sgs/epidemic">https://sa.sogou.com/new-weball/page/sgs/epidemic&lt;/a>&lt;/p>
+&lt;p>来自“搜狗搜索”的实时数据。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://bnonews.com/index.php/2020/01/the-latest-coronavirus-cases/">https://bnonews.com/index.php/2020/01/the-latest-coronavirus-cases/&lt;/a>&lt;/p>
+&lt;p>来自 BNO 的数据整理。&lt;strong>和国内一系列网站相比，每条数据均提供了数据来源的链接，看起来最为严谨。&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="achieved-data">Achieved data&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://raw.githubusercontent.com/BlankerL/DXY-2019-nCoV-Data/master/DXYArea.csv">https://raw.githubusercontent.com/BlankerL/DXY-2019-nCoV-Data/master/DXYArea.csv&lt;/a>&lt;/p>
+&lt;p>Time series date by area.
+同时，开放了实时获取的 API：&lt;a href="https://lab.isaaclin.cn/nCoV/">&lt;img src="https://img.shields.io/website?url=https%3A%2F%2Flab.isaaclin.cn" alt="API Status">&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/globalcitizen/2019-wuhan-coronavirus-data">https://github.com/globalcitizen/2019-wuhan-coronavirus-data&lt;/a>&lt;/p>
+&lt;p>分时段保存了 DXY 和 BNO 的数据。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>二次接口&lt;/strong>:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://service-f9fjwngp-1252021671.bj.apigw.tencentcs.com/release/pneumonia">https://service-f9fjwngp-1252021671.bj.apigw.tencentcs.com/release/pneumonia&lt;/a>&lt;/p>
+&lt;p>实时获取“丁香园”的数据接口&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="visualization">Visualization&lt;/h2>
+&lt;p>&lt;strong>Map&lt;/strong>:
+&lt;img src="//blog.yech.xyz/img/2019-NCoV-animation.gif" alt="Geo map">&lt;/p>
+&lt;p>阳性病人的地理位置：&lt;/p>
+&lt;p>&lt;a href="https://yech.xyz/nCoV_GZ_map.html">https://yech.xyz/nCoV_GZ_map.html&lt;/a>&lt;/p>
+- //blog.yech.xyz/posts/open_resource_for_2019-ncov/ - 2020 by Ye Chang</description></item><item><title>Fcitx5 as Chinese Input Method</title><link>//blog.yech.xyz/posts/fcitx5_as_chinese_input_method/</link><pubDate>Thu, 06 Feb 2020 17:13:56 +0800</pubDate><guid>//blog.yech.xyz/posts/fcitx5_as_chinese_input_method/</guid><description>Chang's blog //blog.yech.xyz/posts/fcitx5_as_chinese_input_method/ -&lt;blockquote>
+&lt;p>安装 Archlinux 最后一件事往往是安装搜狗输入法，这也是最困难的一件事。&lt;/p>
+&lt;ul>
+&lt;li>从 AUR 编译源码需要花费大量的时间（&lt;em>低配置的 Laptop 上需要半天&lt;/em>）。&lt;/li>
+&lt;li>为了兼容 QT4, QT5, GTK4, GTK5, XIM 等框架的应用，需要各种调试。&lt;/li>
+&lt;li>搜狗输入法带有 bug，经常无法调出输入法，或是输入皮肤不显示。&lt;/li>
+&lt;/ul>
+&lt;p>这直到 fcitx5 发布，一切终于有了转机会。
+若非进行大量的中文写作，fcitx5 中的拼音插件&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>完全可以胜任日常的中文输入。&lt;/p>
+&lt;/blockquote>
+&lt;p>fcitx5 安装及配置步骤也非常简单，而且稳定性出奇的好。大致步骤如下：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>安装 fcitx5&lt;/strong>：&lt;/p>
+&lt;p>从 AUR 安装&lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">yay -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>若配置了 ArchlinuxCN&lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>，从 ArchlinuxCN 安装：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">pacman -S fcitx5-git fcitx5-qt5-git fcitx5-gtk-git fcitx5-chinese-addons-git
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>设置 fcitx5 的开启&lt;/strong>：&lt;/p>
+&lt;p>基于 Xorg 的桌面环境，添加配置到 ~/.xprofile：&lt;/p>
+&lt;pre>&lt;code>export GTK_IM_MODULE=fcitx5
+export XMODIFIERS=&amp;quot;@im=fcitx&amp;quot;
+export QT_IM_MODULE=fcitx5
+fcitx5 &amp;gt; /dev/null &amp;amp;
+&lt;/code>&lt;/pre>&lt;p>基于 Wayland 的桌面环境，添加配置到 ~/.pam_environment：&lt;/p>
+&lt;pre>&lt;code>GTK_IM_MODULE DEFAULT=fcitx5
+QT_IM_MODULE DEFAULT=fcitx5
+XMODIFIERS DEFAULT=@im=fcitx5
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>配置 fcitx5&lt;/strong>：&lt;/p>
+&lt;p>(&lt;strong>配置时需要关闭 fcitx !!!&lt;/strong>)&lt;/p>
+&lt;ul>
+&lt;li>在 &lt;code>~/.config/fcitx5/profile&lt;/code> 中添加：&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>[Groups/0]
+# Group Name
+Name=Default
+# Layout
+Default Layout=us
+# Default Input Method
+DefaultIM=pinyin
+[Groups/0/Items/0]
+# Name
+Name=keyboard-us
+# Layout
+Layout=
+[Groups/0/Items/1]
+# Name
+Name=pinyin
+# Layout
+Layout=
+[GroupOrder]
+0=Default
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>下载主题&lt;sup id="fnref:4">&lt;a href="#fn:4" class="footnote-ref" role="doc-noteref">4&lt;/a>&lt;/sup>：&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>git clone https://github.com/weearc/fcitx5-skin-simple-blue.git ~/.local/share/fcitx5/themes/simple-blue
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>开启 fcitx5 然后关闭，让其自动生成配置文件。&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>启用主题并设置字体：&lt;/li>
+&lt;/ul>
+&lt;p>在 &lt;code>~/.config/fcitx5/conf/classicui.conf&lt;/code> 中添加：&lt;/p>
+&lt;pre>&lt;code># True, if you want a vertical candidate list
+Vertical Candidate List=False
+# Use Per Screen DPI
+PerScreenDPI=True
+# Font for Chinese and English, then font size
+Font=&amp;quot;Noto Sans CJK SC Regular Noto Sans Regular 11&amp;quot;
+# Theme
+Theme=simple-blue
+&lt;/code>&lt;/pre>&lt;p>其中，&lt;code>Theme&lt;/code> 为下载的主题文件夹名称，&lt;code>Font&lt;/code> 设置输入法的显示字体及字号。&lt;/p>
+&lt;ul>
+&lt;li>配置拼音输入法（针对 fcitx5-chinese-addons）：&lt;/li>
+&lt;/ul>
+&lt;p>在 &lt;code>~/.config/fcitx5/conf/pinyin.conf&lt;/code> 中修改，使得 &lt;code>&amp;lt;&lt;/code>, &lt;code>&amp;gt;&lt;/code> 键可以用于翻页：&lt;/p>
+&lt;pre>&lt;code>[PrevPage]
+0=minus
+1=Up
+2=comma
+[NextPage]
+0=equal
+1=Down
+2=period
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>配置拼音输入法中的云拼音输入法（同样针对 fcitx5-chinese-addons）：&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;strong>尝试了很多次才知道配置参数为 &lt;code>Backend&lt;/code> 而不是 &lt;code>CloudPinyinBackend&lt;/code>，被代码的命名误导了。配置文件是独立的文件，而不是放在 &lt;code>pinyin.conf&lt;/code> 里面&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>在 &lt;code>~/.config/fcitx5/conf/cloudpinyin.conf&lt;/code> 中修改云拼音的来源从 Google 修改为 Baidu。&lt;/p>
+&lt;pre>&lt;code># Minimum Pinyin Length
+MinimumPinyinLength=4
+# Backend
+Backend=Baidu
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ol>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>fcitx5 也获得了 &lt;a href="https://github.com/fcitx/fcitx5-rime">Rime 输入法的插件&lt;/a>支持，功能更为强大，但配置也相对复杂，有悖于这个文章的初衷。 &lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:2" role="doc-endnote">
+&lt;p>yaourt 已经停止维护了，用 yay &lt;a href="https://zhuanlan.zhihu.com/p/42287487">替代&lt;/a>。 &lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:3" role="doc-endnote">
+&lt;p>从 &lt;a href="https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/">ArchlinuxCN&lt;/a> 下载预编译的安装包，可以省去编译的时间。 &lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li id="fn:4" role="doc-endnote">
+&lt;p>另外推荐两款皮肤：&lt;a href="https://github.com/escape0707/fcitx5-adwaita-dark.git">adwaita-dark&lt;/a> 和 &lt;a href="https://github.com/hosxy/Fcitx5-Material-Color.git">Material-Color&lt;/a>。 &lt;a href="#fnref:4" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section>
+- //blog.yech.xyz/posts/fcitx5_as_chinese_input_method/ - 2020 by Ye Chang</description></item><item><title>Phylogenetic Analysis for 2019-NCoV</title><link>//blog.yech.xyz/posts/phylogenetic_analysis_for_2019-ncov/</link><pubDate>Sun, 02 Feb 2020 16:48:18 +0800</pubDate><guid>//blog.yech.xyz/posts/phylogenetic_analysis_for_2019-ncov/</guid><description>Chang's blog //blog.yech.xyz/posts/phylogenetic_analysis_for_2019-ncov/ -&lt;p>Data source:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Sampele_Name&lt;/th>
+&lt;th>Query_ID&lt;sup>[1]&lt;/sup>&lt;/th>
+&lt;th>Completeness&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/IPBCAMS-WH-01/2019&lt;/td>
+&lt;td>&lt;a href="ftp://download.big.ac.cn/gwh/Viruses/Betacoronavirus_IPBCAMS-WH-01_GWHABKF00000000/GWHABKF00000000.genome.fasta.gz">GWHABKF00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/IPBCAMS-WH-02/2019&lt;/td>
+&lt;td>&lt;a href="ftp://download.big.ac.cn/gwh/Viruses/Betacoronavirus_IPBCAMS-WH-02_GWHABKG00000000/GWHABKG00000000.genome.fasta.gz">GWHABKG00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/IPBCAMS-WH-03/2019&lt;/td>
+&lt;td>&lt;a href="ftp://download.big.ac.cn/gwh/Viruses/Betacoronavirus_IPBCAMS-WH-03_GWHABKH00000000/GWHABKH00000000.genome.fasta.gz">GWHABKH00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/IPBCAMS-WH-04/2019&lt;/td>
+&lt;td>&lt;a href="ftp://download.big.ac.cn/gwh/Viruses/Betacoronavirus_IPBCAMS-WH-04_GWHABKI00000000/GWHABKI00000000.genome.fasta.gz">GWHABKI00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/IPBCAMS-WH-05/2020&lt;/td>
+&lt;td>&lt;a href="ftp://download.big.ac.cn/gwh/Viruses/Betacoronavirus_IPBCAMS-WH-05_GWHABKJ00000000/GWHABKJ00000000.genome.fasta.gz">GWHABKJ00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WIV02&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN996527&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">GWHABKK00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WIV04&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN996528&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">GWHABKL00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WIV05&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN996529&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">GWHABKM00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WIV06&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN996530&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">GWHABKN00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WIV07&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN996531&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">GWHABKO00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TG13&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN996532&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">GWHABKP00000000&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Wuhan-Hu-1&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN908947&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN908947 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-002a_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN938384&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN938384 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-005b_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN975262&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN975262 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV/USA-WA1/2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN985325&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN985325 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV WHU01&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN988668&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN988668 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV WHU02&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN988669&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN988669 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV/USA-IL1/2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN988713&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN988713 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV/USA-CA1/2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN994467&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN994467 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV/USA-CA2/2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN994468&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN994468 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV/USA-AZ1/2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN997409&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN997409 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Australia/VIC01/2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MT007544&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MT007544 &lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH-01/2019&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-01.fasta">NMDC60013002-01&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH-03/2019&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-03.fasta">NMDC60013002-03&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH-04/2019&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-04.fasta">NMDC60013002-04&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH19002/2019&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-05.fasta">NMDC60013002-05&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH19008/2019 &lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-06.fasta">NMDC60013002-06&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/YS8011/2020&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-07.fasta">NMDC60013002-07&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH19001/2019&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-08.fasta">NMDC60013002-08&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH19004/2020&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-09.fasta">NMDC60013002-09&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH19005/2019&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-10.fasta">NMDC60013002-10&lt;/a>&lt;/td>
+&lt;td>Complete&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-001_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN938385&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN938385 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-004_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN938386&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN938386 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-001_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN938387&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN938387 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-002b_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN938388&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN938388 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-004_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN938389&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN938389 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-005_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN938390&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN938390 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SI200040-SP&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN970003&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN970003 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SI200121-SP&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN970004&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN970004 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007a_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN975263&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN975263 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007b_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN975264&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN975264 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007c_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN975265&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN975265 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007a_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN975266&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN975266 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007b_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN975267&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN975267 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019-nCoV_HKU-SZ-007c_2020&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MN975268&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MN975268 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019 nCoV/Italy-INMI1&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MT008022&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MT008022 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2019 nCoV/Italy-INMI2&lt;/td>
+&lt;td>&lt;a href="https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?tool=portal&amp;amp;save=file&amp;amp;log$=seqview&amp;amp;db=nuccore&amp;amp;report=fasta&amp;amp;id=MT008023&amp;amp;conwithfeat=on&amp;amp;withparts=on&amp;amp;hide-cdd=on">MT008023 &lt;/a>&lt;/td>
+&lt;td>Partial/gene level&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BetaCoV/Wuhan/WH-02/2019&lt;/td>
+&lt;td>&lt;a href="http://www.nmdc.cn/SProject/virus/NMDC10013002/NMDC60013002-02.fasta">NMDC60013002-02&lt;/a>&lt;/td>
+&lt;td>Partial/scaffold level&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>[1]: &lt;em>With download link, click for downlaod fasta file.&lt;/em>&lt;/li>
+&lt;li>[2]: &lt;em>GISAID data is not public available.&lt;/em>&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/phylogenetic_analysis_for_2019-ncov/ - 2020 by Ye Chang</description></item></channel></rss>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>tools on Chang's blog</title><link>//blog.yech.xyz/tags/tools/</link><description>Recent content in tools on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Tue, 05 Feb 2019 18:28:41 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/tags/tools/index.xml" rel="self" type="application/rss+xml"/><item><title>Customize Deepin Desktop for Archlinux</title><link>//blog.yech.xyz/posts/customize_deepin_desktop_for_archlinux/</link><pubDate>Tue, 05 Feb 2019 18:28:41 +0800</pubDate><guid>//blog.yech.xyz/posts/customize_deepin_desktop_for_archlinux/</guid><description> 在英文环境中打开日历的农历显示？[1]
+创建配置文件：~/.config/deepin/dde-calendar.conf
+在其中添加 EnableLunar=true
+修改窗口的标题栏宽度？[2]
+创建配置文件：
+~/.local/share/deepin/themes/deepin/light/titlebar.ini(If you use light theme)
+或 ~/.local/share/deepin/themes/deepin/dark/titlebar.ini (If you use dark theme)
+在其中添加
+``` [Active] height=25 [Inactive] height=25 ``` 注：仅对 deepin-kwin 生效，对 deepin-wm 无效。
+Reference
+https://bbs.deepin.org/forum.php?mod=viewthread&amp;amp;tid=154593&amp;amp;extra=&amp;amp;page=2 https://github.com/linuxdeepin/developer-center/issues/1210</description></item></channel></rss>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>editor on Chang's blog</title><link>//blog.yech.xyz/tags/editor/</link><description>Recent content in editor on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Sat, 22 Feb 2020 01:16:22 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/tags/editor/index.xml" rel="self" type="application/rss+xml"/><item><title>随手记录点vim技巧(六)</title><link>//blog.yech.xyz/posts/vim_tip_6/</link><pubDate>Sat, 22 Feb 2020 01:16:22 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_6/</guid><description>Q: 怎么查看 vim 中某个单词/高亮的 syntax 的类型？
+(想修改某一单词的高亮颜色（highlight）或是语法类型（syntax），但如何快速地判断当前被匹配上的类型？)
+设置快捷键：
+map &amp;lt;F10&amp;gt; :echo &amp;#34; \ hi&amp;lt;&amp;#34; . synIDattr(synID(line(&amp;#34;.&amp;#34;),col(&amp;#34;.&amp;#34;),1),&amp;#34;name&amp;#34;) . &amp;#34;&amp;gt; \ trans&amp;lt;&amp;#34; . synIDattr(synID(line(&amp;#34;.&amp;#34;),col(&amp;#34;.&amp;#34;),0),&amp;#34;name&amp;#34;) . &amp;#34;&amp;gt; \ lo&amp;lt;&amp;#34; . synIDattr(synIDtrans(synID(line(&amp;#34;.&amp;#34;),col(&amp;#34;.&amp;#34;),1)),&amp;#34;name&amp;#34;) . &amp;#34;&amp;gt; \ &amp;#34;&amp;lt;CR&amp;gt;其中， synID 获取 syntax 的 ID，参数分别为（行号，列号，TRUE/FALSE1）; synIDtrans 获取 highlight 的 ID，参数分别为（行号，列号，TRUE/FALSE1）; synIDattr 获取 ID 对应的 syntax 名称（&amp;ldquo;name&amp;rdquo;）。
+光标定位至感兴趣的单词，按 F10 显示 syntax 和 highlight 的名称，例如：
+hi&amp;lt;vimMap&amp;gt; trans&amp;lt;vimMap&amp;gt; lo&amp;lt;vimCommand&amp;gt;
+查看 syntax 的正则表达式：
+:syntax list在结果定位 syntax 名称的关键词。</description></item><item><title>随手记录点vim技巧(五)</title><link>//blog.yech.xyz/posts/vim_tip_5/</link><pubDate>Thu, 30 Jan 2020 14:50:30 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_5/</guid><description> Q: 怎么查看 vim 启动时加载的脚本？
+(启动 vim 时怎么 debug？)
+查看 vim 加载时执行了哪些脚本（加载了那些插件）:
+:scriptnames&amp;#39; or `:scr` for short查看每一个脚本/插件的耗时：
+vim --startuptime start_time.log filename 不加载插件启动：
+# vim vim --clean # neovim nvim --noplugin 指定从另外的配置文件启动：
+vim -u min.vim filename Reference
+http://www.wepeng.net/article/detail/100518128.html</description></item><item><title>随手记录点vim技巧(四)</title><link>//blog.yech.xyz/posts/vim_tip_4/</link><pubDate>Thu, 28 Feb 2019 01:54:11 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_4/</guid><description>&lt;blockquote>
+&lt;p>Q: 怎么快速删除每一行最后一个字符?
+（怎么录制宏？）&lt;/p>
+&lt;/blockquote>
+&lt;p>例如一个文件每一行最后一个字符是句号，需要把它们都去掉。&lt;/p></description></item><item><title>Use Black as Formatter for Jupyter Notebook</title><link>//blog.yech.xyz/posts/use_black_as_formatter_for_jupyter_notebook/</link><pubDate>Thu, 31 Jan 2019 20:34:01 +0800</pubDate><guid>//blog.yech.xyz/posts/use_black_as_formatter_for_jupyter_notebook/</guid><description>How to setup?
+Install Nbextensions in jupyter notebook.
+see https://github.com/ipython-contrib/jupyter_contrib_nbextensions#1-install-the-python-package
+Enable code prettify Nbextensions in jupyter notebook.
+check the box in setting page
+Paste the configuration below into Prameters.
+{ &amp;#34;python&amp;#34;: { &amp;#34;library&amp;#34;: &amp;#34;import json\ndef black_reformat(cell_text):\n import black\n import re\n cell_text = re.sub(&amp;#39;^%&amp;#39;, &amp;#39;#%#&amp;#39;, cell_text, flags=re.M)\n try:\n reformated_text = black.format_str(cell_text, 88)\n except TypeError:\n reformated_text = black.format_str(cell_text, mode=black.FileMode(line_length=88))\n return re.sub(&amp;#39;^#%#&amp;#39;, &amp;#39;%&amp;#39;, reformated_text, flags=re.M)&amp;#34;, &amp;#34;prefix&amp;#34;: &amp;#34;print(json.</description></item><item><title>随手记录点vim技巧(三)</title><link>//blog.yech.xyz/posts/vim_tip_3/</link><pubDate>Thu, 01 Feb 2018 15:21:53 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_3/</guid><description>&lt;blockquote>
+&lt;p>Q: vim 怎么快速插入 iso-8601 格式的时间戳？&lt;/p>
+&lt;/blockquote></description></item><item><title>随手记录点vim技巧(二)</title><link>//blog.yech.xyz/posts/vim_tip_2/</link><pubDate>Sun, 27 Dec 2015 23:41:23 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_2/</guid><description>&lt;blockquote>
+&lt;p>Q: 删除到/插入到/移动到 行首怎么搞?&lt;/p>
+&lt;/blockquote></description></item><item><title>随手记录点vim技巧(一)</title><link>//blog.yech.xyz/posts/vim_tip_1/</link><pubDate>Sun, 27 Dec 2015 13:41:23 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_1/</guid><description>&lt;blockquote>
+&lt;p>Q: 粘贴段落的时候, 自动缩进和加注释符, 格式都乱了, 怎么办?&lt;/p>
+&lt;/blockquote></description></item><item><title>随手记录点vim技巧</title><link>//blog.yech.xyz/posts/vim_tip/</link><pubDate>Sun, 27 Dec 2015 13:41:16 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip/</guid><description>这个系列叫“随手记录点 vim 技巧”
+大概就是把自己重复遇到过几次以上的 vim 问题记录起来，现在记性不好了</description></item></channel></rss>

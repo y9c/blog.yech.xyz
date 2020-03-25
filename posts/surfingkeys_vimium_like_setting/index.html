@@ -1,0 +1,340 @@
+<!doctype html><html><head><title>vimium like setting for surfingkeys</title><meta charset=utf-8><meta name=X-UA-Compatible content="IE=edge"><meta name=google-site-verification content><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name=viewport><meta content="telephone=no" name=format-detection><meta name=description content><meta name=renderer content="webkit"><meta name=theme-color content="#ffffff"><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-71962122-1','auto');ga('send','pageview');}</script><script src=/vendor/js/jquery.min.js></script><script src=/vendor/js/popper.min.js></script><script src=/vendor/js/bootstrap.min.js></script><script src=/vendor/js/smooth-scroll.polyfills.min.js></script><link type=text/css rel=stylesheet href=/vendor/css/bootstrap.min.css><script src=/vendor/js/vue.min.js></script><link rel=icon href=favicon-96x96.png><link rel=stylesheet href=//blog.yech.xyz/scss/journal.min.5c667e74038e21ddbb9024b67930f8544e02af62491281cf73fdb817eec2947e.css integrity="sha256-XGZ+dAOOId27kCS2eTD4VE4Cr2JJEoHPc/24F+7ClH4=" media=screen><script src=//blog.yech.xyz//js/loadCSS.js></script><script src=//blog.yech.xyz//js/table.js></script><script src=//blog.yech.xyz//js/toc.js></script><script>loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");</script></head><body><div id=app><div ref=sideContainer class=side-container><a class="a-block nav-head false" href=//blog.yech.xyz/><div class=nav-title>Chang's blog</div><div class=nav-subtitle>learn and share...</div></a><div class=nav-link-list><a class="a-block nav-link-item false" href=/categories>Categories</a>
+<a class="a-block nav-link-item false" href=/tags>Tags</a></div><div class=nav-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+2020 by Ye Chang</div></div><div ref=extraContainer class=extra-container><div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }"></div><div class=pagination><a id=globalBackToTop class="pagination-action animated-visibility" href=#top :class="{ invisible: scrollY == 0 }"><i class="material-icons pagination-action-icon">keyboard_arrow_up</i></a></div></div><div class=single-column-drawer-container ref=drawer v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }"><div class=drawer-content><div class=drawer-menu><a class="a-block drawer-menu-item false" href=/categories>Categories</a>
+<a class="a-block drawer-menu-item false" href=/tags>Tags</a><div class=toc></div></div></div></div><transition name=fade><div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if=isDrawerOpen v-on:click=toggleDrawer></div></transition><nav ref=navBar class="navbar sticky-top navbar-light single-column-nav-container"><div ref=navBackground class=nav-background></div><div class="container container-narrow nav-content"><button id=nav_dropdown_btn class=nav-dropdown-toggle type=button v-on:click=toggleDrawer>
+<i class=material-icons>menu</i></button>
+<a ref=navTitle class=navbar-brand href=//blog.yech.xyz/>Chang's blog</a></div></nav><div class=single-column-header-container ref=pageHead v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }"><a href=//blog.yech.xyz/><div class=single-column-header-title>Chang's blog</div><div class=single-column-header-subtitle>learn and share...</div></a></div><div id=content><div ref=streamContainer class=stream-container><div class="post-list-container post-list-container-shadow"><div class=post><div class=post-head-wrapper-text-only style="background-image:url('/')"><div class=post-title>vimium like setting for surfingkeys<div class=post-meta><time itemprop=datePublished>2016-01-01 01:14</time>
+<i class=material-icons>folder</i>
+<a href=/categories/coding>coding</a>
+&nbsp;
+<i class=material-icons>label</i>
+<a href=/tags/vim>vim</a>
+&nbsp;
+<a href=/tags/web>web</a>
+&nbsp;</div></div></div><div class=post-body-wrapper><div class=post-body><p>A conf file of surfingkeys for vimium user</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=color:#75715e>//help
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;?&#34;</span>, <span style=color:#e6db74>&#34;Show usage&#34;</span>, <span style=color:#e6db74>&#34;Normal.showUsage()&#34;</span>);
+<span style=color:#75715e>//toggle
+</span><span style=color:#75715e></span><span style=color:#a6e22e>Events</span>.<span style=color:#a6e22e>hotKey</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;i&#34;</span>; <span style=color:#75715e>// hotkey must be one keystroke with/without modifier, it can not be a sequence of keystrokes like `gg`.
+</span><span style=color:#75715e></span>
+<span style=color:#75715e>// tab
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;ZQ&#34;</span>, <span style=color:#e6db74>&#34;Quit&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;quit&#34;</span>);
+});
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;ZZ&#34;</span>, <span style=color:#e6db74>&#34;Save session and quit&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;createSession&#34;</span>, {
+    <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;LAST&#34;</span>,
+  });
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;quit&#34;</span>);
+});
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;ZR&#34;</span>, <span style=color:#e6db74>&#34;Restore last session&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;openSession&#34;</span>, {
+    <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;LAST&#34;</span>,
+  });
+});
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;T&#34;</span>, <span style=color:#e6db74>&#34;Choose a tab&#34;</span>, <span style=color:#e6db74>&#34;Normal.chooseTab()&#34;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;x&#34;</span>, <span style=color:#e6db74>&#34;Close current tab&#34;</span>, <span style=color:#e6db74>&#39;RUNTIME(&#34;closeTab&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;X&#34;</span>, <span style=color:#e6db74>&#34;Restore closed tab&#34;</span>, <span style=color:#e6db74>&#39;RUNTIME(&#34;openLast&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;yt&#34;</span>, <span style=color:#e6db74>&#34;Duplicate current tab&#34;</span>, <span style=color:#e6db74>&#39;RUNTIME(&#34;duplicateTab&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;J&#34;</span>, <span style=color:#e6db74>&#34;Go one tab left&#34;</span>, <span style=color:#e6db74>&#39;RUNTIME(&#34;previousTab&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;K&#34;</span>, <span style=color:#e6db74>&#34;Go one tab right&#34;</span>, <span style=color:#e6db74>&#39;RUNTIME(&#34;nextTab&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;P&#34;</span>, <span style=color:#e6db74>&#34;pin/unpin current tab&#34;</span>, <span style=color:#e6db74>&#39;RUNTIME(&#34;togglePinTab&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;B&#34;</span>,
+  <span style=color:#e6db74>&#34;Go one tab history back&#34;</span>,
+  <span style=color:#e6db74>&#39;RUNTIME(&#34;historyTab&#34;, {backward: true})&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;gF&#34;</span>,
+  <span style=color:#e6db74>&#34;Go one tab history forward&#34;</span>,
+  <span style=color:#e6db74>&#39;RUNTIME(&#34;historyTab&#34;, {backward: false})&#39;</span>
+);
+
+<span style=color:#75715e>// page scroll
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;cs&#34;</span>, <span style=color:#e6db74>&#34;Change scroll target&#34;</span>, <span style=color:#e6db74>&#34;Normal.changeScrollTarget()&#34;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;gg&#34;</span>, <span style=color:#e6db74>&#34;Scroll to the top of the page&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;top&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;G&#34;</span>, <span style=color:#e6db74>&#34;Scroll to the bottom of the page&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;bottom&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;u&#34;</span>, <span style=color:#e6db74>&#34;Scroll a page up&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;pageUp&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;d&#34;</span>, <span style=color:#e6db74>&#34;Scroll a page down&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;pageDown&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;j&#34;</span>, <span style=color:#e6db74>&#34;Scroll down&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;down&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;k&#34;</span>, <span style=color:#e6db74>&#34;Scroll up&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;up&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;h&#34;</span>, <span style=color:#e6db74>&#34;Scroll left&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;left&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;l&#34;</span>, <span style=color:#e6db74>&#34;Scroll right&#34;</span>, <span style=color:#e6db74>&#39;Normal.scroll(&#34;right&#34;)&#39;</span>);
+
+<span style=color:#75715e>// history
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;gh&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome History&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://history/&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;H&#34;</span>, <span style=color:#e6db74>&#34;Go back in history&#34;</span>, <span style=color:#e6db74>&#34;history.go(-1)&#34;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;L&#34;</span>, <span style=color:#e6db74>&#34;Go forward in history&#34;</span>, <span style=color:#e6db74>&#34;history.go(1)&#34;</span>);
+
+<span style=color:#75715e>// new
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;r&#34;</span>, <span style=color:#e6db74>&#34;Reload the page&#34;</span>, <span style=color:#e6db74>&#39;RUNTIME(&#34;reloadTab&#34;, { nocache: false })&#39;</span>);
+
+<span style=color:#75715e>// input
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;i&#34;</span>,
+  <span style=color:#e6db74>&#34;Go to edit box&#34;</span>,
+  <span style=color:#e6db74>&#39;Hints.create(&#34;input:visible, textarea:visible&#34;, Hints.dispatchMouseClick)&#39;</span>
+);
+
+<span style=color:#75715e>// click
+</span><span style=color:#75715e></span><span style=color:#a6e22e>Hints</span>.<span style=color:#a6e22e>pointers</span> <span style=color:#f92672>=</span>
+  <span style=color:#e6db74>&#34;a, button, *:visible:css(cursor=pointer), select:visible, input:visible, textarea:visible&#34;</span>; <span style=color:#75715e>// define all the css selectors that can be followed
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;f&#34;</span>,
+  <span style=color:#e6db74>&#34;Open a link&#34;</span>,
+  <span style=color:#e6db74>&#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick)&#34;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;F&#34;</span>,
+  <span style=color:#e6db74>&#34;Open a link in new tab&#34;</span>,
+  <span style=color:#e6db74>&#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick, {tabbed: true})&#34;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;gf&#34;</span>,
+  <span style=color:#e6db74>&#34;Open a link in non-active new tab&#34;</span>,
+  <span style=color:#e6db74>&#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick, {tabbed: true, active: false})&#34;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;a-f&#34;</span>,
+  <span style=color:#e6db74>&#34;Open multiple links in a new tab&#34;</span>,
+  <span style=color:#e6db74>&#34;Hints.create(Hints.pointers, Hints.dispatchMouseClick, {tabbed: true, active: false, multipleHits: true})&#34;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;q&#34;</span>,
+  <span style=color:#e6db74>&#34;Click on an Image or a button&#34;</span>,
+  <span style=color:#e6db74>&#39;Hints.create(&#34;img, button&#34;, Hints.dispatchMouseClick)&#39;</span>
+);
+<span style=color:#75715e>// next and pre page
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;[[&#34;</span>, <span style=color:#e6db74>&#34;Click on the previous link on current page&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>prevLinks</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;a&#34;</span>).<span style=color:#a6e22e>regex</span>(<span style=color:#e6db74>/((上页|上一页|&lt;&lt;|prev(ious)?)+)/i</span>);
+  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>prevLinks</span>.<span style=color:#a6e22e>length</span>) {
+    <span style=color:#a6e22e>clickOn</span>(<span style=color:#a6e22e>prevLinks</span>);
+  } <span style=color:#66d9ef>else</span> {
+    <span style=color:#a6e22e>walkPageUrl</span>(<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>);
+  }
+});
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;]]&#34;</span>, <span style=color:#e6db74>&#34;Click on the next link on current page&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>nextLinks</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;a&#34;</span>).<span style=color:#a6e22e>regex</span>(<span style=color:#e6db74>/((下页|下一页|&gt;&gt;|next)+)/i</span>);
+  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>nextLinks</span>.<span style=color:#a6e22e>length</span>) {
+    <span style=color:#a6e22e>clickOn</span>(<span style=color:#a6e22e>nextLinks</span>);
+  } <span style=color:#66d9ef>else</span> {
+    <span style=color:#a6e22e>walkPageUrl</span>(<span style=color:#ae81ff>1</span>);
+  }
+});
+
+<span style=color:#75715e>// command
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;:&#34;</span>, <span style=color:#e6db74>&#34;Open commands&#34;</span>, <span style=color:#e6db74>&#39;Normal.openOmnibar({type: &#34;Commands&#34;})&#39;</span>);
+<span style=color:#a6e22e>command</span>(<span style=color:#e6db74>&#34;quit&#34;</span>, <span style=color:#e6db74>&#34;quit chrome&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;quit&#34;</span>);
+});
+<span style=color:#a6e22e>command</span>(<span style=color:#e6db74>&#34;listSession&#34;</span>, <span style=color:#e6db74>&#34;list session&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>runtime</span>.<span style=color:#a6e22e>command</span>(
+    {
+      <span style=color:#a6e22e>action</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;getSessions&#34;</span>,
+    },
+    <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>response</span>) {
+      <span style=color:#a6e22e>Omnibar</span>.<span style=color:#a6e22e>listResults</span>(Object.<span style=color:#a6e22e>keys</span>(<span style=color:#a6e22e>response</span>.<span style=color:#a6e22e>sessions</span>), <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>s</span>) {
+        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;&lt;li&gt;&lt;/li&gt;&#34;</span>).<span style=color:#a6e22e>html</span>(<span style=color:#a6e22e>s</span>);
+      });
+    }
+  );
+});
+<span style=color:#a6e22e>command</span>(<span style=color:#e6db74>&#34;createSession&#34;</span>, <span style=color:#e6db74>&#34;createSession [name]&#34;</span>, <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>name</span>) {
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;createSession&#34;</span>, {
+    <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>name</span>,
+  });
+});
+<span style=color:#a6e22e>command</span>(<span style=color:#e6db74>&#34;deleteSession&#34;</span>, <span style=color:#e6db74>&#34;deleteSession [name]&#34;</span>, <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>name</span>) {
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;deleteSession&#34;</span>, {
+    <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>name</span>,
+  });
+  <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>; <span style=color:#75715e>// to close omnibar after the command executed.
+</span><span style=color:#75715e></span>});
+<span style=color:#a6e22e>command</span>(<span style=color:#e6db74>&#34;openSession&#34;</span>, <span style=color:#e6db74>&#34;openSession [name]&#34;</span>, <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>name</span>) {
+  <span style=color:#a6e22e>RUNTIME</span>(<span style=color:#e6db74>&#34;openSession&#34;</span>, {
+    <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>name</span>,
+  });
+});
+
+<span style=color:#75715e>// visual mode
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;v&#34;</span>, <span style=color:#e6db74>&#34;Toggle visual mode&#34;</span>, <span style=color:#e6db74>&#34;Visual.toggle()&#34;</span>);
+
+<span style=color:#75715e>// find
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#e6db74>&#34;Find in current page&#34;</span>, <span style=color:#e6db74>&#34;Normal.openFinder()&#34;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;*&#34;</span>, <span style=color:#e6db74>&#34;Find selected text in current page&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>Visual</span>.<span style=color:#a6e22e>star</span>();
+  <span style=color:#a6e22e>Visual</span>.<span style=color:#a6e22e>toggle</span>();
+});
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;n&#34;</span>, <span style=color:#e6db74>&#34;Next found text&#34;</span>, <span style=color:#e6db74>&#34;Visual.next(false)&#34;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;N&#34;</span>, <span style=color:#e6db74>&#34;Previous found text&#34;</span>, <span style=color:#e6db74>&#34;Visual.next(true)&#34;</span>);
+
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;m&#34;</span>, <span style=color:#e6db74>&#34;Add current URL to vim-like marks&#34;</span>, <span style=color:#a6e22e>Normal</span>.<span style=color:#a6e22e>addVIMark</span>, <span style=color:#ae81ff>1</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;&#39;&#34;</span>, <span style=color:#e6db74>&#34;Jump to vim-like mark&#34;</span>, <span style=color:#a6e22e>Normal</span>.<span style=color:#a6e22e>jumpVIMark</span>, <span style=color:#ae81ff>1</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;w&#34;</span>, <span style=color:#e6db74>&#34;Switch frames&#34;</span>, <span style=color:#e6db74>&#34;Normal.rotateFrame()&#34;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;p&#34;</span>, <span style=color:#e6db74>&#34;Paste html on current page.&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>Normal</span>.<span style=color:#a6e22e>getContentFromClipboard</span>(<span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>response</span>) {
+    document.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>response</span>.<span style=color:#a6e22e>data</span>;
+  });
+});
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;cc&#34;</span>, <span style=color:#e6db74>&#34;Open selected link or link from clipboard&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#a6e22e>Normal</span>.<span style=color:#a6e22e>getContentFromClipboard</span>(<span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>response</span>) {
+    <span style=color:#a6e22e>tabOpenLink</span>(window.<span style=color:#a6e22e>getSelection</span>().<span style=color:#a6e22e>toString</span>() <span style=color:#f92672>||</span> <span style=color:#a6e22e>response</span>.<span style=color:#a6e22e>data</span>);
+  });
+});
+
+<span style=color:#75715e>// url
+</span><span style=color:#75715e></span><span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;ou&#34;</span>, <span style=color:#e6db74>&#34;Open an URLs&#34;</span>, <span style=color:#e6db74>&#39;Normal.openOmnibar({type: &#34;URLs&#34;})&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;b&#34;</span>, <span style=color:#e6db74>&#34;Open a bookmark&#34;</span>, <span style=color:#e6db74>&#39;Normal.openOmnibar(({type: &#34;Bookmarks&#34;}))&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;oh&#34;</span>, <span style=color:#e6db74>&#34;Open URL from history&#34;</span>, <span style=color:#e6db74>&#39;Normal.openOmnibar({type: &#34;History&#34;})&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;om&#34;</span>,
+  <span style=color:#e6db74>&#34;Open URL from vim-like marks&#34;</span>,
+  <span style=color:#e6db74>&#39;Normal.openOmnibar({type: &#34;VIMarks&#34;})&#39;</span>
+);
+
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;ys&#34;</span>, <span style=color:#e6db74>&#34;Copy current page&#39;s source&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>aa</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>documentElement</span>.<span style=color:#a6e22e>cloneNode</span>(<span style=color:#66d9ef>true</span>);
+  <span style=color:#a6e22e>Normal</span>.<span style=color:#a6e22e>writeClipboard</span>(<span style=color:#a6e22e>aa</span>.<span style=color:#a6e22e>outerHTML</span>);
+});
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;yf&#34;</span>,
+  <span style=color:#e6db74>&#34;Copy current page&#39;s URL&#34;</span>,
+  <span style=color:#e6db74>&#34;Normal.writeClipboard(window.location.href)&#34;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;yl&#34;</span>,
+  <span style=color:#e6db74>&#34;Copy current page&#39;s title&#34;</span>,
+  <span style=color:#e6db74>&#34;Normal.writeClipboard(document.title)&#34;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;ob&#34;</span>,
+  <span style=color:#e6db74>&#34;Open Search with alias b&#34;</span>,
+  <span style=color:#e6db74>&#39;Normal.openOmnibar({type: &#34;SearchEngine&#34;, extra: &#34;b&#34;})&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;og&#34;</span>,
+  <span style=color:#e6db74>&#34;Open Search with alias g&#34;</span>,
+  <span style=color:#e6db74>&#39;Normal.openOmnibar({type: &#34;SearchEngine&#34;, extra: &#34;g&#34;})&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;ow&#34;</span>,
+  <span style=color:#e6db74>&#34;Open Search with alias w&#34;</span>,
+  <span style=color:#e6db74>&#39;Normal.openOmnibar({type: &#34;SearchEngine&#34;, extra: &#34;w&#34;})&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;t&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome newtab&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://newtab/&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;gb&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome Bookmarks&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://bookmarks/&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;gj&#34;</span>,
+  <span style=color:#e6db74>&#34;Open Chrome Bookmarks&#34;</span>,
+  <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://chrome/settings/contentExceptions#javascript&#34;)&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;gc&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome Cache&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://cache/&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;gd&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome Downloads&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://downloads/&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;gk&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome Cookies&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://settings/cookies&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;ge&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome Extensions&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://extensions/&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;gn&#34;</span>,
+  <span style=color:#e6db74>&#34;Open Chrome net-internals&#34;</span>,
+  <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://net-internals/#proxy&#34;)&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;gs&#34;</span>,
+  <span style=color:#e6db74>&#34;View page source&#34;</span>,
+  <span style=color:#e6db74>&#39;RUNTIME(&#34;viewSource&#34;, { tab: { tabbed: true }})&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;gu&#34;</span>, <span style=color:#e6db74>&#34;Go up one path in the URL&#34;</span>, <span style=color:#66d9ef>function</span> () {
+  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>url</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>location</span>.<span style=color:#a6e22e>href</span>;
+  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>location</span>.<span style=color:#a6e22e>pathname</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>1</span>) {
+    <span style=color:#a6e22e>url</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>endsWith</span>(<span style=color:#e6db74>&#34;/&#34;</span>) <span style=color:#f92672>?</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>substr</span>(<span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>:</span> <span style=color:#a6e22e>url</span>;
+    <span style=color:#a6e22e>url</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>substr</span>(<span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>lastIndexOf</span>(<span style=color:#e6db74>&#34;/&#34;</span>));
+  }
+  window.<span style=color:#a6e22e>location</span>.<span style=color:#a6e22e>href</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>url</span>;
+});
+
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;gU&#34;</span>,
+  <span style=color:#e6db74>&#34;Go to root of current URL hierarchy&#34;</span>,
+  <span style=color:#e6db74>&#34;window.location.href = window.location.origin&#34;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;se&#34;</span>,
+  <span style=color:#e6db74>&#34;Edit Settings&#34;</span>,
+  <span style=color:#e6db74>&#39;RUNTIME(&#34;editSettings&#34;, { tab: { tabbed: true }})&#39;</span>
+);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;sr&#34;</span>, <span style=color:#e6db74>&#34;Reset Settings&#34;</span>, <span style=color:#e6db74>&#34;Normal.resetSettings()&#34;</span>);
+<span style=color:#a6e22e>mapkey</span>(<span style=color:#e6db74>&#34;si&#34;</span>, <span style=color:#e6db74>&#34;Open Chrome Inpect&#34;</span>, <span style=color:#e6db74>&#39;tabOpenLink(&#34;chrome://inspect/#devices&#34;)&#39;</span>);
+<span style=color:#a6e22e>mapkey</span>(
+  <span style=color:#e6db74>&#34;;q&#34;</span>,
+  <span style=color:#e6db74>&#34;Insert jquery library on current page&#34;</span>,
+  <span style=color:#e6db74>&#39;Normal.insertJS(&#34;//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js&#34;)&#39;</span>
+);
+
+<span style=color:#75715e>// search
+</span><span style=color:#75715e></span><span style=color:#a6e22e>addSearchAliasX</span>(
+  <span style=color:#e6db74>&#34;g&#34;</span>,
+  <span style=color:#e6db74>&#34;google&#34;</span>,
+  <span style=color:#e6db74>&#34;https://www.google.com/search?q=&#34;</span>,
+  <span style=color:#e6db74>&#34;s&#34;</span>,
+  <span style=color:#e6db74>&#34;https://www.google.com/complete/search?client=chrome-omni&amp;gs_ri=chrome-ext&amp;oit=1&amp;cp=1&amp;pgcl=7&amp;q=&#34;</span>,
+  <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>response</span>) {
+    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>res</span> <span style=color:#f92672>=</span> eval(<span style=color:#a6e22e>response</span>.<span style=color:#a6e22e>text</span>);
+    <span style=color:#a6e22e>Omnibar</span>.<span style=color:#a6e22e>listWords</span>(<span style=color:#a6e22e>res</span>[<span style=color:#ae81ff>1</span>]);
+  }
+);
+<span style=color:#a6e22e>addSearchAliasX</span>(
+  <span style=color:#e6db74>&#34;b&#34;</span>,
+  <span style=color:#e6db74>&#34;baidu&#34;</span>,
+  <span style=color:#e6db74>&#34;https://www.baidu.com/s?wd=&#34;</span>,
+  <span style=color:#e6db74>&#34;s&#34;</span>,
+  <span style=color:#e6db74>&#34;http://suggestion.baidu.com/su?cb=eval&amp;wd=&#34;</span>,
+  <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>response</span>) {
+    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>res</span> <span style=color:#f92672>=</span> eval(<span style=color:#a6e22e>response</span>.<span style=color:#a6e22e>text</span>);
+    <span style=color:#a6e22e>Omnibar</span>.<span style=color:#a6e22e>listWords</span>(<span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>s</span>);
+  }
+);
+<span style=color:#a6e22e>addSearchAliasX</span>(
+  <span style=color:#e6db74>&#34;w&#34;</span>,
+  <span style=color:#e6db74>&#34;bing&#34;</span>,
+  <span style=color:#e6db74>&#34;http://global.bing.com/search?setmkt=en-us&amp;setlang=en-us&amp;q=&#34;</span>,
+  <span style=color:#e6db74>&#34;s&#34;</span>,
+  <span style=color:#e6db74>&#34;http://api.bing.com/osjson.aspx?query=&#34;</span>,
+  <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>response</span>) {
+    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>res</span> <span style=color:#f92672>=</span> eval(<span style=color:#a6e22e>response</span>.<span style=color:#a6e22e>text</span>);
+    <span style=color:#a6e22e>Omnibar</span>.<span style=color:#a6e22e>listWords</span>(<span style=color:#a6e22e>res</span>[<span style=color:#ae81ff>1</span>]);
+  }
+);
+<span style=color:#a6e22e>addSearchAliasX</span>(<span style=color:#e6db74>&#34;s&#34;</span>, <span style=color:#e6db74>&#34;stackoverflow&#34;</span>, <span style=color:#e6db74>&#34;http://stackoverflow.com/search?q=&#34;</span>);
+<span style=color:#a6e22e>addSearchAliasX</span>(
+  <span style=color:#e6db74>&#34;h&#34;</span>,
+  <span style=color:#e6db74>&#34;github&#34;</span>,
+  <span style=color:#e6db74>&#34;https://github.com/search?type=Code&amp;utf8=%E2%9C%93&amp;q=&#34;</span>
+);
+
+<span style=color:#a6e22e>$</span>(document)
+  .<span style=color:#a6e22e>dblclick</span>(<span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>event</span>) {
+    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>sel</span> <span style=color:#f92672>=</span> window.<span style=color:#a6e22e>getSelection</span>().<span style=color:#a6e22e>toString</span>();
+    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>sel</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>sel</span>.<span style=color:#a6e22e>length</span>) {
+      <span style=color:#a6e22e>httpRequest</span>(
+        {
+          <span style=color:#a6e22e>url</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;https://api.shanbay.com/bdc/search/?word=&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>sel</span>,
+        },
+        <span style=color:#66d9ef>function</span> (<span style=color:#a6e22e>res</span>) {
+          <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>res</span> <span style=color:#f92672>=</span> eval(<span style=color:#e6db74>&#34;a=&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>text</span>);
+          <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>b</span> <span style=color:#f92672>=</span> window.<span style=color:#a6e22e>getSelection</span>().<span style=color:#a6e22e>getRangeAt</span>(<span style=color:#ae81ff>0</span>).<span style=color:#a6e22e>getBoundingClientRect</span>();
+          <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>pos</span> <span style=color:#f92672>=</span> [<span style=color:#a6e22e>b</span>.<span style=color:#a6e22e>top</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>18</span>, <span style=color:#a6e22e>b</span>.<span style=color:#a6e22e>left</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>b</span>.<span style=color:#a6e22e>width</span> <span style=color:#f92672>/</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>12</span>];
+          <span style=color:#a6e22e>Normal</span>.<span style=color:#a6e22e>showBubble</span>(
+            {
+              <span style=color:#a6e22e>top</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>pos</span>[<span style=color:#ae81ff>0</span>],
+              <span style=color:#a6e22e>left</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>pos</span>[<span style=color:#ae81ff>1</span>],
+            },
+            <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>data</span>.<span style=color:#a6e22e>definition</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>msg</span>
+          );
+        }
+      );
+    }
+  })
+  .<span style=color:#a6e22e>click</span>(<span style=color:#66d9ef>function</span> () {
+    <span style=color:#a6e22e>Normal</span>.<span style=color:#a6e22e>hideBubble</span>();
+  });
+</code></pre></div><hr width=100% id=EOF><p style=color:#777>Last modified on 2020-03-26</p></div></div><nav class=post-pagination><a class=newer-posts href=//blog.yech.xyz/posts/markup_language/>Next<br>Markup Language</a>
+<a class=older-posts href=//blog.yech.xyz/posts/happy_new_year_2016/>Previous<br>happy new year 2016</a></nav><div class=post-comment-wrapper></div></div></div></div></div><div id=single-column-footer>Hugo Theme <a href=https://github.com/amazingrise/hugo-theme-diary>Diary</a> by <a href=https://amazingrise.net>Rise</a><br>Ported from <a href=https://mak1t0.cc/ target=_blank rel="noreferrer noopener">Makito</a>'s <a href=https://github.com/SumiMakito/hexo-theme-journal/ target=_blank rel="noreferrer noopener">Journal.</a><br><br>&copy;
+2020 by Ye Chang</div></div><script src=//blog.yech.xyz//js/journal.js></script></body></html>

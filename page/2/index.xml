@@ -1,0 +1,746 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chang's blog</title><link>//blog.yech.xyz/</link><description>Recent content on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Mon, 23 Mar 2020 22:38:14 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/index.xml" rel="self" type="application/rss+xml"/><item><title>Personal Website by Caddy</title><link>//blog.yech.xyz/posts/personal_website_by_caddy/</link><pubDate>Thu, 30 Jan 2020 18:53:20 +0800</pubDate><guid>//blog.yech.xyz/posts/personal_website_by_caddy/</guid><description>Chang's blog //blog.yech.xyz/posts/personal_website_by_caddy/ -&lt;h2 id="about">About&lt;/h2>
+&lt;p>The content is hosted in a remote github repo, and a webhook is triggered when
+there is a new commit. Hence, the local repo on the web server, which is set as
+root of the website, will be updated automatically.&lt;/p>
+&lt;ul>
+&lt;li>The home page is prerendered and as servered directly.&lt;/li>
+&lt;li>The markdown files of blog content are built by hugo.&lt;/li>
+&lt;/ul>
+&lt;h2 id="setup">Setup&lt;/h2>
+&lt;p>Download hugo:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">mkdir hugo_binary
+cd hugo_binary
+wget https://github.com/gohugoio/hugo/releases/download/v0.63.2/hugo_extended_0.63.2_Linux-64bit.tar.gz
+tar xvf hugo_extended_0.63.2_Linux-64bit.tar.gz
+mv hugo /usr/local/bin/
+cd ..
+rm -r hugo_binary
+chmod +x /usr/local/bin/hugo
+hugo version
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Downlaod caddy:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget https://github.com/caddyserver/caddy/releases/download/v2.0.0-beta.13/caddy2_beta13_linux_amd64 -O /usr/local/bin/caddy
+curl https://getcaddy.com | bash -s personal http.git http.authz http.minify
+chmod +x /usr/local/bin/caddy
+caddy version
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Run caddy:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">groupadd --system caddy
+useradd --system --gid caddy --create-home --home-dir /var/lib/caddy --shell /usr/sbin/nologin --comment &lt;span style="color:#e6db74">&amp;#34;Caddy web server&amp;#34;&lt;/span> caddy
+wget https://raw.githubusercontent.com/caddyserver/dist/master/init/caddy.service -O /etc/systemd/system/caddy.service
+vim /etc/systemd/system/caddy.service
+mkdir -p /etc/caddy
+vim /etc/caddy/Caddyfile
+&lt;span style="color:#75715e"># for markdown blog&lt;/span>
+mkdir -p /var/www/caddy
+chown -R caddy:caddy /var/www/caddy
+&lt;span style="color:#75715e"># for caddy log&lt;/span>
+mkdir -p /var/log/caddy
+chown -R caddy:caddy /var/log/caddy
+systemctl daemon-reload
+systemctl enable caddy.service
+systemctl start caddy.service
+systemctl status caddy.service
+&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;blockquote>
+&lt;p>caddy.service&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#f92672">[&lt;/span>Unit&lt;span style="color:#f92672">]&lt;/span>
+Description&lt;span style="color:#f92672">=&lt;/span>Caddy HTTP/2 web server
+Documentation&lt;span style="color:#f92672">=&lt;/span>https://caddyserver.com/docs
+After&lt;span style="color:#f92672">=&lt;/span>network-online.target
+Wants&lt;span style="color:#f92672">=&lt;/span>network-online.target systemd-networkd-wait-online.service
+StartLimitIntervalSec&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">14400&lt;/span>
+StartLimitBurst&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">10&lt;/span>
+&lt;span style="color:#f92672">[&lt;/span>Service&lt;span style="color:#f92672">]&lt;/span>
+Restart&lt;span style="color:#f92672">=&lt;/span>on-abnormal
+User&lt;span style="color:#f92672">=&lt;/span>caddy
+Group&lt;span style="color:#f92672">=&lt;/span>caddy
+Environment&lt;span style="color:#f92672">=&lt;/span>CADDYPATH&lt;span style="color:#f92672">=&lt;/span>/etc/ssl/caddy
+ExecStart&lt;span style="color:#f92672">=&lt;/span>/usr/local/bin/caddy -log stdout -log-timestamps&lt;span style="color:#f92672">=&lt;/span>false -agree&lt;span style="color:#f92672">=&lt;/span>true -conf&lt;span style="color:#f92672">=&lt;/span>/etc/caddy/Caddyfile -root&lt;span style="color:#f92672">=&lt;/span>/var/tmp
+ExecReload&lt;span style="color:#f92672">=&lt;/span>/bin/kill -USR1 $MAINPID
+KillMode&lt;span style="color:#f92672">=&lt;/span>mixed
+KillSignal&lt;span style="color:#f92672">=&lt;/span>SIGQUIT
+TimeoutStopSec&lt;span style="color:#f92672">=&lt;/span>5s
+LimitNOFILE&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1048576&lt;/span>
+LimitNPROC&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">512&lt;/span>
+PrivateTmp&lt;span style="color:#f92672">=&lt;/span>true
+PrivateDevices&lt;span style="color:#f92672">=&lt;/span>false
+ProtectHome&lt;span style="color:#f92672">=&lt;/span>true
+ProtectSystem&lt;span style="color:#f92672">=&lt;/span>full
+ReadWritePaths&lt;span style="color:#f92672">=&lt;/span>/etc/ssl/caddy
+ReadWriteDirectories&lt;span style="color:#f92672">=&lt;/span>/etc/ssl/caddy
+&lt;span style="color:#f92672">[&lt;/span>Install&lt;span style="color:#f92672">]&lt;/span>
+WantedBy&lt;span style="color:#f92672">=&lt;/span>multi-user.target
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Caddyfile&lt;/p>
+&lt;/blockquote>
+&lt;pre>&lt;code>yech.xyz, www.yech.xyz {
+gzip
+root /var/www/caddy/github_xxx_repo
+log /var/log/caddy/access.log
+git {
+repo https://github.com/xxx/xxx
+path ../github_xxx_repo
+hook /webhook xxxxx
+clone_args --recursive
+pull_args --recurse-submodules
+interval 3600
+}
+errors {
+404 404.html
+}
+}
+blog.yech.xyz {
+gzip
+root /var/www/caddy/blog.yech.xyz
+log /var/log/caddy/access.log
+git {
+repo https://github.com/xxx/xxx
+path ../github_xxx_repo
+hook /webhook xxxxx
+then hugo --destination=/var/www/caddy/blog.yech.xyz
+clone_args --recursive
+pull_args --recurse-submodules
+interval 3600
+}
+errors {
+404 404.html
+}
+}
+&lt;/code>&lt;/pre>- //blog.yech.xyz/posts/personal_website_by_caddy/ - 2020 by Ye Chang</description></item><item><title>随手记录点vim技巧(五)</title><link>//blog.yech.xyz/posts/vim_tip_5/</link><pubDate>Thu, 30 Jan 2020 14:50:30 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_5/</guid><description>Chang's blog //blog.yech.xyz/posts/vim_tip_5/ -&lt;blockquote>
+&lt;p>Q: 怎么查看 vim 启动时加载的脚本？&lt;/p>
+&lt;p>(启动 vim 时怎么 debug？)&lt;/p>
+&lt;/blockquote>
+&lt;p>查看 vim 加载时执行了哪些脚本（加载了那些插件）:&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-vim" data-lang="vim">:&lt;span style="color:#a6e22e">scriptnames&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&lt;/span>&amp;#39; &lt;span style="color:#a6e22e">or&lt;/span> `:&lt;span style="color:#a6e22e">scr&lt;/span>` &lt;span style="color:#a6e22e">for&lt;/span> &lt;span style="color:#a6e22e">short&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>查看每一个脚本/插件的耗时：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">vim --startuptime start_time.log filename
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>不加载插件启动：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e"># vim&lt;/span>
+vim --clean
+&lt;span style="color:#75715e"># neovim&lt;/span>
+nvim --noplugin
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>指定从另外的配置文件启动：&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">vim -u min.vim filename
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Reference&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>&lt;a href="http://www.wepeng.net/article/detail/100518128.html">http://www.wepeng.net/article/detail/100518128.html&lt;/a>&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/vim_tip_5/ - 2020 by Ye Chang</description></item><item><title>Raspberry Pi</title><link>//blog.yech.xyz/posts/raspberry_pi/</link><pubDate>Sat, 17 Aug 2019 18:01:14 +0800</pubDate><guid>//blog.yech.xyz/posts/raspberry_pi/</guid><description>Chang's blog //blog.yech.xyz/posts/raspberry_pi/ -&lt;p>&lt;img src="https://www.raspberrypi.org/homepage-9df4b/static/blueprint-labelled-0c67f40af31e84e51d8a86529ca2d292.svg" alt="raspberry pi4">&lt;/p>
+&lt;h2 id="树莓派-2b-上手">树莓派 2b 上手&lt;/h2>
+&lt;p>specs:&lt;/p>
+&lt;ul>
+&lt;li>A 900MHz quad-core ARM Cortex-A7 CPU&lt;/li>
+&lt;li>1GB RAM&lt;/li>
+&lt;li>100 Base Ethernet&lt;/li>
+&lt;li>4 USB ports&lt;/li>
+&lt;li>40 GPIO pins&lt;/li>
+&lt;li>Full HDMI port&lt;/li>
+&lt;li>Combined 3.5mm audio jack and composite video&lt;/li>
+&lt;li>Camera interface (CSI)&lt;/li>
+&lt;li>Display interface (DSI)&lt;/li>
+&lt;li>Micro SD card slot&lt;/li>
+&lt;li>VideoCore IV 3D graphics core&lt;/li>
+&lt;/ul>
+&lt;h2 id="树莓派-4b-上手">树莓派 4b 上手&lt;/h2>
+&lt;p>specs:&lt;/p>
+&lt;ul>
+&lt;li>Broadcom BCM2711, Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz&lt;/li>
+&lt;li>1GB, 2GB or 4GB LPDDR4-3200 SDRAM (depending on model)&lt;/li>
+&lt;li>2.4 GHz and 5.0 GHz IEEE 802.11ac wireless, Bluetooth 5.0, BLE&lt;/li>
+&lt;li>Gigabit Ethernet&lt;/li>
+&lt;li>2 USB 3.0 ports; 2 USB 2.0 ports.&lt;/li>
+&lt;li>Raspberry Pi standard 40 pin GPIO header (fully backwards compatible with previous boards)&lt;/li>
+&lt;li>2 × micro-HDMI ports (up to 4kp60 supported)&lt;/li>
+&lt;li>2-lane MIPI DSI display port&lt;/li>
+&lt;li>2-lane MIPI CSI camera port&lt;/li>
+&lt;li>4-pole stereo audio and composite video port&lt;/li>
+&lt;li>H.265 (4kp60 decode), H264 (1080p60 decode, 1080p30 encode)&lt;/li>
+&lt;li>OpenGL ES 3.0 graphics&lt;/li>
+&lt;li>Micro-SD card slot for loading operating system and data storage&lt;/li>
+&lt;li>5V DC via USB-C connector (minimum 3A*)&lt;/li>
+&lt;li>5V DC via GPIO header (minimum 3A*)&lt;/li>
+&lt;li>Power over Ethernet (PoE) enabled (requires separate PoE HAT)&lt;/li>
+&lt;li>Operating temperature: 0 – 50 degrees C ambient&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>TODO&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>3D printed box&lt;/li>
+&lt;li>run a DNS server&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/raspberry_pi/ - 2020 by Ye Chang</description></item><item><title>Fix Chrome Emoji Rendering Issue</title><link>//blog.yech.xyz/posts/fix_chrome_emoji_rendering_issue/</link><pubDate>Thu, 07 Mar 2019 02:44:14 +0800</pubDate><guid>//blog.yech.xyz/posts/fix_chrome_emoji_rendering_issue/</guid><description>Chang's blog //blog.yech.xyz/posts/fix_chrome_emoji_rendering_issue/ -&lt;p>Chrome/Chromium 下部分 emoji 符号显示出来怎么是小方块？而同样的字符在 Firefox 能正常显示。&lt;/p>
+&lt;p>原因是系统缺少了 emoji 字体。Chrome 渲染网页的时候，根据 CSS 样式，先查找网页的字体文件，如果找不到再到系统字库里面找。&lt;/p>
+&lt;p>而 Firefox 本身就打包了 emoji 字符，所以虽然系统没有 emoji 字体，也能正常显示。&lt;/p>
+&lt;ul>
+&lt;li>解决方案：&lt;/li>
+&lt;/ul>
+&lt;p>安装&lt;code>noto-fonts-emoji&lt;/code>字体&lt;/p>
+&lt;blockquote>
+&lt;p>ArchLinux&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo pacman -S noto-fonts-emoji
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Ubuntu&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo apt install fonts-noto-color-emoji
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Restart Chrome, or restart PC.&lt;/p>- //blog.yech.xyz/posts/fix_chrome_emoji_rendering_issue/ - 2020 by Ye Chang</description></item><item><title>Shell Shortcut</title><link>//blog.yech.xyz/posts/shell_shortcut/</link><pubDate>Tue, 05 Mar 2019 19:21:46 +0800</pubDate><guid>//blog.yech.xyz/posts/shell_shortcut/</guid><description>Chang's blog //blog.yech.xyz/posts/shell_shortcut/ -&lt;p>Some useful bash shortcut for me.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>key&lt;/th>
+&lt;th>method&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + a&lt;/code>&lt;/td>
+&lt;td>Move to the beginning of the line&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + e&lt;/code>&lt;/td>
+&lt;td>Move to the end of the line&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + u&lt;/code>&lt;/td>
+&lt;td>(bash) Clear the characters on the line before the current cursor position&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + u&lt;/code>&lt;/td>
+&lt;td>(zsh) If you&amp;rsquo;re using the zsh, this will clear the entire line&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + k&lt;/code>&lt;/td>
+&lt;td>Clear the characters on the line after the current cursor position&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + w&lt;/code>&lt;/td>
+&lt;td>Delete the word in front of the cursor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + r&lt;/code>&lt;/td>
+&lt;td>Search history&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + g&lt;/code>&lt;/td>
+&lt;td>Escape from search mode&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + -&lt;/code>&lt;/td>
+&lt;td>Undo the last change&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + s&lt;/code>&lt;/td>
+&lt;td>Stop output to screen&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + q&lt;/code>&lt;/td>
+&lt;td>Re-enable screen output&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + c&lt;/code>&lt;/td>
+&lt;td>Terminate/kill current foreground process&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + z&lt;/code>&lt;/td>
+&lt;td>Suspend/stop current foreground process&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Alt + d&lt;/code>&lt;/td>
+&lt;td>Delete the word after the cursor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + l&lt;/code>&lt;/td>
+&lt;td>Clear screen&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + j&lt;/code>&lt;/td>
+&lt;td>Sent Enter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Ctrl + j&lt;/code>&lt;/td>
+&lt;td>Delete one charater before cursor&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+- //blog.yech.xyz/posts/shell_shortcut/ - 2020 by Ye Chang</description></item><item><title>Workflow Setup and Run</title><link>//blog.yech.xyz/posts/workflow_setup_and_run/</link><pubDate>Fri, 01 Mar 2019 23:54:43 +0800</pubDate><guid>//blog.yech.xyz/posts/workflow_setup_and_run/</guid><description>Chang's blog //blog.yech.xyz/posts/workflow_setup_and_run/ -&lt;p>Workflow&lt;/p>
+&lt;h2 id="framework-tools">Framework (Tools)&lt;/h2>
+&lt;ul>
+&lt;li>Snakemake&lt;/li>
+&lt;li>WDL&lt;/li>
+&lt;li>nextflow&lt;/li>
+&lt;li>CWL&lt;/li>
+&lt;li>Martian (Pipeline Manager developed by 10x Genomics for Cellranger)&lt;/li>
+&lt;li>make (GNU)&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="comparision">Comparision&lt;/h2>
+&lt;p>There are two types of workflow system.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>backward (pull) (output -&amp;gt; input)
+eg, make, snakemake&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>forward (push) (input -&amp;gt; output)
+eg, nextflow, SciPipe&lt;/p>
+&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/workflow_setup_and_run/ - 2020 by Ye Chang</description></item><item><title>High-throughput Sequencing Specification</title><link>//blog.yech.xyz/posts/high_thoughput_sequencing_spec/</link><pubDate>Thu, 28 Feb 2019 16:36:21 +0800</pubDate><guid>//blog.yech.xyz/posts/high_thoughput_sequencing_spec/</guid><description>Chang's blog //blog.yech.xyz/posts/high_thoughput_sequencing_spec/ -&lt;h1 id="specification-of-illumna-platform">Specification of Illumna Platform&lt;/h1>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Platform&lt;/th>
+&lt;th>Run Cycle&lt;/th>
+&lt;th>Base per Reads (bp)&lt;/th>
+&lt;th>Read per Lane (M)&lt;/th>
+&lt;th>Lane per Cell&lt;/th>
+&lt;th>Cell per Run&lt;/th>
+&lt;th>Run Reagent&lt;/th>
+&lt;th>Run Time (h)&lt;/th>
+&lt;th>Q30 (%)&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>iSeq100&lt;/td>
+&lt;td>SE36&lt;/td>
+&lt;td>36&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>9&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>iSeq100&lt;/td>
+&lt;td>SE50&lt;/td>
+&lt;td>50&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>9&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>iSeq100&lt;/td>
+&lt;td>SE50&lt;/td>
+&lt;td>75&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>10&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>iSeq100&lt;/td>
+&lt;td>PE50&lt;/td>
+&lt;td>150&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>13&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>iSeq100&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>17.5&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MiniSeq&lt;/td>
+&lt;td>SE75&lt;/td>
+&lt;td>75&lt;/td>
+&lt;td>22–25&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>High&lt;/td>
+&lt;td>7&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MiniSeq&lt;/td>
+&lt;td>PE75&lt;/td>
+&lt;td>150&lt;/td>
+&lt;td>22–25&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>High&lt;/td>
+&lt;td>13&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MiniSeq&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>600&lt;/td>
+&lt;td>22–25&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>High&lt;/td>
+&lt;td>24&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MiniSeq&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>600&lt;/td>
+&lt;td>7-8&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>Mid&lt;/td>
+&lt;td>17&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MiSeq&lt;/td>
+&lt;td>PE75&lt;/td>
+&lt;td>150&lt;/td>
+&lt;td>22–25&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>v3&lt;/td>
+&lt;td>21&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MiSeq&lt;/td>
+&lt;td>PE300&lt;/td>
+&lt;td>600&lt;/td>
+&lt;td>22–25&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>v3&lt;/td>
+&lt;td>56&lt;/td>
+&lt;td>70&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NextSeq550&lt;/td>
+&lt;td>SE75&lt;/td>
+&lt;td>75&lt;/td>
+&lt;td>400&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>High&lt;/td>
+&lt;td>11&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NextSeq550&lt;/td>
+&lt;td>PE75&lt;/td>
+&lt;td>150&lt;/td>
+&lt;td>400&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>High&lt;/td>
+&lt;td>18&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NextSeq550&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>400&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>High&lt;/td>
+&lt;td>29&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NextSeq550&lt;/td>
+&lt;td>PE75&lt;/td>
+&lt;td>150&lt;/td>
+&lt;td>130&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>Mid&lt;/td>
+&lt;td>15&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NextSeq550&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>130&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>Mid&lt;/td>
+&lt;td>26&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>HiSeq2000&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>HiSeq2500&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>HiSeq3000&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>HiSeq4000&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>HiSeqX&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>325-375&lt;/td>
+&lt;td>8&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>-&lt;/td>
+&lt;td>70&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE50&lt;/td>
+&lt;td>100&lt;/td>
+&lt;td>325-400&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>SP&lt;/td>
+&lt;td>13&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>325-400&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>SP&lt;/td>
+&lt;td>25&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE250&lt;/td>
+&lt;td>500&lt;/td>
+&lt;td>325-400&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>SP&lt;/td>
+&lt;td>38&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE50&lt;/td>
+&lt;td>100&lt;/td>
+&lt;td>650-800&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S1&lt;/td>
+&lt;td>13&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE100&lt;/td>
+&lt;td>200&lt;/td>
+&lt;td>650-800&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S1&lt;/td>
+&lt;td>19&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>650-800&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S1&lt;/td>
+&lt;td>25&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE50&lt;/td>
+&lt;td>100&lt;/td>
+&lt;td>1650-2050&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S2&lt;/td>
+&lt;td>16&lt;/td>
+&lt;td>85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE100&lt;/td>
+&lt;td>200&lt;/td>
+&lt;td>1650-2050&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S2&lt;/td>
+&lt;td>25&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>1650-2050&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S2&lt;/td>
+&lt;td>36&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE100&lt;/td>
+&lt;td>200&lt;/td>
+&lt;td>2000-2500&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S4&lt;/td>
+&lt;td>36&lt;/td>
+&lt;td>80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NovaSeq6000&lt;/td>
+&lt;td>PE150&lt;/td>
+&lt;td>300&lt;/td>
+&lt;td>2000-2500&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>1/2&lt;/td>
+&lt;td>S4&lt;/td>
+&lt;td>44&lt;/td>
+&lt;td>75&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;blockquote>
+&lt;p>note:&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>paired end reads are regarded as one&lt;/li>
+&lt;li>there are unreggle 4 lanes on MiSeq chip, thus treated as one&lt;/li>
+&lt;li>1/2 means single flow cell and dual flow cell are both supported&lt;/li>
+&lt;/ul>
+&lt;h1 id="specification-of-pacbio-smrt-platform">Specification of PacBio SMRT Platform&lt;/h1>
+- //blog.yech.xyz/posts/high_thoughput_sequencing_spec/ - 2020 by Ye Chang</description></item><item><title>随手记录点vim技巧(四)</title><link>//blog.yech.xyz/posts/vim_tip_4/</link><pubDate>Thu, 28 Feb 2019 01:54:11 +0800</pubDate><guid>//blog.yech.xyz/posts/vim_tip_4/</guid><description>Chang's blog //blog.yech.xyz/posts/vim_tip_4/ -&lt;blockquote>
+&lt;p>Q: 怎么快速删除每一行最后一个字符?
+（怎么录制宏？）&lt;/p>
+&lt;/blockquote>
+&lt;p>例如一个文件每一行最后一个字符是句号，需要把它们都去掉。&lt;/p>
+&lt;p>这是一个 ini 类型的配置文件，可以看到每一行的最前面有一个逗号，现在如果需要将每行前面的逗号去掉，怎么办？
+如果是对一行进行操作，方法相当简单，&lt;code>$&lt;/code>调到行尾，再按&lt;code>x&lt;/code>删除一个字符，就完成了。
+如果要对连续 100 行做这样修改呢？当然这每一行的长度是不一样的，用不了列编辑模式。&lt;/p>
+&lt;p>这时候需要用到 vim 里面的宏。&lt;/p>
+&lt;blockquote>
+&lt;p>所谓宏，在 vim 里面是指某种特定顺序的一系列操作。vim 宏有录制和播放的过程，录制就是你教给 vim 该怎么操作，播放就是 vim 照着你教的进行自动操作。&lt;/p>
+&lt;/blockquote>
+&lt;ol>
+&lt;li>
+&lt;p>把光标定位在要修改的第一行；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在 normal 模式下输入&lt;code>qa&lt;/code>(这里的 a 是指寄存器名称，vim 会把录制好的宏放在这个寄存器中, 所以也可以是&lt;code>qb&lt;/code>, &lt;code>qc&lt;/code>, &lt;code>qd&lt;/code>&amp;hellip;)&lt;/p>
+&lt;blockquote>
+&lt;p>SpaceVim 重用了 &lt;code>q&lt;/code> 键，需要输入&lt;code>\qr&lt;/code>来进入录制模式。&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>vim 的命令行会显示“recording @a”的提示，开始输入&lt;code>$&lt;/code>调到行尾，再按 x 删除，按 j 跳到下一行；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>normal 模式下输入&lt;code>q&lt;/code>，结束宏录制。&lt;/p>
+&lt;blockquote>
+&lt;p>SpaceVim 需要输入&lt;code>\qr&lt;/code>来进入结束模式。&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;/ol>
+&lt;p>经过以上步骤， 我们定义了一个存储在寄存器 a 中的宏，它的操作序列是：&lt;code>$&lt;/code>-&amp;gt;&lt;code>x&lt;/code>-&amp;gt;&lt;code>j&lt;/code>，也就是跳到行尾，删除，跳到下一行。&lt;/p>
+&lt;p>现在，第一行已经删除了行尾的句号，而且光标也已经在第二行。
+这时候如果在 normal 模式下输入&lt;code>@a&lt;/code>，就可以播放我们刚录制好的存在寄存器 a 中的宏，结果是第二行行尾的句号也被删除了，光标停在第三行。
+当然不是输入 &lt;code>@a&lt;/code> 99 次了，用 vim 的重复命令，输入 &lt;code>99@a&lt;/code> 一并把剩下的 99 行都解决了。&lt;/p>- //blog.yech.xyz/posts/vim_tip_4/ - 2020 by Ye Chang</description></item><item><title>Configure iSCSI on Ubuntu</title><link>//blog.yech.xyz/posts/configure_iscsi_on_ubuntu/</link><pubDate>Tue, 26 Feb 2019 19:05:50 +0800</pubDate><guid>//blog.yech.xyz/posts/configure_iscsi_on_ubuntu/</guid><description>Chang's blog //blog.yech.xyz/posts/configure_iscsi_on_ubuntu/ -&lt;p>iSCSI (Internet Small Computer System Interface) is a protocol that allows SCSI commands to be transmitted over a network.&lt;/p>
+&lt;p>The SCSI communicates with devices such as hard disks through the SCSI controller, and the SCSI controller is called the &lt;strong>Target&lt;/strong>.
+While the client application that initiates the access is called the &lt;strong>Initiator&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Assumed that you already have an iSCSI target on your local network&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Install open-iscsi package in Ubuntu server, and configure it into an iSCSI initiator.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo apt install open-iscsi
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Check which targets are available through a target IP address on your network.&lt;/p>
+&lt;p>Add an eth devicde on your server, and configure the IP address into &lt;code>192.168.253.199&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo iscsiadm -m discovery -t st -p 192.168.253.200
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;em>change 192.168.253.200 into the target IP address on your network.&lt;/em>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Login and mount the target device&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">iscsiadm -m node -T iqn.1997-12.cn.chinaserver:alias.tgt0000.20000001555b42ee -p 192.168.253.200 --login
+sleep &lt;span style="color:#ae81ff">6&lt;/span>
+mount -o usrquota,grpquota /dev/sdb1 /storage
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+- //blog.yech.xyz/posts/configure_iscsi_on_ubuntu/ - 2020 by Ye Chang</description></item><item><title>Proxy Gitea as Caddy Subpath</title><link>//blog.yech.xyz/posts/proxy_gitea_as_caddy_subpath/</link><pubDate>Tue, 26 Feb 2019 03:04:42 +0800</pubDate><guid>//blog.yech.xyz/posts/proxy_gitea_as_caddy_subpath/</guid><description>Chang's blog //blog.yech.xyz/posts/proxy_gitea_as_caddy_subpath/ -&lt;p>Using Caddy with a Sub-path as a reverse proxy.&lt;/p>
+&lt;p>Gitea and Caddy are on different server.&lt;/p>
+&lt;p>Caddyfile (on caddy server)&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#960050;background-color:#1e0010">example.com&lt;/span> {
+&lt;span style="color:#960050;background-color:#1e0010">proxy&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">/git&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">http://x.x.x.x:3000&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">{&lt;/span>
+&lt;span style="color:#960050;background-color:#1e0010">without&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">/git&lt;/span>
+}
+&lt;span style="color:#960050;background-color:#1e0010">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>custom/conf/app.ini (on gitea server)&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-toml" data-lang="toml">[&lt;span style="color:#a6e22e">server&lt;/span>]
+&lt;span style="color:#a6e22e">ROOT_URL&lt;/span> = &lt;span style="color:#a6e22e">http&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">://&lt;/span>&lt;span style="color:#a6e22e">example&lt;/span>.&lt;span style="color:#a6e22e">com&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">/&lt;/span>&lt;span style="color:#a6e22e">git&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">/&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Reference&lt;/p>
+&lt;/blockquote>
+&lt;ol>
+&lt;li>&lt;a href="https://docs.gitea.io/en-us/reverse-proxies/">https://docs.gitea.io/en-us/reverse-proxies/&lt;/a>&lt;/li>
+&lt;/ol>- //blog.yech.xyz/posts/proxy_gitea_as_caddy_subpath/ - 2020 by Ye Chang</description></item></channel></rss>

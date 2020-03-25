@@ -1,0 +1,64 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chang's blog</title><link>//blog.yech.xyz/</link><description>Recent content on Chang's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2020 by Ye Chang</copyright><lastBuildDate>Mon, 23 Mar 2020 22:38:14 +0800</lastBuildDate><atom:link href="//blog.yech.xyz/index.xml" rel="self" type="application/rss+xml"/><item><title>node.js 学习笔记(三)</title><link>//blog.yech.xyz/posts/learn_nodejs_note_3/</link><pubDate>Tue, 22 Dec 2015 00:09:42 +0800</pubDate><guid>//blog.yech.xyz/posts/learn_nodejs_note_3/</guid><description>Chang's blog //blog.yech.xyz/posts/learn_nodejs_note_3/ -&lt;h1 id="网页端的-javascript-和服务端的-nodejs-的区别">网页端的 javascript 和服务端的 nodejs 的区别&lt;/h1>
+&lt;p>网页端&lt;/p>
+- //blog.yech.xyz/posts/learn_nodejs_note_3/ - 2020 by Ye Chang</description></item><item><title>node.js 学习笔记(二)</title><link>//blog.yech.xyz/posts/learn_nodejs_note_2/</link><pubDate>Mon, 21 Dec 2015 14:01:05 +0800</pubDate><guid>//blog.yech.xyz/posts/learn_nodejs_note_2/</guid><description>Chang's blog //blog.yech.xyz/posts/learn_nodejs_note_2/ -&lt;h1 id="运行环境">运行环境&lt;/h1>
+&lt;blockquote>
+&lt;p>两种,类似 python&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>命令行交互&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ node
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello World&amp;#34;&lt;/span>);
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>文件运行(无需编译)&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ echo &lt;span style="color:#e6db74">&amp;#39;console.log(&amp;#34;Hello World&amp;#34;)&amp;#39;&lt;/span> &amp;gt; helloworld.js
+$ node helloworld.js
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/learn_nodejs_note_2/ - 2020 by Ye Chang</description></item><item><title>node.js 学习笔记(一)</title><link>//blog.yech.xyz/posts/learn_nodejs_note_1/</link><pubDate>Sun, 20 Dec 2015 16:21:23 +0800</pubDate><guid>//blog.yech.xyz/posts/learn_nodejs_note_1/</guid><description>Chang's blog //blog.yech.xyz/posts/learn_nodejs_note_1/ -&lt;h1 id="ubuntu-安装-nodejs5">ubuntu 安装 nodejs5&lt;/h1>
+&lt;ul>
+&lt;li>将 nodejs 添加到源&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget -qO- https://deb.nodesource.com/setup_5.x | sudo bash -
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>安装 nodejs&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo apt-get install --yes nodejs
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/learn_nodejs_note_1/ - 2020 by Ye Chang</description></item><item><title>javascript 学习笔记</title><link>//blog.yech.xyz/posts/learn_javascript_note/</link><pubDate>Sun, 20 Dec 2015 14:01:05 +0800</pubDate><guid>//blog.yech.xyz/posts/learn_javascript_note/</guid><description>Chang's blog //blog.yech.xyz/posts/learn_javascript_note/ -&lt;p>记录一下 js 的笔记&lt;/p>
+&lt;p>&amp;hellip;&lt;/p>
+- //blog.yech.xyz/posts/learn_javascript_note/ - 2020 by Ye Chang</description></item><item><title>node.js 学习笔记</title><link>//blog.yech.xyz/posts/learn_nodejs_note/</link><pubDate>Sun, 20 Dec 2015 14:01:05 +0800</pubDate><guid>//blog.yech.xyz/posts/learn_nodejs_note/</guid><description>Chang's blog //blog.yech.xyz/posts/learn_nodejs_note/ -&lt;p>记录一下 nodejs 的小知识&lt;/p>
+&lt;hr>
+&lt;p>update in 2019-02-28:&lt;/p>
+&lt;p>这个系列应该是凉了&lt;/p>
+- //blog.yech.xyz/posts/learn_nodejs_note/ - 2020 by Ye Chang</description></item><item><title>convolution 和 cross-correlation的区别</title><link>//blog.yech.xyz/posts/convolution_and_cross_correlation/</link><pubDate>Thu, 20 Aug 2015 17:50:49 +0800</pubDate><guid>//blog.yech.xyz/posts/convolution_and_cross_correlation/</guid><description>Chang's blog //blog.yech.xyz/posts/convolution_and_cross_correlation/ -&lt;p>“卷积”和“互相关”&lt;/p>
+&lt;h1 id="计算函数">计算函数:&lt;/h1>
+&lt;ul>
+&lt;li>
+&lt;p>卷积(convolution)
+&lt;img src="//blog.yech.xyz/images/convolution_func.png" alt="卷积函数">&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>互相关(cross-correlation)
+&lt;img src="//blog.yech.xyz/images/cross-correlation_func.png" alt="互相关函数">&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h1 id="数学解释">数学解释:&lt;/h1>
+&lt;ul>
+&lt;li>cross-correlation 是两个时间序列移动不同的相位(lags)后依次求 correlation&lt;/li>
+&lt;li>convolution 和 cross-correlation 类似, 不过得先将其中一个函数反向再进行计算.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h1 id="现实意义">现实意义:&lt;/h1>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;h1 id="代码实现">代码实现:&lt;/h1>
+&lt;h2 id="matlab-code">matlab code&lt;/h2>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-matlab" data-lang="matlab">&lt;span style="color:#75715e">%matlab&lt;/span>
+a = [&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">4&lt;/span> &lt;span style="color:#ae81ff">7&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">2&lt;/span>]
+b = [&lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">9&lt;/span>]
+&lt;span style="color:#75715e">%cross-correlation&lt;/span>
+[corr_seq lags] = xcorr(a,b)
+plot(lags,corr_seq)
+&lt;span style="color:#75715e">%autocorrelation&lt;/span>
+xcorr(a)
+&lt;span style="color:#75715e">%convolution&lt;/span>
+&lt;span style="color:#75715e">...&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>- //blog.yech.xyz/posts/convolution_and_cross_correlation/ - 2020 by Ye Chang</description></item></channel></rss>

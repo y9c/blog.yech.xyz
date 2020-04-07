@@ -9,11 +9,15 @@ comment = true
 +++
 
 Metaprogramming (元编程[^1]) 是指程序在运行前/时， **将代码自身作为数据进行处理**，从而获得了在更高的层面扩展了编程语法的表达力。
-实现方式大致有两类（_不是很严格的分法_），一类是<ins>利用模板等在编译时替换代码</ins>（宏，Macro）；另一类是<ins>利用内置的函数在运行时动态改变代码</ins>（如, quasiquotation）。
+实现方式大致有两类（_不是很严格的分法_），一类是<ins>利用模板等在编译时替换代码</ins>（宏，Macro）；另一类是<ins>利用内置的函数在运行时动态转变代码</ins>（如, quasiquotation）。
 
-Quasiquotation 在 1970 年中期即被 Lisp 语言所使用 (`` ` `` 符号)， 后来发明的很多语言都“抄”了 Lisp 的这个特性，如 Racket ( `` ` `` / `@`), Clojure (`` ` `` / `~`), and Julia (`:` / `@`) 等[^2]。
-这些语言的 quasiquotations 都必须显式地（explicity）使用。R 语言也是借鉴了 Lisp 的 quasiquotation，然而与大多数语言都不同的是，
-如果巧妙利用 R 语言中函数， quasiquotation 在 R 可以通过隐式地（implicitly）调用。这也是 R 语言作为统计学工具的强大支持，也是 R 作为一门编程语言最“丑陋”[^3]的一面。
+Quasiquotation 中 `quasi-` 的中文翻译有「半-」、「准-」的含义。quotation 表面上是“添加引号”的意思， 包含了 quote 和 unquote 的两个相反的过程。
+本质上是「将可执行的代码转变为 **unevaluated expression**」和「将 **unevaluated expression** 转变为代码来执行」这两个过程。
+quasiquotation 在 1970 年中期即被 Lisp 语言所使用 (`` ` `` 符号)， 后来发明的很多语言都“抄”了 Lisp 的这个特性，如 Racket ( `` ` `` / `@`), Clojure (`` ` `` / `~`), and Julia (`:` / `@`) 等[^2]。
+这些语言的 quasiquotations 都必须显式地（explicity）使用。
+
+R 语言也是借鉴了 Lisp 的 quasiquotation，然而与大多数语言都不同的是，
+如果巧妙利用 R 语言中函数， quasiquotation 在 R 可以通过隐式地（**implicitly**）调用。这也是 R 语言作为统计学工具的强大支持，也是 R 作为一门编程语言最“丑陋”[^3]的一面。
 
 ---
 
@@ -32,7 +36,7 @@ f1(x)
 f1("x")
 ```
 
-但是可以通过定义以下的函数（`f2()`），在进行类似的测试中，却得到了完全相反的结果：
+但是可以通过定义以下的函数（`f2()`），在类似的测试中，却得到了完全相反的输出：
 输入符号 `x`，输出的是 `[1] x`；
 而输入字符串 `"x"` ，输出的是 `[1] hello`。
 

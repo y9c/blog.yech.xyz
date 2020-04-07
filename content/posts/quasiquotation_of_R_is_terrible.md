@@ -17,7 +17,7 @@ quasiquotation 在 1970 年中期即被 Lisp 语言首先使用 (通过 `` ` `` 
 这些语言的 quasiquotations 都必须显式地（explicity）使用。
 
 R 语言也是借鉴了 Lisp 的 quasiquotation，然而与大多数语言都不同的是，
-如果巧妙利用 R 语言中函数， quasiquotation 在 R 可以通过隐式地（**implicitly**）调用。这也是 R 语言作为统计学工具的强大支持，也是 R 作为一门编程语言最“丑陋”[^4]的一面。
+如果巧妙利用 R 语言中函数， quasiquotation 在 R 可以通过隐式地（**implicitly**）调用。这也是 R 语言作为统计学工具最强大的基石，也是 R 作为一门编程语言最“丑陋”[^4]的一面。
 
 ---
 

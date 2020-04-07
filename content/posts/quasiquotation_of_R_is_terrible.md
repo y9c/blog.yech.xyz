@@ -12,7 +12,7 @@ Metaprogramming (元编程[^1]) 是指程序在运行前/时，将代码本身�
 
 实现方式大致有两类（_不是很严格的分法_），一类是在利用模板等在编译时替换代码（宏，Macro）；另一类是利用内置的函数在运行时动态改变代码（如, quasiquotation）。
 
-Quasiquotation 在 1970 年中期即被 Lisp 语言所使用 (`` ` `` 符号)， 后来发明的很多语言都“抄”了 Lisp 的这个特性，如 Racket ( `` ` `` / `@`), Clojure (`` ` `` / `~`), and Julia (`:` / `@`) 等。
+Quasiquotation 在 1970 年中期即被 Lisp 语言所使用 (`` ` `` 符号)， 后来发明的很多语言都“抄”了 Lisp 的这个特性，如 Racket ( `` ` `` / `@`), Clojure (`` ` `` / `~`), and Julia (`:` / `@`) 等[^2]。
 这些语言的 quasiquotations 都必须显式地（explicity）使用，而如果巧妙利用 R 语言中函数， quasiquotation 在 R 可以通过隐式地（implicitly）调用。这也是 R 语言作为统计学工具的强大支持，也是 R 作为一门编程语言最“丑陋”[^3]的一面。
 
 ---

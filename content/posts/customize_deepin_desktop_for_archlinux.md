@@ -8,13 +8,15 @@ tags = ["tools", "linux"]
 comment = true
 +++
 
-> 在英文环境中打开日历的农历显示？<sup>[1]</sup>
+> 在英文环境中打开日历的农历显示？[^1]
 
-- 创建配置文件：`~/.config/deepin/dde-calendar.conf`
+~~- 创建配置文件：`~/.config/deepin/dde-calendar.conf`~~
 
-- 在其中添加 `EnableLunar=true`
+~~- 在其中添加 `EnableLunar=true`~~
 
-> 修改窗口的标题栏宽度？<sup>[2]</sup>
+_更新 V20 后失效_
+
+> 修改窗口的标题栏宽度？[^2]
 
 - 创建配置文件：
 
@@ -34,7 +36,5 @@ comment = true
 
 注：仅对 deepin-kwin 生效，对 deepin-wm 无效。
 
-> Reference
-
-1. https://bbs.deepin.org/forum.php?mod=viewthread&tid=154593&extra=&page=2
-2. https://github.com/linuxdeepin/developer-center/issues/1210
+[^1]: https://bbs.deepin.org/forum.php?mod=viewthread&tid=154593&extra=&page=2
+[^2]: https://github.com/linuxdeepin/developer-center/issues/1210

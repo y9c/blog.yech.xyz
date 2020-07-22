@@ -12,7 +12,6 @@ tags = ["R", "tidyverse", "ggplot"]
 ```R
 ggplot(iris, mapping=aes(x=Sepal.Length, y=Sepal.Width)) +
   geom_point()
-  layer(geom="point", stat="identity", position="identity")
 ```
 
 is a shortcut to

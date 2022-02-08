@@ -3,7 +3,7 @@ title = "Download Data From Sra Through Google Cloud"
 description = ""
 featured_image = "https://www.gstatic.com/devrel-devsite/prod/v85bebc91899d0895957066f8f5069a9f78fae0477c52c06eb50e4921ab7d41ad/cloud/images/social-icon-google-cloud-1200-630.png"
 date = 2022-02-07T23:05:21-06:00
-categories = ["Bio"]
+categories = ["sci"]
 tags = ["linux", "google"]
 comment = true
 +++

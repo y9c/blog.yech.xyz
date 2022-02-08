@@ -12,10 +12,10 @@ comment = true
 
 In some cases, you might need to download the orignal file from SRA, instead of downloading the data in `*.sra` format.
 
-- You the `*.bam` or `.*h5` format for 3rd generation sequencing data.
+- You need the `*.bam` or `.*h5` format for 3rd generation sequencing data.
 - You would like to have the orignal read name for the `*.fastq` format.
 
-NCBI do not provide download link for the orignal file, but the original file are stored on both Amazon Cloud (AWS) and Google Cloud. You can search the data link in the _Run Browser_ page.
+NCBI do not provide download link for the orignal files, but already stored the files on both Amazon Cloud (AWS) and Google Cloud. You can find the data link in the _Run Browser_ page.
 
 Take dataset SRR13168868 as an example, you can have more details on page https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR13168868.
 And Under _Data access_ tab, there are links startswith "gs://" or "s3://" prefix. The "gs://" one is from Google Cloud (GCP).
@@ -37,7 +37,7 @@ gcloud auth login
 
 If not, you will have an error mesage during the data download.
 
-...serviceusage.services.use access to the Google Cloud Project...
+_...serviceusage.services.use access to the Google Cloud Project..._
 
 4. Creat a key follow the instruction below.
 

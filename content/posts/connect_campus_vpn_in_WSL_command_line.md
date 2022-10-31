@@ -3,8 +3,8 @@ title = "Connect Campus Vpn in WSL Command Line"
 description = ""
 featured_image = "/img/Cisco-AnyConnect-Logo.png"
 date = 2022-10-30T23:27:47-05:00
-categories = []
-tags = []
+categories = ["geek"]
+tags = ["linux", "VPN"]
 comment = true
 +++
 

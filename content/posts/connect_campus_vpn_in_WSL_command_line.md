@@ -1,5 +1,5 @@
 +++
-title = "Connect Campus Vpn in WSL Command Line"
+title = "Connect Campus VPN in WSL Command Line"
 description = ""
 featured_image = "/img/Cisco-AnyConnect-Logo.png"
 date = 2022-10-30T23:27:47-05:00
@@ -9,7 +9,7 @@ comment = true
 +++
 
 WSL (Windows Subsystem for Linux) is becoming more and more powerful and stable these days, but the internet connection is still not easy to use.
-When you connect VPN in the host machine, the networking will lost, or the DNS won't resolve by default.
+When you connect VPN in the host machine, the networking will be lost, or the DNS won't resolve by default.
 
 - https://github.com/microsoft/WSL/issues/1350
 - https://github.com/microsoft/WSL/issues/5068
@@ -32,9 +32,9 @@ pip install --user pipx
 pipx install "openconnect-sso"
 ```
 
-But, some modification are required to make it work under WSL.
+But, some modifications are required to make it work under WSL.
 
-- Firstly, install the the qt5 library.
+- Firstly, install the qt5 library.
 
 ```bash
 # for Archlinux
@@ -43,14 +43,14 @@ pacman -S qt5
 apt install qt5-default
 ```
 
-- Seconcdly, you need to install `pyqt5` and `PyQtWebEngine` python package. This is very tricky, because pipx do not use the python under your PATH, but the one under its virtual environment.
+- Secondly, you need to install `pyqt5` and `PyQtWebEngine` python package. This is very tricky, because pipx do not use the python under your PATH, but the one under its virtual environment.
   Thus, you need to install `pyqt5` and `PyQtWebEngine` for python under virtual environment.
 
 ```bash
 ~/.local/pipx/venvs/openconnect-sso/bin/python -m pip install pyqt5 PyQtWebEngine
 ```
 
-- note: You can check the path of the python by `head -1 $(which openconnect-sso)` command.
+note: You can check the path of the python by `head -1 $(which openconnect-sso)` command.
 
 Running this tool is also tricky.
 
@@ -60,7 +60,7 @@ Running this tool is also tricky.
 export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox"
 ```
 
-- Secondly, you should NOT specific the user name in the command line, or the webpage will keep freshing.
+- Secondly, you should NOT specify the username in the command line, or the webpage will keep refreshing.
 
 ```bash
 openconnect-sso --server vpn.yourschoolname.edu

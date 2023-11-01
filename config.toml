@@ -1,7 +1,7 @@
 baseURL = "https://blog.yech.xyz/"
 languageCode = "en-us"
 title = "Chang's blog"
-copyright = "2020 by Ye Chang"
+copyright = "2024 by Ye Chang"
 disableKinds = ["section"]
 theme = "diary"
 googleAnalytics = "UA-71962122-1"

@@ -173,9 +173,9 @@ WantedBy = multi-user.target
 
 4. 配置 Fail2ban (jail.local)
 
-    fail2ban 不需要任何特殊配置。因为 `sshd` 日志现在记录的是真实 IP，fail2ban 默认的 `sshd` jail 就可以直接工作。
+   fail2ban 不需要任何特殊配置。因为 `sshd` 日志现在记录的是真实 IP，fail2ban 默认的 `sshd` jail 就可以直接工作。
 
-    确保 `/etc/fail2ban/jail.local` 中 `sshd` 是启用的（如果文件不存在，请创建它）：
+   确保 `/etc/fail2ban/jail.local` 中 `sshd` 是启用的（如果文件不存在，请创建它）：
 
 ```toml
 [DEFAULT]

@@ -1,5 +1,5 @@
 +++
-title = "打造“可溯源”的 `ssh` 转发：解决 `frp` + Fail2ban 无法获取真实 IP 的问题"
+title = "打造“可溯源”的ssh转发：解决 frp + Fail2ban 无法获取真实 IP 的问题"
 description = ""
 featured_image = ""
 date = 2025-10-29T06:18:42+08:00
@@ -50,7 +50,7 @@ FRP是访问内网服务器的常用手段。 但将内网服务器的 `ssh` 端
 
 1. 安装 `frp` (下载二进制)
 
-`frp` 下载: https://github.com/fatedier/frp/releases
+   `frp` 下载: https://github.com/fatedier/frp/releases
 
 ```bash
 # 下载 `frp` (v0.65.0, linux-amd64)
@@ -63,7 +63,8 @@ sudo chmod +x /usr/local/bin/frpc
 
 2. 安装 `go-mmproxy` (下载二进制)
 
-`go-mmproxy` 下载: https://github.com/kzemek/go-mmproxy/releases
+   `go-mmproxy` 下载: https://github.com/kzemek/go-mmproxy/releases
+
 (_我们使用 kzemek 维护的 `go-mmproxy` fork，它提供了更新的预编译版本。_)
 
 ```bash
@@ -77,7 +78,7 @@ sudo chmod +x /usr/local/bin/go-mmproxy
 
 3. 安装 fail2ban
 
-使用 apt 安装 fail2ban：
+   使用 apt 安装 fail2ban：
 
 ```bash
 sudo apt update
@@ -88,9 +89,9 @@ sudo apt install fail2ban
 
 1. 配置 `go-mmproxy` (systemd)
 
-`go-mmproxy` 必须在 `frpc` 之前启动，并且需要 ip rule 权限来配置路由表。
+   `go-mmproxy` 必须在 `frpc` 之前启动，并且需要 ip rule 权限来配置路由表。
 
-创建 `/etc/systemd/system/go-mmproxy.service`:
+   创建 `/etc/systemd/system/go-mmproxy.service`:
 
 ```toml
 [Unit]
@@ -122,9 +123,9 @@ WantedBy=multi-user.target
 
 2. 配置 `frpc` (frpc.toml)
 
-修改 `frpc` 的配置文件，让 `ssh` 代理不指向 `sshd` (22)，而是指向 `go-mmproxy` (33322)。
+   修改 `frpc` 的配置文件，让 `ssh` 代理不指向 `sshd` (22)，而是指向 `go-mmproxy` (33322)。
 
-编辑 `/etc/frp/frpc.toml`:
+   编辑 `/etc/frp/frpc.toml`:
 
 ```toml
 serverAddr = "frp.your-domain.com" # 你的FRP服务器
@@ -146,8 +147,9 @@ transport.proxyProtocolVersion = "v2"
 
 3. 配置 `frpc` (systemd)
 
-确保 frpc.service 在 go-mmproxy.service 启动之后才启动。
-编辑 `/etc/systemd/system/frpc.service`:
+   确保 frpc.service 在 go-mmproxy.service 启动之后才启动。
+
+   编辑 `/etc/systemd/system/frpc.service`:
 
 ```toml
 [Unit]
@@ -171,8 +173,9 @@ WantedBy = multi-user.target
 
 4. 配置 Fail2ban (jail.local)
 
-fail2ban 不需要任何特殊配置。因为 `sshd` 日志现在记录的是真实 IP，fail2ban 默认的 `sshd` jail 就可以直接工作。
-确保 `/etc/fail2ban/jail.local` 中 `sshd` 是启用的（如果文件不存在，请创建它）：
+    fail2ban 不需要任何特殊配置。因为 `sshd` 日志现在记录的是真实 IP，fail2ban 默认的 `sshd` jail 就可以直接工作。
+
+    确保 `/etc/fail2ban/jail.local` 中 `sshd` 是启用的（如果文件不存在，请创建它）：
 
 ```toml
 [DEFAULT]

@@ -153,8 +153,8 @@ transport.proxyProtocolVersion = "v2"
 
 ```toml
 [Unit]
-Description = `frp` Client Service
-# 关键：确保 mmproxy 先于 `frpc` 启动
+Description = frp Client Service
+# 关键：确保 mmproxy 先于 frpc 启动
 Requires=go-mmproxy.service
 After=network.target syslog.target go-mmproxy.service
 Wants=network.target
@@ -164,7 +164,7 @@ Type = simple
 User = nobody # 建议使用低权限用户
 Restart = on-failure
 RestartSec = 5s
-ExecStart = /usr/local/bin/`frpc` -c /etc/frp/frpc.toml
+ExecStart = /usr/local/bin/frpc -c /etc/frp/frpc.toml
 LimitNOFILE = 1048576
 
 [Install]
